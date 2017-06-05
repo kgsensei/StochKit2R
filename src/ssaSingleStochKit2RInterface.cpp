@@ -16,8 +16,6 @@
 
 #include <Rcpp.h>
 
-using namespace Rcpp;
-
 //'@title C++ Interface to Gillespie Stochastic Simulation Algorithm single trajectory
 //'
 //'@description
@@ -31,82 +29,111 @@ using namespace Rcpp;
 //'@return NULL
 //'@keywords internal
 // [[Rcpp::export]]
-void ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString, double startTime, double endTime, unsigned int seed) {
+RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString,
+                                             double startTime, double endTime, unsigned int seed)
+{
+  //create StochKit2R mass action model object
+  //first, pull out pieces from list object
+  Rcpp::List rParameterList=StochKit2Rmodel[0];
+  Rcpp::List rSpeciesList=StochKit2Rmodel[1];
+  Rcpp::List rReactionList=StochKit2Rmodel[2];
 
-    //create StochKit2R mass action model object
-    //first, pull out pieces from list object
-    Rcpp::List rParameterList=StochKit2Rmodel[0];
-    Rcpp::List rSpeciesList=StochKit2Rmodel[1];
-    Rcpp::List rReactionList=StochKit2Rmodel[2];
-    
-    //get species labels...
-    std::vector<std::string> modelSpeciesList=getSpeciesList(rSpeciesList);
-    //try to write labels to file
-    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputFileNameString,modelSpeciesList);
-    
-    STOCHKIT::MassActionModel<STOCHKIT::StandardDriverTypes::populationType, STOCHKIT::StandardDriverTypes::denseStoichiometryType, STOCHKIT::StandardDriverTypes::propensitiesType, STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,rReactionList,rSpeciesList);
-    
-    //create the output object
-    std::vector<std::pair<double, STOCHKIT::StandardDriverTypes::populationType> > output;
-    
-    //use StochKit2 seeding (and parallel RNG) strategy
-    std::vector<unsigned int> seeds;
-    boost::mt19937 seedGenerator;
-    seedGenerator.seed(seed);
-    seeds.push_back(seedGenerator());//thread 0
-    
-    STOCHKIT::SSA_Direct<STOCHKIT::StandardDriverTypes::populationType, STOCHKIT::StandardDriverTypes::denseStoichiometryType, STOCHKIT::StandardDriverTypes::propensitiesType, STOCHKIT::StandardDriverTypes::graphType> ssa(model.writeInitialPopulation(),model.writeStoichiometry(),model.writePropensities(),model.writeDependencyGraph(),seeds[0]);
-     ssa.simulateSingle(startTime, endTime, output);
-    
-    //write output
-    std::ofstream outfile;
-    
-    //open for appending
-    outfile.open(outputFileNameString.c_str(),std::ios::out | std::ios::app);
-    
-    if (!outfile) {
-        Rcpp::Rcout << "StochKit ERROR (ssaSingleStochKit2RInterface): Unable to open output file.\n";
-        Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+  //get species labels...
+  std::vector<std::string> modelSpeciesList = getSpeciesList(rSpeciesList);
+
+  //try to write labels to file
+  STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputFileNameString, modelSpeciesList);
+
+  STOCHKIT::MassActionModel<STOCHKIT::StandardDriverTypes::populationType,
+                            STOCHKIT::StandardDriverTypes::denseStoichiometryType,
+                            STOCHKIT::StandardDriverTypes::propensitiesType,
+                            STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,
+                                                                            rReactionList,
+                                                                            rSpeciesList);
+
+  //create the output object
+  std::vector< std::pair<double, STOCHKIT::StandardDriverTypes::populationType> > output;
+
+  //use StochKit2 seeding (and parallel RNG) strategy
+  std::vector<unsigned int> seeds;
+  boost::mt19937 seedGenerator;
+  seedGenerator.seed(seed);
+  seeds.push_back(seedGenerator());//thread 0
+
+  STOCHKIT::SSA_Direct<STOCHKIT::StandardDriverTypes::populationType,
+                       STOCHKIT::StandardDriverTypes::denseStoichiometryType,
+                       STOCHKIT::StandardDriverTypes::propensitiesType,
+                       STOCHKIT::StandardDriverTypes::graphType> ssa(model.writeInitialPopulation(),
+                                                                     model.writeStoichiometry(),
+                                                                     model.writePropensities(),
+                                                                     model.writeDependencyGraph(),
+                                                                     seeds[0]);
+
+  ssa.simulateSingle(startTime, endTime, output);
+
+  // write output
+  std::ofstream outfile;
+
+  // to return data
+  // this 2D double array will get converted to a dataframe
+  std::vector< std::vector<double> > buffer;
+
+  //open for appending
+  outfile.open(outputFileNameString.c_str(), std::ios::out | std::ios::app);
+
+  if (!outfile) {
+    Rcpp::Rcout << "StochKit ERROR (ssaSingleStochKit2RInterface): Unable to open output file.\n";
+    Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+  }
+
+  try {
+    std::vector<double> row(rSpeciesList.size()+1);
+
+    int i = 0;
+    for (std::size_t step=0; step!=output.size(); ++step) {
+      i = 0;
+      row[i++] = output[step].first;
+
+      //write time
+      outfile << output[step].first << "\t";
+
+      for (size_t index=0; index!=output[step].second.size(); ++index) {
+        row[i++] = output[step].second[index];
+        outfile << std::setprecision(8) << output[step].second[index] << "\t";
+      }
+      outfile << "\n";
+      buffer.push_back(row);
     }
-    
-    try {
-        for (std::size_t step=0; step!=output.size(); ++step) {
-            //write time
-            outfile << output[step].first << "\t";
-            
-            for (size_t index=0; index!=output[step].second.size(); ++index) {
-                outfile << std::setprecision(8) << output[step].second[index] << "\t";
-            }
-            outfile << "\n";
-        }
-        outfile.close();
-    }
-    catch (...) {
-        Rcpp::Rcout << "StochKit ERROR (IntervalOutput::writeDataToFile): error writing data to output file.\n";
-        Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+    outfile.close();
+  }
+  catch (...) {
+    Rcpp::Rcout << "StochKit ERROR (IntervalOutput::writeDataToFile): error writing data to output file.\n";
+    Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+  }
+
+  int nr = buffer.size(), nc = buffer[0].size();
+  Rcpp::NumericMatrix m( nr, nc );
+  for (int i=0; i<nr; i++) {
+    std::vector<double>& result_i = buffer[i];
+
+    if (result_i.size() != nc) {
+      //the length of data in a row is inconsistent, will not be able to convert to a data frame.
+      Rcpp::stop("Fatal error encountered, terminating StochKit2R");
     }
 
-    
-//    if (keepStats) {
-//        STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
-//        output[0].stats.writeMeansToFile(outputDirNameString+"/stats/means.txt",true,true);
-//        STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/variances.txt",modelSpeciesList);
-//        output[0].stats.writeVariancesToFile(outputDirNameString+"/stats/variances.txt",true,true);
-//    }
-//    if (keepTrajectories) {
-//        std::size_t trajectoryNumber;
-//        std::string trajectoryNumberString;
-//        for (int i=0; i!=realizations; ++i) {
-//            trajectoryNumber=i;
-//            trajectoryNumberString=STOCHKIT::StandardDriverUtilities::size_t2string(trajectoryNumber);
-//
-//            //
-//            STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",modelSpeciesList);
-//            output[0].trajectories.writeDataToFile(i,outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",true,true);
-//        }
-//    }
-//    if (keepHistograms) {
-//        output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
-//    }
+    for (int j=0; j<nc; j++)
+      m(i, j) = result_i[j];
+  }
 
+  // name the columns accordingly
+  Rcpp::CharacterVector col_names;
+  col_names.push_back("time");
+
+  for (int i = 0; i < modelSpeciesList.size(); i++)
+    col_names.push_back(modelSpeciesList[i]);
+
+  Rcpp::DataFrame df = Rcpp::DataFrame(m);
+  df.attr("names")= col_names;
+
+  return df;
 }
