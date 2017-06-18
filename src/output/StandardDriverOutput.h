@@ -128,6 +128,7 @@ public:
   void merge(StandardDriverOutput<_populationVectorType> other) {
     stats.merge(other.stats);
     trajectories.merge(other.trajectories);
+	histograms.merge(other.histograms);
   }
 
   void merge(std::vector<StandardDriverOutput<_populationVectorType> > others) {
