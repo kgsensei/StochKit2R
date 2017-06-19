@@ -96,6 +96,7 @@ void ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string outputDirNam
         
         //merge output
         //in the future this can be done in parallel and use a little less data
+#pragma omp barrier
 #pragma omp master
         {
             for (int i=1; i<n; ++i) {
