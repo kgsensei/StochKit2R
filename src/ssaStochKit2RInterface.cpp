@@ -42,7 +42,8 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
     int numberOfReactions=((Rcpp::List)StochKit2Rmodel[2]).size();
     int numberOfSpecies=((Rcpp::List)StochKit2Rmodel[1]).size();
     int n=1;//number of threads, may be set >1 later
-    
+	int defaultN=1;
+	
 #if defined(_OPENMP)
 #pragma omp parallel
 	{
