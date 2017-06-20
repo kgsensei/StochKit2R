@@ -44,6 +44,14 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
     int n=1;//number of threads, may be set >1 later
     
 #if defined(_OPENMP)
+#pragma omp parallel
+	{
+#pragma omp master
+		{
+			defaultN = omp_get_num_threads();//so we can reset later
+		}
+	}
+	
     if (p!=0) {
         omp_set_num_threads(p); //force use of p threads per user's request
     }
@@ -55,7 +63,9 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
             n=omp_get_num_threads();
         }
     }
-#pragma omp barrier
+	
+	//reset number of threads to default
+	omp_set_num_threads(defaultN);
 #endif
     
     std::string method=chooseMethod(numberOfReactions, realizations, n);

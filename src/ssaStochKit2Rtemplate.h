@@ -56,10 +56,19 @@ void ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string outputDirNam
     boost::mt19937 seedGenerator;
     seedGenerator.seed(seed);
     seeds.push_back(seedGenerator());//thread 0
-    
+	
+	int n=1; //number of threads, may be set >1 later
+	int defaultN=1;//default number of threads, so we can reset later
+	
     
 #if defined(_OPENMP)
-    int n=1; //number of threads, may be set >1 later
+#pragma omp parallel
+	{
+#pragma omp master
+		{
+			defaultN = omp_get_num_threads();//so we can reset later
+		}
+	}
 
     if (p!=0) {
         omp_set_num_threads(p); //force use of p threads per user's request
@@ -99,11 +108,15 @@ void ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string outputDirNam
 #pragma omp barrier
 #pragma omp master
         {
+			Rcout << "...merging output...\n";
             for (int i=1; i<n; ++i) {
                 output[0].merge(output[i]);
             }
         }
     }
+	//reset number of threads to default
+	omp_set_num_threads(defaultN);
+
 #else
     
     // we are in serial mode (no OpenMP support)
