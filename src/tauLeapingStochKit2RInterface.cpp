@@ -72,9 +72,19 @@ void tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outpu
     
     Rcout << "StochKit2R MESSAGE: running tau-leaping...\n";
 
+	int n=1;//number of threads, may be set >1 later
+	int defaultN=1;//default number of threads, may be set >1 later
+
 #if defined(_OPENMP)
-    int n;//number of threads
-    if (p!=0) {
+#pragma omp parallel
+	{
+#pragma omp master
+		{
+			defaultN = omp_get_num_threads();//so we can reset later
+		}
+	}
+
+	if (p!=0) {
         omp_set_num_threads(p); //force use of p threads per user's request
     }
 #pragma omp parallel
@@ -84,6 +94,7 @@ void tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outpu
 #pragma omp single
         {
             n=omp_get_num_threads();
+			Rcout << "...running "<<n<<" threads...\n";
             output.resize(n);
             //seed other threads
             for (int i=1; i<n; ++i) {
@@ -110,15 +121,23 @@ void tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outpu
 
         //merge output
         //in the future this can be done in parallel and use a little less data
+#pragma omp barrier
 #pragma omp master
         {
+			Rcout << "...merging output...\n";
             for (int i=1; i<n; ++i) {
                 output[0].merge(output[i]);
             }
 
         }
     }
+	//reset number of threads to default
+	omp_set_num_threads(defaultN);
+	
 #else
+	// we are in serial mode (no OpenMP support)
+	Rcout << "...running in serial mode (1 thread)...\n";
+
     STOCHKIT::TauLeapingExplicitAdaptive<STOCHKIT::StandardDriverTypes::populationType, STOCHKIT::StandardDriverTypes::matrixStoichiometryType, STOCHKIT::StandardDriverTypes::propensitiesType, STOCHKIT::StandardDriverTypes::graphType> tauLeaping(model.writeInitialPopulation(),model.writeMatrixStoichiometry(),model.writePropensities(),model.writeDependencyGraphMatrixStoichiometry(),seeds[0]);
     tauLeaping.setEpsilon(epsilon);
     tauLeaping.setThreshold(threshold);
