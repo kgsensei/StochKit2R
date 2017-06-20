@@ -665,17 +665,17 @@ namespace STOCHKIT
             
         initialize(startTime);
         
-        output.push_back(std::make_pair<double, _populationVectorType>(startTime,initialPopulation));
+        output.push_back(std::make_pair(startTime,initialPopulation));
         
         currentTime+=selectStepSize();
         
         while (currentTime<endTime) {
             fireReaction(selectReaction());
-            output.push_back(std::make_pair<double, _populationVectorType>(currentTime,currentPopulation));
+            output.push_back(std::make_pair(currentTime,currentPopulation));
             currentTime+=selectStepSize();
         }
         
-        output.push_back(std::make_pair<double, _populationVectorType>(endTime,currentPopulation));
+        output.push_back(std::make_pair(endTime,currentPopulation));
 
         
     }//end simulateSingle
