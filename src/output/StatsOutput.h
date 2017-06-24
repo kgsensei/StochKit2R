@@ -90,6 +90,22 @@ public:
     Base::setSpeciesSubset(speciesIndices);
   }
 
+  std::vector< std::vector<double> > getMeans(std::string filename, bool printTime=true, bool append=false, bool highPrecision=false) {
+    std::vector< std::vector<double> > buffer;
+
+    if (m_n==0) {
+      Rcpp::Rcout << "StochKit ERROR (StatsOutput::writeMeansToFile) can't write means to file when number of realizations = 0\n";
+
+      std::vector<double> n(1);
+      buffer.push_back(n);
+      return buffer;
+    }
+
+    buffer = Base::getData(1,filename,printTime,append,highPrecision);
+    return buffer;
+  }
+ 
+
   void writeMeansToFile(std::string filename, bool printTime=true, bool append=false, bool highPrecision=false) {
     if (m_n==0) {
       Rcpp::Rcout << "StochKit ERROR (StatsOutput::writeMeansToFile) can't write means to file when number of realizations = 0\n";
@@ -99,6 +115,34 @@ public:
     }
   }
 
+  std::vector< std::vector<double> > getVariances(std::string filename, bool printTime=true, bool append=false, bool highPrecision=false) {
+    std::vector< std::vector<double> > buffer;
+    std::vector<double> row(data[3][0].size()+1);
+    double currentVariance;
+      
+    for (std::size_t interval=0; interval!=outputTimes.size(); ++interval) {
+      row[0] = outputTimes[interval];
+
+      for (size_t index=0; index!=data[3][interval].size(); ++index) {
+        if (m_n==1) {
+          currentVariance=0.0;
+        }
+        else {
+          currentVariance=data[3][interval][index]/(double)(m_n-1);
+        }
+        if (currentVariance<0.0) {
+          currentVariance=0.0;
+        }
+
+        row[index+1] = currentVariance;
+      }
+
+      buffer.push_back(row);
+    }
+
+    return buffer;
+  }
+ 
   void writeVariancesToFile(std::string filename, bool printTime=true, bool append=false, bool highPrecision=false) {
     if (m_n==0) {
       Rcpp::Rcout << "StochKit ERROR (StatsOutput::writeVariancesToFile) can't write variances to file when number of realizations = 0" << std::endl;

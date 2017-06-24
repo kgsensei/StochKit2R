@@ -35,8 +35,9 @@ using namespace Rcpp;
 //'@return NULL
 //'@keywords internal
 // [[Rcpp::export]]
-void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p) {
+RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p) {
 
+    Rcpp::List out;
     Rcout << "StochKit2R MESSAGE: determining appropriate method...";
 
     int numberOfReactions=((Rcpp::List)StochKit2Rmodel[2]).size();
@@ -63,21 +64,21 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
     if (numberOfSpecies<denseStoichiometryCutoff) {
         if (method=="odm") {
             Rcout << "running odm dense...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
                                 STOCHKIT::SSA_ODM<STOCHKIT::StandardDriverTypes::populationType,
                                 STOCHKIT::StandardDriverTypes::denseStoichiometryType,
                                 STOCHKIT::StandardDriverTypes::propensitiesType,
                                 STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p);
         } else if (method=="direct"){
             Rcout << "running direct dense...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
                               STOCHKIT::SSA_Direct<STOCHKIT::StandardDriverTypes::populationType,
                                                    STOCHKIT::StandardDriverTypes::denseStoichiometryType,
                                                    STOCHKIT::StandardDriverTypes::propensitiesType,
                                                    STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p);
         } else if (method=="constant") {
             Rcout << "running direct constant dense...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::denseStoichiometryType,
             STOCHKIT::SSA_ConstantTime<STOCHKIT::StandardDriverTypes::populationType,
             STOCHKIT::StandardDriverTypes::denseStoichiometryType,
             STOCHKIT::StandardDriverTypes::propensitiesType,
@@ -86,21 +87,21 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
     } else {
         if (method=="odm") {
             Rcout << "running odm sparse...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::SSA_ODM<STOCHKIT::StandardDriverTypes::populationType,
             STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::StandardDriverTypes::propensitiesType,
             STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p);
         } else if (method=="direct"){
             Rcout << "running direct sparse...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::SSA_Direct<STOCHKIT::StandardDriverTypes::populationType,
             STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::StandardDriverTypes::propensitiesType,
             STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p);
         } else if (method=="constant") {
             Rcout << "running direct constant sparse...\n";
-            ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
+            out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::SSA_ConstantTime<STOCHKIT::StandardDriverTypes::populationType,
             STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::StandardDriverTypes::propensitiesType,
@@ -108,4 +109,6 @@ void ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNam
         }
     }
     Rcout << "done!\n";
+
+  return out; 
 }
