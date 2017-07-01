@@ -36,7 +36,7 @@ ssaSingleStochKit2RInterface <- function(StochKit2Rmodel, outputFileNameString, 
 #'@return NULL
 #'@keywords internal
 ssaStochKit2RInterface <- function(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p) {
-    invisible(.Call('StochKit2R_ssaStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p))
+    .Call('StochKit2R_ssaStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p)
 }
 
 #'@title C++ Interface to Explicit Adaptive Tau-Leaping simulation
@@ -60,6 +60,6 @@ ssaStochKit2RInterface <- function(StochKit2Rmodel, outputDirNameString, time, r
 #'@return NULL
 #'@keywords internal
 tauLeapingStochKit2RInterface <- function(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold) {
-    invisible(.Call('StochKit2R_tauLeapingStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold))
+    .Call('StochKit2R_tauLeapingStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold)
 }
 

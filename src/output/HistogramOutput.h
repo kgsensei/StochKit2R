@@ -244,12 +244,12 @@ public:
   void writeHistogramsToFile(std::string filenamePrefix, std::string filenameSuffix){
     for(std::size_t i=0; i<_numberOfIntervals;i++){
       for(std::size_t j=0; j<_numberOfSpecies;j++){
-	std::ostringstream species_oss;
-	std::ostringstream interval_oss;
-	species_oss << j;
-	interval_oss << i;
-	std::string fname = filenamePrefix+"_"+species_oss.str()+"_"+interval_oss.str()+filenameSuffix;
-	    _histograms.at(i*_numberOfSpecies+j).writeToFile(fname, _outputTimes);
+        std::ostringstream species_oss;
+        std::ostringstream interval_oss;
+        species_oss << j;
+        interval_oss << i;
+        std::string fname = filenamePrefix+"_"+species_oss.str()+"_"+interval_oss.str()+filenameSuffix;
+        _histograms.at(i*_numberOfSpecies+j).writeToFile(fname, _outputTimes);
       }
     }
   }

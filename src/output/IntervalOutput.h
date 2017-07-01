@@ -108,6 +108,22 @@ public:
     }
   }
 
+  std::vector< std::vector<double> > getData(size_t realization) {
+
+    std::vector< std::vector<double> > buffer;
+    std::vector<double> row(data[realization][0].size()+1);
+
+    for (std::size_t interval=0; interval!=outputTimes.size(); ++interval) {
+      row[0] = outputTimes[interval];
+
+      for (size_t index=0; index!=data[realization][interval].size(); ++index) {
+          row[index+1] = data[realization][interval][index];
+      }
+      buffer.push_back(row);
+    }
+    return buffer;
+  }
+
   //should add an option to print a column header (e.g. species names)
   void writeDataToFile(size_t realization, std::string filename, bool printTime=true, bool append=false, bool highPrecision=false) {
 
@@ -127,19 +143,21 @@ public:
     }
     try {
       for (std::size_t interval=0; interval!=outputTimes.size(); ++interval) {
-	if (printTime) {
-	  outfile << outputTimes[interval] << "\t";
-	}
-	for (size_t index=0; index!=data[realization][interval].size(); ++index) {
-	  //what happens if this value has not yet been written? probably seg fault
-	  if (highPrecision) {
-	    outfile << std::setprecision(std::numeric_limits<double>::digits10)<< data[realization][interval][index] << "\t";
-	  }
-	  else {
-	    outfile << std::setprecision(8) << data[realization][interval][index] << "\t";
-	  }
-	}
-	outfile << "\n";
+        if (printTime) {
+          outfile << outputTimes[interval] << "\t";
+        }
+        for (size_t index=0; index!=data[realization][interval].size(); ++index) {
+          //what happens if this value has not yet been written? probably seg fault
+          if (highPrecision) {
+            outfile << std::setprecision(std::numeric_limits<double>::digits10)<< data[realization][interval][index] << "\t";
+          }
+          else {
+            //Rcpp::Rcout << data[realization][interval][index] << "\t";
+            outfile << std::setprecision(8) << data[realization][interval][index] << "\t";
+          }
+        }
+        //Rcpp::Rcout << "\n";
+        outfile << "\n";
       }
       outfile.close();
     }
