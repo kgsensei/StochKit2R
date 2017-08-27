@@ -32,7 +32,7 @@ using namespace Rcpp;
 //'@param bins Number of histogram bins
 //'@param seed Seed for random number generator
 //'@param p  Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
-//'@return NULL
+//'@return List of means, variances, and trajectories
 //'@keywords internal
 // [[Rcpp::export]]
 RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p) {

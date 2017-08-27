@@ -26,7 +26,7 @@
 //'@param startTime Simulation start time
 //'@param endTime Simulation end time
 //'@param seed Seed for random number generator
-//'@return NULL
+//'@return Dataframe containing the time and population sizes
 //'@keywords internal
 // [[Rcpp::export]]
 RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString,
