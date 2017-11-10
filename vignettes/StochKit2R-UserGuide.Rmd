@@ -157,9 +157,9 @@ library(StochKit2R)
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,force=TRUE)
+out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
-plotStats("ex_out/stats",c(2,3))
+plotStats(out,c(2,3))
 ```
 
 This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves.

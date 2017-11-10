@@ -3,7 +3,7 @@
 #'@description
 #'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices} in the StochKit2R stats output directory \code{statsDirectory}
 #'
-#'@param statsDirectory Character string with path to StochKit2 stats output directory
+#'@param ssa output, list of data frames
 #'@param indices The species indices that will be plotted. The first species is index 1
 #'@return The ggplot object
 #'@examples
@@ -15,7 +15,7 @@
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model)
 #'plotStats("ex_out/stats",c(1,2,3))
 #'}
-plotStats <- function(statsDirectory,indices) {
+plotStats <- function(statsDF,indices) {
   
   # Check to make sure that the indices are integers
   if (sum((round(indices)==indices)) != length(indices)) {
@@ -39,28 +39,28 @@ plotStats <- function(statsDirectory,indices) {
   len_indices =length(indices);
  
   # get file names
-  fnameMean = paste(statsDirectory,'/means.txt',sep='');
-  fnameVar =  paste(statsDirectory,'/variances.txt',sep='');
+  #fnameMean = paste(statsDirectory,'/means.txt',sep='');
+  #fnameVar =  paste(statsDirectory,'/variances.txt',sep='');
   
   #read the first line of the means file
   #and check for headers (labels)
-  line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
-  if (line1[1]=="time") {
+  #line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
+  if (names(statsDF$means[1]=="time")) {
     hasLabels=TRUE
   } else {
     hasLabels=FALSE
   }
   
   #get the means data
-  meansData <- read.table(fnameMean,header=hasLabels)[,c(1,indices)]
+  meansData <- statsDF$means
   #give (slightly) more meaningful labels if none
-  if (!hasLabels) {
+  if (!(names(statsDF$means[1]=="time"))) {
     names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
   }
   #get the variances data
-  variancesData <- read.table(fnameVar,header=hasLabels)[,c(1,indices)]
+  variancesData <- statsDF$vars
   #give (slightly) more meaningful labels if none
-  if (!hasLabels) {
+  if (!(names(statsDF$vars[1]=="time"))) {
     names(variancesData) <- names(meansData)
   }
   
