@@ -16,7 +16,7 @@
 #'@param force Force overwriting of existing data
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
-#'@return NULL
+#'@return List of data frames with means, variances, and a list of trajectory vectors
 #'@examples
 #'\dontrun{
 #'#'#example using included dimer_decay.xml file
@@ -24,13 +24,13 @@
 #'#run 100 simulations for 10 time units, keeping output at 20 time intervals
 #'#store model file name in a variable first
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
-#'ssa(model,"ex_out",10,100,20,force=TRUE)
+#'out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #'
 #'#more typical example where model file is stored elsewhere
 #'#(must be valid path to existing .xml StochKit2 model file)
 #'#store output in dimer_decay_output, overwrite existing data
 #'#and keep trajectory data.
-#'ssa("Desktop/dimer_decay.xml",
+#'out <- ssa("Desktop/dimer_decay.xml",
 #'    "Desktop/dimer_decay_output",10,100,20,keepTrajectories=T,force=T)
 #'}
 ssa <- function(modelFile,outputDir,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,force=FALSE,seed=NULL,p=0) {

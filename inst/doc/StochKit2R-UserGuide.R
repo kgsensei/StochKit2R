@@ -14,26 +14,26 @@
 #  # use the dimer_decay.xml model that is included with StochKit2R
 #  # to make things easier to read, store the path in a variable
 #  model <- system.file("dimer_decay.xml",package="StochKit2R")
-#  # now, run a simulation:
-#  ssa(model,"ex_out",10,100,20)
+#  # now, run a simulation, you can save the output locally and save it to a selected output:
+#  out <- ssa(model,"ex_out",10,100,20)
 
 ## ----, eval=FALSE--------------------------------------------------------
-#  ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20)
+#  out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20)
 
 ## ----, eval=FALSE--------------------------------------------------------
-#  ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20,force=T)
+#  out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20,force=T)
 
 ## ----, eval=FALSE--------------------------------------------------------
-#  ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
+#  out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
 
 ## ----, fig.width=6, fig.height=4, fig.align="center"---------------------
 library(StochKit2R)
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
-#output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,force=TRUE)
+#output list saved to out
+out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
-plotStats("ex_out/stats",c(2,3))
+plotStats(out,c(2,3))
 
 ## ----, eval=FALSE--------------------------------------------------------
 #  model <- system.file("dimer_decay.xml",package="StochKit2R")

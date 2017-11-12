@@ -3,7 +3,7 @@
 #'@description
 #'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices} in the StochKit2R stats output directory \code{statsDirectory}
 #'
-#'@param ssa output, list of data frames
+#'@param statsDF ssa output, list of data frames
 #'@param indices The species indices that will be plotted. The first species is index 1
 #'@return The ggplot object
 #'@examples
@@ -11,9 +11,9 @@
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'ssa(model,"ex_out",10,100,20,force=TRUE)
+#'out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model)
-#'plotStats("ex_out/stats",c(1,2,3))
+#'plotStats(out,c(1,2,3))
 #'}
 plotStats <- function(statsDF,indices) {
   
@@ -45,7 +45,7 @@ plotStats <- function(statsDF,indices) {
   #read the first line of the means file
   #and check for headers (labels)
   #line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
-  if (names(statsDF$means[1]=="time")) {
+  if (names(statsDF$means[1])=="time") {
     hasLabels=TRUE
   } else {
     hasLabels=FALSE
@@ -54,13 +54,13 @@ plotStats <- function(statsDF,indices) {
   #get the means data
   meansData <- statsDF$means
   #give (slightly) more meaningful labels if none
-  if (!(names(statsDF$means[1]=="time"))) {
+  if (!(names(statsDF$means[1])=="time")) {
     names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
   }
   #get the variances data
   variancesData <- statsDF$vars
   #give (slightly) more meaningful labels if none
-  if (!(names(statsDF$vars[1]=="time"))) {
+  if (!(names(statsDF$vars[1])=="time")) {
     names(variancesData) <- names(meansData)
   }
   

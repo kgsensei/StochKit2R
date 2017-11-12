@@ -121,23 +121,23 @@ An example of running the ssa function:
 # to make things easier to read, store the path in a variable
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 # now, run a simulation:
-ssa(model,"ex_out",10,100,20)
+out <- ssa(model,"ex_out",10,100,20)
 ```
-The above function will run 100 simulations to time 10 using 20 output intervals. Output will be stored in a new directory named ex_out which will be created in the current working directory. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
+The above function will run 100 simulations to time 10 using 20 output intervals. The returned list of data frames will be stored in the variable named out. Output may be stored in a new directory named ex_out which will be created in the current working directory. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
 
 In the more typical case, the model file will be stored elsewhere in your file system. For example:
 ```{r, eval=FALSE}
-ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20)
+out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20)
 ```
 The file dimer_decay.xml must exist in the ~/Desktop directory. (This corresponds to a machine-specific full path such as "/Users/kevinsanft/Desktop/dimer_decay.xml", which might be required on some systems. On Windows, "~" usually corresponds to the user's Documents folder, so ~/Desktop would not be a valid path.) Output will be stored in a new directory named dimer_decay_output which will be created in the Desktop directory. If dimer_decay_output already exists, the ssa function will exit with an error saying that the directory already exists. To overwrite an existing directory, use force=TRUE:
 ```{r, eval=FALSE}
-ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20,force=T)
+out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20,force=T)
 ```
 By default, the simulation will create an output directory named "stats" within the outputDir. The stats directory will contain two files: means.txt and variances.txt, containing the means and variances of the species at the output intervals. If keepTrajectories or keepHistograms is TRUE, a directory named trajectories or histograms, respectively, will be created within the output directory.
 
 ssaSingle runs a single trajectory and outputs a row of data for every reaction event that occurs to a file. The function takes as arguments: a path to a StochKit2 .xml model, a path to an output file name, a start time (you will usually use 0 here), and an end time. Here is the example from the documentation, using the dimer_decay.xml model that is included with the StochKit2R package:
 ```{r, eval=FALSE}
-ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
+out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
 ```
 The above command will run one realization from t=0 to t=10 and write the output to single_output.txt. Note: the file will contain about 25,000 lines, one line for each reaction event (plus one line for the initial population and one line for the end time).
 
@@ -156,10 +156,10 @@ Consult the R function documentation (e.g. ?plotStats) for details. Here an exam
 library(StochKit2R)
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
-#output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,force=TRUE)
+#output value stored locally for use and written to ex_out file in working directory
+out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
-plotStats("ex_out/stats",c(2,3))
+plotStats(out,c(2,3))
 ```
 
 This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves.

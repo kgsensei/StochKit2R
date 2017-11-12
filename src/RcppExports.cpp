@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // ssaSingleStochKit2RInterface
 RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString, double startTime, double endTime, unsigned int seed);
-RcppExport SEXP StochKit2R_ssaSingleStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputFileNameStringSEXP, SEXP startTimeSEXP, SEXP endTimeSEXP, SEXP seedSEXP) {
+RcppExport SEXP _StochKit2R_ssaSingleStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputFileNameStringSEXP, SEXP startTimeSEXP, SEXP endTimeSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,7 @@ END_RCPP
 }
 // ssaStochKit2RInterface
 RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p);
-RcppExport SEXP StochKit2R_ssaStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP) {
+RcppExport SEXP _StochKit2R_ssaStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -43,7 +43,7 @@ END_RCPP
 }
 // tauLeapingStochKit2RInterface
 RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p, double epsilon, int threshold);
-RcppExport SEXP StochKit2R_tauLeapingStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP, SEXP epsilonSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP _StochKit2R_tauLeapingStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP, SEXP epsilonSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -66,9 +66,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"StochKit2R_ssaSingleStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaSingleStochKit2RInterface, 5},
-    {"StochKit2R_ssaStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaStochKit2RInterface, 11},
-    {"StochKit2R_tauLeapingStochKit2RInterface", (DL_FUNC) &_StochKit2R_tauLeapingStochKit2RInterface, 13},
+    {"_StochKit2R_ssaSingleStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaSingleStochKit2RInterface, 5},
+    {"_StochKit2R_ssaStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaStochKit2RInterface, 11},
+    {"_StochKit2R_tauLeapingStochKit2RInterface", (DL_FUNC) &_StochKit2R_tauLeapingStochKit2RInterface, 13},
     {NULL, NULL, 0}
 };
 

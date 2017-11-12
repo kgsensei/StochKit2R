@@ -9,7 +9,7 @@
 #'@param startTime Simulation start time
 #'@param endTime Simulation end time
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssaSingle}
-#'@return NULL
+#'@return Data frame containing: mean, variance for run and a vector of trajectories
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
