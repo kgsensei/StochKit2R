@@ -1,5 +1,4 @@
 #ignore workspace image
 .Rhistory
 
-#ignore compiled files from dev testing
-.o
+
