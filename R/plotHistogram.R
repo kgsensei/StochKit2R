@@ -23,11 +23,23 @@
 plotHistogram <- function(histogramData,file=FALSE) {
   
   if (!file) {
+    if (length(histogramData)!=3) {
+      if (length(histogramData==1)) {
+        stop('Invalid histogramData (did you intend to set file=TRUE?)')
+      }
+      else {
+        stop('Invalid histogramData')        
+      }
+    }
     # data is coming from character vector from output object, not file
     lines <- strsplit(histogramData,split="\t")
   }
   else {
     #histogramData is a histogram output file name
+    if (length(histogramData)!=1) {
+        stop('Invalid histogramData argument with file=TRUE')
+    }
+      
     # read in the lines 
     lines <- strsplit(readLines(histogramData),split="\t")
   }

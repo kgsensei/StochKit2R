@@ -29,10 +29,23 @@ histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FA
   # read in the lines for the first data 
   if (!file1) {
     # data is coming from character vector from output object, not file
+    if (length(histogramData1)!=3) {
+      if (length(histogramData1==1)) {
+        stop('Invalid histogramData1 (did you intend to set file1=TRUE?)')
+      }
+      else {
+        stop('Invalid histogramData1')        
+      }
+    }
+    
     lines1 <- strsplit(histogramData1,split="\t")
   }
   else {
     #histogramData is a histogram output file name
+    if (length(histogramData1)!=1) {
+      stop('Invalid histogramData1 argument with file1=TRUE')
+    }
+    
     # read in the lines 
     lines1 <- strsplit(readLines(histogramData1),split="\t")
   }  
@@ -61,10 +74,23 @@ histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FA
   # read in the lines for the first data 
   if (!file2) {
     # data is coming from character vector from output object, not file
+    if (length(histogramData2)!=3) {
+      if (length(histogramData2==1)) {
+        stop('Invalid histogramData2 (did you intend to set file2=TRUE?)')
+      }
+      else {
+        stop('Invalid histogramData2')        
+      }
+    }
+    
     lines2 <- strsplit(histogramData2,split="\t")
   }
   else {
     #histogramData is a histogram output file name
+    if (length(histogramData2)!=1) {
+      stop('Invalid histogramData2 argument with file2=TRUE')
+    }
+    
     # read in the lines 
     lines2 <- strsplit(readLines(histogramData2),split="\t")
   }  
