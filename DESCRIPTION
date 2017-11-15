@@ -13,3 +13,4 @@ LinkingTo: Rcpp, BH
 Suggests: knitr
 VignetteBuilder: knitr
 Packaged: 2015-03-03 19:37:11 UTC; kevinsanft
+RoxygenNote: 6.0.1
