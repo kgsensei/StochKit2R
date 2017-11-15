@@ -144,7 +144,8 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
   Rcpp::DataFrame means = R_NilValue;
   Rcpp::DataFrame vars = R_NilValue;
   Rcpp::List trajs = R_NilValue;
-
+  Rcpp::List hist = R_NilValue;
+	
   if (keepStats) {
     Rcpp::Rcout << "creating statistics output files...\n";
     STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
@@ -242,13 +243,32 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
   }
 
   if (keepHistograms) {
-    Rcpp::Rcout << "creating histogram output files...\n";
-    output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
-    //std::vector< std::vector<double> > histBuffer;
+	  Rcpp::Rcout << "creating histogram output files...\n";
+	  output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
+	  
+	  // create hist return list
+	  // hist has one element per species
+	  hist = Rcpp::List(output[0].histograms.numberOfSpecies());
+	  // name elements species names
+	  hist.attr("names")= modelSpeciesList;
+	  
+	  // iterate over the species
+	  for (int species_index = 0; species_index<modelSpeciesList.size(); species_index++) {
+
+		  std::vector<std::vector<std::string> > species_data;
+		  //iterate over the output intervals
+		  for (int output_index = 0; output_index<=intervals; output_index++) {
+			  std::vector<std::string> this_interval = output[0].histograms(output_index,species_index).fileDataAsString(output[0].histograms.getOutputTimes(), modelSpeciesList[species_index]);
+			  species_data.push_back(this_interval);
+		  }
+		  
+		  hist[species_index] = Rcpp::wrap(species_data);
+	  }
   }
 
   return Rcpp::List::create(Rcpp::Named("means") = means,
                             Rcpp::Named("vars") = vars,
-                            Rcpp::Named("trajs") = trajs);
+                            Rcpp::Named("trajs") = trajs,
+							Rcpp::Named("hist") = hist);
 }
 #endif

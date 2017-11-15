@@ -437,6 +437,22 @@ public:
     } 
   }
 
+	 std::vector<std::string> fileDataAsString(std::vector<double> outputTimes, std::string speciesID) const {
+		 std::vector<std::string> outdat;//(1);
+			 // time index and species index
+		 std::string str = speciesID +"\t"+ std::to_string(outputTimes[_timeIndex]) + "\t"+ std::to_string(_speciesIndex) +"\t"+std::to_string(_timeIndex);
+		 outdat.push_back(str);
+			 // other necessary information
+		 str =  std::to_string(_lowerBound)+"\t"+std::to_string(_upperBound)+"\t"+std::to_string(_width)+"\t"+std::to_string(_size)+"\t"+std::to_string(_inverseWidth);
+		 outdat.push_back(str);
+		 str = "";
+		 for (std::size_t i=0; i<_data.size(); i++) {
+			 str+= std::to_string(_data[i])+"\t";
+		 }
+		 outdat.push_back(str);
+		 return outdat;
+	 }
+
 
  };
 }
