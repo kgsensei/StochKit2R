@@ -4,30 +4,28 @@
 \alias{plotTrajectories}
 \title{Plot StochKit2R simulation trajectory output data}
 \usage{
-plotTrajectories(trajectoriesDirectory, startn, endn, indices)
+plotTrajectories(trajectoriesData, outputIndex, speciesIndex, file = F)
 }
 \arguments{
-\item{trajectoriesDirectory}{Character string with path to StochKit2 trajectories output directory}
+\item{trajectoriesData}{String containing file (must end in /trajectories) name or ssa output, depending on the value of the file parameter}
 
-\item{startn}{First trajectory to print (note: trajectories start at index 0)}
+\item{outputIndex}{Integer vector containing indexes for which trials will be plotted}
 
-\item{endn}{Last trajectory to print}
-
-\item{indices}{Vector of the species indices that will be plotted. The first species is index 1}
+\item{speciesIndex}{Integer Vector of the species indices that will be plotted. The first species is index 1}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotTrajectories} Plots trajectories numbered \code{startn} to \code{endn} of populations specified in \code{indices} in the StochKit2R trajectories output directory \code{trajectoriesDirectory}
+\code{plotTrajectories} Plots trajectories \code{outputIndex} of populations specified in \code{speciesIndex} in the StochKit2R trajectories in \code{trajectoriesData}
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,keepTrajectories=TRUE,force=TRUE)
+out <- ssa(model,"ex_out",10,100,20,keepTrajectories=TRUE,force=TRUE)
 #plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5
-plotTrajectories("ex_out/trajectories",2,5,c(1,2,3))
+plotTrajectories("ex_out/trajectories",2:5,1:3,file=T)
 }
 }
