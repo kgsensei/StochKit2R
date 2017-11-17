@@ -15,6 +15,9 @@
 #include "boost/tokenizer.hpp"
 #include <limits>
 
+#define to_string( x ) static_cast< std::ostringstream & >( \
+        ( std::ostringstream() << std::dec << x ) ).str()
+
 //export LD_LIBRARY_PATH=libs/boost_1_41_0/stage/lib/
 
 namespace STOCHKIT
@@ -128,7 +131,7 @@ public:
     for(i=0; i!=size;i++)
       _data.push_back(0);
   }
-      
+
   //! Return the number of bins.
   std::size_t size() const {
     return _size;
@@ -440,14 +443,14 @@ public:
 	 std::vector<std::string> fileDataAsString(std::vector<double> outputTimes, std::string speciesID) const {
 		 std::vector<std::string> outdat;//(1);
 			 // time index and species index
-		 std::string str = speciesID +"\t"+ std::to_string(outputTimes[_timeIndex]) + "\t"+ std::to_string(_speciesIndex) +"\t"+std::to_string(_timeIndex);
+		 std::string str = speciesID +"\t"+ to_string(outputTimes[_timeIndex]) + "\t"+ to_string(_speciesIndex) +"\t"+to_string(_timeIndex);
 		 outdat.push_back(str);
 			 // other necessary information
-		 str =  std::to_string(_lowerBound)+"\t"+std::to_string(_upperBound)+"\t"+std::to_string(_width)+"\t"+std::to_string(_size)+"\t"+std::to_string(_inverseWidth);
+		 str =  to_string(_lowerBound)+"\t"+to_string(_upperBound)+"\t"+to_string(_width)+"\t"+to_string(_size)+"\t"+to_string(_inverseWidth);
 		 outdat.push_back(str);
 		 str = "";
 		 for (std::size_t i=0; i<_data.size(); i++) {
-			 str+= std::to_string(_data[i])+"\t";
+			 str+= to_string(_data[i])+"\t";
 		 }
 		 outdat.push_back(str);
 		 return outdat;
