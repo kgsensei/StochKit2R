@@ -4,12 +4,17 @@
 \alias{histogramDistance}
 \title{Plot two StochKit2R simulation histograms and display distance}
 \usage{
-histogramDistance(histogramFileName1, histogramFileName2)
+histogramDistance(histogramData1, histogramData2, file1 = FALSE,
+  file2 = FALSE)
 }
 \arguments{
-\item{histogramFileName1}{Character string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{histogramData1}{character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
 
-\item{histogramFileName2}{Character string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{histogramData2}{character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+
+\item{file1}{indicates whether \code{histogramData1} is data or file name}
+
+\item{file2}{indicates whether \code{histogramData2} is data or file name}
 }
 \value{
 The ggplot object
@@ -22,14 +27,15 @@ The ggplot object
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
+result1 = ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
 
 #another ensemble with output written to ex_out2 directory
-ssa(model,"ex_out2",10,100,20,keepHistograms=TRUE,force=TRUE)
-#plot the histograms for species 2 at time point 5 for the two runs above
+result2 = ssa(model,"ex_out2",10,100,20,keepHistograms=TRUE,force=TRUE)
+#plot the histograms for species 2 ("S2") at time point 5 (t=2.0) for the two runs above
+histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
 #IMPORTANT: histogram file names have format:
 #hist_<species index>_<time point>.dat, where species index STARTS AT 0
-histogramDistance("ex_out/histograms/hist_1_5.dat",
-                 "ex_out2/histograms/hist_1_5.dat")
+histogramDistance("ex_out/histograms/hist_1_4.dat",
+                 "ex_out2/histograms/hist_1_4.dat",TRUE,TRUE)
 }
 }

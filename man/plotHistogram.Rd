@@ -4,26 +4,31 @@
 \alias{plotHistogram}
 \title{Plot StochKit2R simulation histogram output data}
 \usage{
-plotHistogram(histogramFileName)
+plotHistogram(histogramData, file = FALSE)
 }
 \arguments{
-\item{histogramFileName}{Character string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{histogramData}{character vector from output object or string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+
+\item{file}{indicates whether \code{histogramData} is data or file name}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotHistogram} Plots histogram of data stored in StochKit2R histogram output file \code{histogramFileName}. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
-#plot the histogram for species 2 at time point 5
+result = ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
+#plot the histogram for species 2 ("S2") at time point 5 (t=2.0)
 #IMPORTANT: histogram file names have format:
 #hist_<species index>_<time point>.dat, where species index STARTS AT 0
-plotHistogram("ex_out/histograms/hist_1_5.dat")
+#  and time point index starts at 0
+plotHistogram(result$hist$S2[[5]])
+#equivalent, data from file
+plotHistogram("ex_out/histograms/hist_1_4.dat",TRUE) # from file
 }
 }

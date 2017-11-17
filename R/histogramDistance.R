@@ -3,28 +3,52 @@
 #'@description
 #'\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram output files \code{histogramFileName1} and \code{histogramFileName1} and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
 #'
-#'@param histogramFileName1 Character string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param histogramFileName2 Character string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'@param histogramData1 character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'@param histogramData2 character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'@param file1 indicates whether \code{histogramData1} is data or file name
+#'@param file2 indicates whether \code{histogramData2} is data or file name
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
+#'result1 = ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
 #'
 #'#another ensemble with output written to ex_out2 directory
-#'ssa(model,"ex_out2",10,100,20,keepHistograms=TRUE,force=TRUE)
-#'#plot the histograms for species 2 at time point 5 for the two runs above
+#'result2 = ssa(model,"ex_out2",10,100,20,keepHistograms=TRUE,force=TRUE)
+#'#plot the histograms for species 2 ("S2") at time point 5 (t=2.0) for the two runs above
+#'histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
 #'#IMPORTANT: histogram file names have format:
 #'#hist_<species index>_<time point>.dat, where species index STARTS AT 0
-#'histogramDistance("ex_out/histograms/hist_1_5.dat",
-#'                  "ex_out2/histograms/hist_1_5.dat")
+#'histogramDistance("ex_out/histograms/hist_1_4.dat",
+#'                  "ex_out2/histograms/hist_1_4.dat",TRUE,TRUE)
 #'}
-histogramDistance <- function(histogramFileName1,histogramFileName2) {
+histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FALSE) {
   
   # read in the lines for the first data 
-  lines1 <- strsplit(readLines(histogramFileName1),split="\t")
+  if (!file1) {
+    # data is coming from character vector from output object, not file
+    if (length(histogramData1)!=3) {
+      if (length(histogramData1==1)) {
+        stop('Invalid histogramData1 (did you intend to set file1=TRUE?)')
+      }
+      else {
+        stop('Invalid histogramData1')        
+      }
+    }
+    
+    lines1 <- strsplit(histogramData1,split="\t")
+  }
+  else {
+    #histogramData is a histogram output file name
+    if (length(histogramData1)!=1) {
+      stop('Invalid histogramData1 argument with file1=TRUE')
+    }
+    
+    # read in the lines 
+    lines1 <- strsplit(readLines(histogramData1),split="\t")
+  }  
   sID1 <- lines1[[1]][1] # species ID
   time1 = as.numeric(lines1[[1]][2]) # time
   sInd1 = as.numeric(lines1[[1]][2]) # species index
@@ -47,7 +71,30 @@ histogramDistance <- function(histogramFileName1,histogramFileName2) {
   df1 <- data.frame(centers=bincenters1,counts=data1)
 
   #read in second file
-  lines2 <- strsplit(readLines(histogramFileName2),split="\t")
+  # read in the lines for the first data 
+  if (!file2) {
+    # data is coming from character vector from output object, not file
+    if (length(histogramData2)!=3) {
+      if (length(histogramData2==1)) {
+        stop('Invalid histogramData2 (did you intend to set file2=TRUE?)')
+      }
+      else {
+        stop('Invalid histogramData2')        
+      }
+    }
+    
+    lines2 <- strsplit(histogramData2,split="\t")
+  }
+  else {
+    #histogramData is a histogram output file name
+    if (length(histogramData2)!=1) {
+      stop('Invalid histogramData2 argument with file2=TRUE')
+    }
+    
+    # read in the lines 
+    lines2 <- strsplit(readLines(histogramData2),split="\t")
+  }  
+  
   sID2 <- lines2[[1]][1] # species ID
   time2 = as.numeric(lines2[[1]][2]) # time
   sInd2 = as.numeric(lines2[[1]][2]) # species index
