@@ -159,7 +159,7 @@ model <- system.file("dimer_decay.xml",package="StochKit2R")
 ##output value stored locally for use and written to ex_out file in working directory
 out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
-plotStats(out,c(2,3))
+plotStats(out$stats,c(2,3))
 ```
 
 This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves.

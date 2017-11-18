@@ -26,6 +26,6 @@ model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
 out <- ssa(model,"ex_out",10,100,20,keepTrajectories=TRUE,force=TRUE)
 #plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5
-plotTrajectories("ex_out/trajectories",2:5,1:3,file=T)
+plotTrajectories("ex_out/trajectories",2:3,1:3,file=T)
 }
 }

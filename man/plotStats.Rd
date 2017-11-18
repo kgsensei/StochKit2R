@@ -7,7 +7,7 @@
 plotStats(statsDF, indices)
 }
 \arguments{
-\item{statsDF}{ssa output, list of data frames}
+\item{statsDF}{stats dta frame of ssa output, list of means and vars sata frames}
 
 \item{indices}{The species indices that will be plotted. The first species is index 1}
 }
@@ -24,6 +24,6 @@ model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
 out <- ssa(model,"ex_out",10,100,20,force=TRUE)
 #plot the data for species 1,2 and 3 (all of them in the dimer decay model)
-plotStats(out,c(1,2,3))
+plotStats(out$stats,c(1,2,3))
 }
 }

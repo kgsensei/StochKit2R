@@ -199,6 +199,10 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
 
   }
 
+  Rcpp::List stats = Rcpp::List::create(
+    Rcpp::Named("means") = means,
+    Rcpp::Named("vars") = vars);
+
   if (keepTrajectories) {
     Rcpp::Rcout << "creating trajectories output files...\n";
     std::size_t trajectoryNumber;
@@ -266,9 +270,9 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
 	  }
   }
 
-  return Rcpp::List::create(Rcpp::Named("means") = means,
-                            Rcpp::Named("vars") = vars,
-                            Rcpp::Named("trajs") = trajs,
+  return Rcpp::List::create(
+              Rcpp::Named("stats") = stats,
+              Rcpp::Named("trajs") = trajs,
 							Rcpp::Named("hist") = hist);
 }
 #endif
