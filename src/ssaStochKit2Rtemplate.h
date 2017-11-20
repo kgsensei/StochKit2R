@@ -28,7 +28,7 @@ using namespace Rcpp;
 
 template<typename _stoichiometryType,
 typename _solverType>
-Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p) {
+Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, std::string outputDirNameString, unsigned int seed, int p) {
   //assumes outputDirNameString is a valid path to the output directory name that does not end in path separator
 
   //create StochKit2R mass action model object
@@ -143,16 +143,18 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
 
   Rcpp::DataFrame means = R_NilValue;
   Rcpp::DataFrame vars = R_NilValue;
+  Rcpp::List Stats = R_NilValue;
   Rcpp::List trajs = R_NilValue;
   Rcpp::List hist = R_NilValue;
 	
   if (keepStats) {
-    Rcpp::Rcout << "creating statistics output files...\n";
-    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
-    output[0].stats.writeMeansToFile(outputDirNameString+"/stats/means.txt",true,true);
-    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/variances.txt",modelSpeciesList);
-    output[0].stats.writeVariancesToFile(outputDirNameString+"/stats/variances.txt",true,true);
-
+    if(outputDirNameString != "") {
+      Rcpp::Rcout << "creating statistics output files...\n";
+      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
+      output[0].stats.writeMeansToFile(outputDirNameString+"/stats/means.txt",true,true);
+      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/variances.txt",modelSpeciesList);
+      output[0].stats.writeVariancesToFile(outputDirNameString+"/stats/variances.txt",true,true);
+    }
     // return data
     // each 2D double array will get converted to a dataframe
     // retrieve stats in 2D arrays
@@ -196,25 +198,22 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
     vars = Rcpp::DataFrame(v);
     vars.attr("names")= col_names;
     ///////////////////////////
-    Rcpp::List stats = Rcpp::List::create(
-    Rcpp::Named("means") = means,
-    Rcpp::Named("vars") = vars);
-
-  }
-
-  
-  if (keepTrajectories) {
-    Rcpp::Rcout << "creating trajectories output files...\n";
-    std::size_t trajectoryNumber;
-    std::string trajectoryNumberString;
-    for (int i=0; i!=realizations; ++i) {
-      trajectoryNumber=i;
-      trajectoryNumberString=STOCHKIT::StandardDriverUtilities::size_t2string(trajectoryNumber);
-
-      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",modelSpeciesList);
-      output[0].trajectories.writeDataToFile(i,outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",true,true);
     }
 
+
+  if (keepTrajectories) {
+    if(outputDirNameString!="") {
+      Rcpp::Rcout << "creating trajectories output files...\n";
+      std::size_t trajectoryNumber;
+      std::string trajectoryNumberString;
+        for (int i=0; i!=realizations; ++i) {
+          trajectoryNumber=i;
+          trajectoryNumberString=STOCHKIT::StandardDriverUtilities::size_t2string(trajectoryNumber);
+      
+          STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",modelSpeciesList);
+          output[0].trajectories.writeDataToFile(i,outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",true,true);
+      }
+    }
     // retrieve trajs in 3D array
     std::vector< std::vector< std::vector<double> > > trajBuffer;
 
@@ -247,9 +246,10 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
   }
 
   if (keepHistograms) {
-	  Rcpp::Rcout << "creating histogram output files...\n";
-	  output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
-	  
+  	if(outputDirNameString!=""){  
+      Rcpp::Rcout << "creating histogram output files...\n";
+  	  output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
+  	} 
 	  // create hist return list
 	  // hist has one element per species
 	  hist = Rcpp::List(output[0].histograms.numberOfSpecies());
@@ -269,6 +269,12 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, std::string output
 		  hist[species_index] = Rcpp::wrap(species_data);
 	  }
   }
+
+  //merge means and vars into "stats"
+  Rcpp::List stats = Rcpp::List::create(
+    Rcpp::Named("means") = means,
+    Rcpp::Named("vars") = vars);
+
 
   return Rcpp::List::create(
               Rcpp::Named("stats") = stats,

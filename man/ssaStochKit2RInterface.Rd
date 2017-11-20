@@ -4,13 +4,12 @@
 \alias{ssaStochKit2RInterface}
 \title{C++ Interface to Gillespie Stochastic Simulation Algorithm}
 \usage{
-ssaStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time, realizations,
-  intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p)
+ssaStochKit2RInterface(StochKit2Rmodel, time, realizations, intervals,
+  keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed,
+  p)
 }
 \arguments{
 \item{StochKit2Rmodel}{R list (Rcpp List built from buildStochKit2Rmodel output)}
-
-\item{outputDirNameString}{Character string with path to output directory. Should end in path separator.}
 
 \item{time}{Simulation time of each realization}
 
@@ -25,6 +24,8 @@ ssaStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time, realizations,
 \item{keepHistograms}{Keep histogram data}
 
 \item{bins}{Number of histogram bins}
+
+\item{outputDirNameString}{Character string with path to output directory. Should end in path separator.}
 
 \item{seed}{Seed for random number generator}
 

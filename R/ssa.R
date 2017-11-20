@@ -5,7 +5,6 @@
 #'data to \code{outputDir}
 #'
 #'@param modelFile Character string with path to StochKit2 .xml model file
-#'@param outputDir Character string with path to output directory. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
 #'@param time Simulation time of each realization
 #'@param realizations Number of realizations
 #'@param intervals Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.
@@ -13,6 +12,7 @@
 #'@param keepTrajectories Keep trajectory data. Creates trajectories directory in output directory
 #'@param keepHistograms Keep histogram data. Creates histograms directory in output directory
 #'@param bins Number of histogram bins
+#'@param outputDir Character string with path to output directory. By default (=NULL) and will not write file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
 #'@param force Force overwriting of existing data
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
@@ -33,7 +33,7 @@
 #'out <- ssa("Desktop/dimer_decay.xml",
 #'    "Desktop/dimer_decay_output",10,100,20,keepTrajectories=T,force=T)
 #'}
-ssa <- function(modelFile,outputDir,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,force=FALSE,seed=NULL,p=0) {
+ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,outputDir=NULL,force=FALSE,seed=NULL,p=0) {
   # can set seed in R with set.seed()
   
   #checks on modelFile  
@@ -57,10 +57,6 @@ ssa <- function(modelFile,outputDir,time,realizations,intervals=0,noStats=FALSE,
     stop("ERROR: number of processes must not be negative (when p=0, processes will be determined automatically)")
   }
   
-  #checks on outputDir
-  if (outputDir=="" | is.null(outputDir)) {
-    stop("ERROR: An output directory must be specified")
-  }
   
   #must keep some output
   if (noStats & !keepTrajectories & !keepHistograms) {
@@ -75,7 +71,12 @@ ssa <- function(modelFile,outputDir,time,realizations,intervals=0,noStats=FALSE,
   outputDir <- gsub("//*$","",outputDir)
   outputDir <- gsub("\\\\*$","",outputDir)
 
-  createOutputDirs(outputDir,noStats,keepTrajectories,keepHistograms,force)
+  if(!is.null(outputDir)){
+    createOutputDirs(outputDir,noStats,keepTrajectories,keepHistograms,force)
+  }
+  if(is.null(outputDir)){
+    outputDir=""
+  }
   
   if (is.null(seed)) {
     seed=floor(runif(1,-.Machine$integer.max,.Machine$integer.max))
@@ -85,5 +86,5 @@ ssa <- function(modelFile,outputDir,time,realizations,intervals=0,noStats=FALSE,
   StochKit2Rmodel <- buildStochKit2Rmodel(modelFile)
   
   # everything is set up, ready to run the simulation
-  ssaStochKit2RInterface(StochKit2Rmodel,outputDir,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,seed,p)
+  ssaStochKit2RInterface(StochKit2Rmodel,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,outputDir,seed,p)
 }

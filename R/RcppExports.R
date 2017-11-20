@@ -35,8 +35,8 @@ ssaSingleStochKit2RInterface <- function(StochKit2Rmodel, outputFileNameString, 
 #'@param p  Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
 #'@return List of means, variances, and trajectories
 #'@keywords internal
-ssaStochKit2RInterface <- function(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p) {
-    .Call('_StochKit2R_ssaStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p)
+ssaStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p) {
+    .Call('_StochKit2R_ssaStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p)
 }
 
 #'@title C++ Interface to Explicit Adaptive Tau-Leaping simulation

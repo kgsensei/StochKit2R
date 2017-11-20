@@ -7,7 +7,7 @@
 plotTrajectories(trajectoriesData, outputIndex, speciesIndex, file = F)
 }
 \arguments{
-\item{trajectoriesData}{String containing file (must end in /trajectories) name or ssa output, depending on the value of the file parameter}
+\item{trajectoriesData}{String containing file (must end in /trajectories) name or $trajs list of ssa output, depending on the value of the file parameter}
 
 \item{outputIndex}{Integer vector containing indexes for which trials will be plotted}
 

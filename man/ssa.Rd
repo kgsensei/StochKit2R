@@ -4,14 +4,12 @@
 \alias{ssa}
 \title{Gillespie Stochastic Simulation Algorithm}
 \usage{
-ssa(modelFile, outputDir, time, realizations, intervals = 0,
-  noStats = FALSE, keepTrajectories = FALSE, keepHistograms = FALSE,
-  bins = 32, force = FALSE, seed = NULL, p = 0)
+ssa(modelFile, time, realizations, intervals = 0, noStats = FALSE,
+  keepTrajectories = FALSE, keepHistograms = FALSE, bins = 32,
+  outputDir = NULL, force = FALSE, seed = NULL, p = 0)
 }
 \arguments{
 \item{modelFile}{Character string with path to StochKit2 .xml model file}
-
-\item{outputDir}{Character string with path to output directory. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
 \item{time}{Simulation time of each realization}
 
@@ -26,6 +24,8 @@ ssa(modelFile, outputDir, time, realizations, intervals = 0,
 \item{keepHistograms}{Keep histogram data. Creates histograms directory in output directory}
 
 \item{bins}{Number of histogram bins}
+
+\item{outputDir}{Character string with path to output directory. By default (=NULL) and will not write file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
 \item{force}{Force overwriting of existing data}
 

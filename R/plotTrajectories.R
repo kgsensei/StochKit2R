@@ -3,7 +3,7 @@
 #'@description
 #'\code{plotTrajectories} Plots trajectories \code{outputIndex} of populations specified in \code{speciesIndex} in the StochKit2R trajectories in \code{trajectoriesData}
 #'
-#'@param trajectoriesData String containing file (must end in /trajectories) name or ssa output, depending on the value of the file parameter
+#'@param trajectoriesData String containing file (must end in /trajectories) name or $trajs list of ssa output, depending on the value of the file parameter
 #'@param outputIndex Integer vector containing indexes for which trials will be plotted
 #'@param speciesIndex Integer Vector of the species indices that will be plotted. The first species is index 1
 #'@return The ggplot object
@@ -51,9 +51,8 @@ plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
   
   if(!file){
     #check for headers (labels)
-    trajs=trajectoriesData$trajs
 
-    colLabels <- names(trajs[[1]])
+    colLabels <- names(trajectoriesData[[1]])
     if (colLabels[1]=="time") {
       hasLabels=TRUE
     }
@@ -63,7 +62,7 @@ plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
 
   #plot data...
     
-    trajData <- trajs[[1]][,c(1,speciesIndex)]
+    trajData <- trajectoriesData[[1]][,c(1,speciesIndex)]
       #give (slightly) more meaningful labels if none
     if (!hasLabels) {
       names(trajData) <- c("time",names(trajData)[1:(length(trajData)-1)])
@@ -78,7 +77,7 @@ plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
     # plot the rest of the trajectories!
     if (length(outputIndex>1)) {
       for (i in outputIndex[2:length(outputIndex)]) {
-        trajData <- trajs[[i]][,c(1,speciesIndex)]
+        trajData <- trajectoriesData[[i]][,c(1,speciesIndex)]
         #give (slightly) more meaningful labels if none
         if (!hasLabels) {
           names(trajData) <- c("time",names(trajData)[1:(length(trajData)-1)])

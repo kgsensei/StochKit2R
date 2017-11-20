@@ -21,13 +21,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // ssaStochKit2RInterface
-RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p);
-RcppExport SEXP _StochKit2R_ssaStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP) {
+RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, std::string outputDirNameString, unsigned int seed, int p);
+RcppExport SEXP _StochKit2R_ssaStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP outputDirNameStringSEXP, SEXP seedSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type StochKit2Rmodel(StochKit2RmodelSEXP);
-    Rcpp::traits::input_parameter< std::string >::type outputDirNameString(outputDirNameStringSEXP);
     Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< int >::type realizations(realizationsSEXP);
     Rcpp::traits::input_parameter< int >::type intervals(intervalsSEXP);
@@ -35,9 +34,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type keepTrajectories(keepTrajectoriesSEXP);
     Rcpp::traits::input_parameter< bool >::type keepHistograms(keepHistogramsSEXP);
     Rcpp::traits::input_parameter< int >::type bins(binsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputDirNameString(outputDirNameStringSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type seed(seedSEXP);
     Rcpp::traits::input_parameter< int >::type p(pSEXP);
-    rcpp_result_gen = Rcpp::wrap(ssaStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p));
+    rcpp_result_gen = Rcpp::wrap(ssaStochKit2RInterface(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p));
     return rcpp_result_gen;
 END_RCPP
 }
