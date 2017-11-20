@@ -64,14 +64,14 @@ ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajec
   }
   
   
-  #expand path
-  outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
-  #remove tailing slashes or backslashes
-  #because file.exists returns false if directory ends in slash or backslash
-  outputDir <- gsub("//*$","",outputDir)
-  outputDir <- gsub("\\\\*$","",outputDir)
-
   if(!is.null(outputDir)){
+    #expand path
+    outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
+    #remove tailing slashes or backslashes
+    #because file.exists returns false if directory ends in slash or backslash
+    outputDir <- gsub("//*$","",outputDir)
+    outputDir <- gsub("\\\\*$","",outputDir)
+
     createOutputDirs(outputDir,noStats,keepTrajectories,keepHistograms,force)
   }
   if(is.null(outputDir)){
