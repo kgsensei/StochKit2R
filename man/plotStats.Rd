@@ -4,12 +4,12 @@
 \alias{plotStats}
 \title{Plot StochKit2R simulation statistics output data}
 \usage{
-plotStats(statsDF, indices, file = FALSE)
+plotStats(statsData, indices, file = FALSE)
 }
 \arguments{
-\item{statsDF}{stats dta frame of ssa output, list of means and vars sata frames}
-
 \item{indices}{The species indices that will be plotted. The first species is index 1}
+
+\item{statsDF}{stats dta frame of ssa output, list of means and vars sata frames}
 }
 \value{
 The ggplot object
@@ -23,7 +23,9 @@ The ggplot object
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
 out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
-#plot the data for species 1,2 and 3 (all of them in the dimer decay model)
+#plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
 plotStats("ex_out/stats",c(1,2,3),TRUE)
+#same plot from output
+plotStats(out$stats,c(1,2,3))
 }
 }

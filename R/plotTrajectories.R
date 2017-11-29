@@ -13,8 +13,10 @@
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
 #'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
-#'#plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5
+#'#plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5 from file
 #'plotTrajectories("ex_out/trajectories",2:3,1:3,TRUE)
+#'#same plot from output
+#'plotTrajectories(out$trajs,2:3,1:3)
 #'}
 plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
 
@@ -90,7 +92,7 @@ plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
 
   }
 
-  if(file){
+  else{
     #read the first line of the first file
     #and check for headers (labels)  
     fileName <- paste(trajectoriesData,"/trajectory",outputIndex[1]-1,".txt",sep="")

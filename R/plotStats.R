@@ -12,8 +12,10 @@
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
 #'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
-#'#plot the data for species 1,2 and 3 (all of them in the dimer decay model)
+#'#plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
 #'plotStats("ex_out/stats",c(1,2,3),TRUE)
+#'#same plot from output
+#'plotStats(out$stats,c(1,2,3))
 #'}
 plotStats <- function(statsData,indices,file=FALSE) {
 
@@ -38,7 +40,28 @@ plotStats <- function(statsData,indices,file=FALSE) {
   indices = sort(indices);
   len_indices =length(indices);
 
-  if(file){
+if(!file){
+  if (names(statsData$means[1])=="time") {
+    hasLabels=TRUE
+    } else {
+      hasLabels=FALSE
+    }
+    
+    #get the means data
+    meansData <- statsData$means
+    #give (slightly) more meaningful labels if none
+    if (!(names(statsData$means[1])=="time")) {
+      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
+    }
+    #get the variances data
+    variancesData <- statsData$vars
+    #give (slightly) more meaningful labels if none
+    if (!(names(statsData$vars[1])=="time")) {
+      names(variancesData) <- names(meansData)
+    }
+}
+
+else{
     # get file names
     fnameMean = paste(statsData,'/means.txt',sep='');
     fnameVar =  paste(statsData,'/variances.txt',sep='');
@@ -62,27 +85,6 @@ plotStats <- function(statsData,indices,file=FALSE) {
     variancesData <- read.table(fnameVar,header=hasLabels)[,c(1,indices)]
     #give (slightly) more meaningful labels if none
     if (!hasLabels) {
-      names(variancesData) <- names(meansData)
-    }
-}
-
-if(!file){
-  if (names(statsData$means[1])=="time") {
-    hasLabels=TRUE
-    } else {
-      hasLabels=FALSE
-    }
-    
-    #get the means data
-    meansData <- statsData$means
-    #give (slightly) more meaningful labels if none
-    if (!(names(statsData$means[1])=="time")) {
-      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
-    }
-    #get the variances data
-    variancesData <- statsData$vars
-    #give (slightly) more meaningful labels if none
-    if (!(names(statsData$vars[1])=="time")) {
       names(variancesData) <- names(meansData)
     }
 }

@@ -16,7 +16,7 @@
 #'#IMPORTANT: histogram file names have format:
 #'#hist_<species index>_<time point>.dat, where species index STARTS AT 0
 #'#  and time point index starts at 0
-#'plotHistogram(result$hist$S2[[5]])
+#'plotHistogram(out$hist$S2[[5]])
 #'#equivalent, data from file
 #'plotHistogram("ex_out/histograms/hist_1_4.dat",TRUE) # from file
 #'}
