@@ -7,14 +7,14 @@
 #'\code{ssa} Called by StochKit2R ssaSingle function, do not call this C++ interface directly
 #'
 #'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)
-#'@param outputFileNameString Character string with path to output file.
 #'@param startTime Simulation start time
 #'@param endTime Simulation end time
+#'@param outputFileNameString Character string with path to output file.
 #'@param seed Seed for random number generator
 #'@return Dataframe containing the time and population sizes
 #'@keywords internal
-ssaSingleStochKit2RInterface <- function(StochKit2Rmodel, outputFileNameString, startTime, endTime, seed) {
-    .Call('_StochKit2R_ssaSingleStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputFileNameString, startTime, endTime, seed)
+ssaSingleStochKit2RInterface <- function(StochKit2Rmodel, startTime, endTime, outputFileNameString, seed) {
+    .Call('_StochKit2R_ssaSingleStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, startTime, endTime, outputFileNameString, seed)
 }
 
 #'@title C++ Interface to Gillespie Stochastic Simulation Algorithm

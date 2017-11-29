@@ -6,17 +6,17 @@
 using namespace Rcpp;
 
 // ssaSingleStochKit2RInterface
-RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString, double startTime, double endTime, unsigned int seed);
-RcppExport SEXP _StochKit2R_ssaSingleStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputFileNameStringSEXP, SEXP startTimeSEXP, SEXP endTimeSEXP, SEXP seedSEXP) {
+RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, double startTime, double endTime, std::string outputFileNameString, unsigned int seed);
+RcppExport SEXP _StochKit2R_ssaSingleStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP startTimeSEXP, SEXP endTimeSEXP, SEXP outputFileNameStringSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type StochKit2Rmodel(StochKit2RmodelSEXP);
-    Rcpp::traits::input_parameter< std::string >::type outputFileNameString(outputFileNameStringSEXP);
     Rcpp::traits::input_parameter< double >::type startTime(startTimeSEXP);
     Rcpp::traits::input_parameter< double >::type endTime(endTimeSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputFileNameString(outputFileNameStringSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(ssaSingleStochKit2RInterface(StochKit2Rmodel, outputFileNameString, startTime, endTime, seed));
+    rcpp_result_gen = Rcpp::wrap(ssaSingleStochKit2RInterface(StochKit2Rmodel, startTime, endTime, outputFileNameString, seed));
     return rcpp_result_gen;
 END_RCPP
 }

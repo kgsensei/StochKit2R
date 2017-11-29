@@ -22,15 +22,15 @@
 //'\code{ssa} Called by StochKit2R ssaSingle function, do not call this C++ interface directly
 //'
 //'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)
-//'@param outputFileNameString Character string with path to output file.
 //'@param startTime Simulation start time
 //'@param endTime Simulation end time
+//'@param outputFileNameString Character string with path to output file.
 //'@param seed Seed for random number generator
 //'@return Dataframe containing the time and population sizes
 //'@keywords internal
 // [[Rcpp::export]]
-RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputFileNameString,
-                                             double startTime, double endTime, unsigned int seed)
+RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel,
+                                             double startTime, double endTime, std::string outputFileNameString, unsigned int seed)
 {
   //create StochKit2R mass action model object
   //first, pull out pieces from list object
@@ -40,9 +40,6 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::st
 
   //get species labels...
   std::vector<std::string> modelSpeciesList = getSpeciesList(rSpeciesList);
-
-  //try to write labels to file
-  STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputFileNameString, modelSpeciesList);
 
   STOCHKIT::MassActionModel<STOCHKIT::StandardDriverTypes::populationType,
                             STOCHKIT::StandardDriverTypes::denseStoichiometryType,
@@ -71,46 +68,64 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::st
 
   ssa.simulateSingle(startTime, endTime, output);
 
-  // write output
-  std::ofstream outfile;
-
-  // to return data
+  // construct vector of proper row size
+  std::vector<double> row(rSpeciesList.size()+1); 
   // this 2D double array will get converted to a dataframe
-  std::vector< std::vector<double> > buffer;
+  std::vector< std::vector<double> > buffer; 
+  
+  //if user entered an output directory then write file and fill data buffer
+  if(outputFileNameString != ""){
+    //try to write labels to file
+    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputFileNameString, modelSpeciesList);
+    // write output
+    std::ofstream outfile;
 
-  //open for appending
-  outfile.open(outputFileNameString.c_str(), std::ios::out | std::ios::app);
+    //open for appending
+    outfile.open(outputFileNameString.c_str(), std::ios::out | std::ios::app);
 
-  if (!outfile) {
-    Rcpp::Rcout << "StochKit ERROR (ssaSingleStochKit2RInterface): Unable to open output file.\n";
-    Rcpp::stop("Fatal error encountered, terminating StochKit2R");
-  }
-
-  try {
-    std::vector<double> row(rSpeciesList.size()+1);
-
-    int i = 0;
-    for (std::size_t step=0; step!=output.size(); ++step) {
-      i = 0;
-      row[i++] = output[step].first;
-
-      //write time
-      outfile << output[step].first << "\t";
-
-      for (size_t index=0; index!=output[step].second.size(); ++index) {
-        row[i++] = output[step].second[index];
-        outfile << std::setprecision(8) << output[step].second[index] << "\t";
-      }
-      outfile << "\n";
-      buffer.push_back(row);
+    if (!outfile) {
+      Rcpp::Rcout << "StochKit ERROR (ssaSingleStochKit2RInterface): Unable to open output file.\n";
+      Rcpp::stop("Fatal error encountered, terminating StochKit2R");
     }
-    outfile.close();
-  }
-  catch (...) {
-    Rcpp::Rcout << "StochKit ERROR (IntervalOutput::writeDataToFile): error writing data to output file.\n";
-    Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+
+    try {
+      int i = 0;
+      for (std::size_t step=0; step!=output.size(); ++step) {
+        i = 0;
+        row[i++] = output[step].first;
+
+        //write time
+        outfile << output[step].first << "\t";
+
+        for (size_t index=0; index!=output[step].second.size(); ++index) {
+          row[i++] = output[step].second[index];
+          outfile << std::setprecision(8) << output[step].second[index] << "\t";
+        }
+        outfile << "\n";
+        buffer.push_back(row);
+      }
+      outfile.close();
+    }
+    catch (...) {
+      Rcpp::Rcout << "StochKit ERROR (IntervalOutput::writeDataToFile): error writing data to output file.\n";
+      Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+    }
   }
 
+  // to fill data buffer without writing file
+  else{
+    int i=0;
+    for(std::size_t step=0; step!=output.size(); ++step){
+      i=0;
+      row[i++] = output[step].first;
+      for (size_t index=0; index!=output[step].second.size(); ++index) {
+            row[i++] = output[step].second[index];
+          }
+        buffer.push_back(row);
+    }
+  }
+  
+  //write buffer to return data 
   int nr = buffer.size(), nc = buffer[0].size();
   Rcpp::NumericMatrix m( nr, nc );
   for (int i=0; i<nr; i++) {
@@ -125,6 +140,7 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::st
       m(i, j) = result_i[j];
   }
 
+
   // name the columns accordingly
   Rcpp::CharacterVector col_names;
   col_names.push_back("time");
@@ -134,6 +150,8 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::st
 
   Rcpp::DataFrame df = Rcpp::DataFrame(m);
   df.attr("names")= col_names;
+
+  
 
   return df;
 }

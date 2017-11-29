@@ -24,8 +24,7 @@
 #'#run 100 simulations for 10 time units, keeping output at 20 time intervals
 #'#store model file name in a variable first
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
-#'out <- ssa(model,"ex_out",10,100,20,force=TRUE)
-#'
+#'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #'#more typical example where model file is stored elsewhere
 #'#(must be valid path to existing .xml StochKit2 model file)
 #'#store output in dimer_decay_output, overwrite existing data

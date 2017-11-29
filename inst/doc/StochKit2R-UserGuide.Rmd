@@ -102,7 +102,6 @@ StochKit2R contains three primary simulation functions: ssa, ssaSingle, and tauL
 ssa and tauLeaping run ensembles (multiple simulation trajectories) and output data at regularly spaced intervals. They have nearly identical function calls. Consult the help pages for information. Here are the arguments:
 
 * modelFile: the path to the StochKit2 xml model file.
-* outputDir: the path to the output directory. If the directory does not exist, it will be created. If the directory already exists, an error will occur unless force=TRUE is specified (see below).
 * time: the simulation time. Each simulation will run from 0 to time.
 * realizations: number of simulations that will be run.
 * intervals: number of intervals between output. The default, 0, specifies that output will be stored only for the simulation end time. 1 indicates output will be stored at time 0 and the end time. 2 indicates output at time 0, the middle of the simulation time and the end time, etc. Note data is stored at (intervals + 1) time points.
@@ -110,6 +109,7 @@ ssa and tauLeaping run ensembles (multiple simulation trajectories) and output d
 * keepTrajectories: when TRUE, trajectory data will be stored. Default is FALSE.
 * keepHistograms: when TRUE, historgram data will be stored. Default is FALSE.
 * bins: set the number of histogram bins. Default=32.
+* outputDir: the path to the output directory. By default (=NULL) which writes no file. If the directory does not exist, it will be created. If the directory already exists, an error will occur unless force=TRUE is specified (see below).
 * force: overwrite existing output. Default=FALSE.
 * p: number of processes (threads) to use. With default=0, the number of threads will be determined automatically (recommended). On some architectures, parallelism is not available by default (see section on "Advanced Mac OS X installation for high performance").
 * epsilon: (tauLeaping only) the error tolerance used for the step size selection procedure. Default=0.03.
@@ -151,15 +151,15 @@ StochKit2R includes four plotting functions for visualizing simulation output da
 * histogramDistance
 
 Consult the R function documentation (e.g. ?plotStats) for details. Here an example of the plotStats function, which plots the means and +/- one standard deviation curves.
-
+##
 ```{r, fig.width=6, fig.height=4, fig.align="center"}
 library(StochKit2R)
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
-#output value stored locally for use and written to ex_out file in working directory
-out <- ssa(model,"ex_out",10,100,20,force=TRUE)
+##output value stored locally for use and written to ex_out file in working directory
+out <- ssa(modelFile=model,time=10,realizations=100,interval=20, outputDir="ex_out",force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
-plotStats(out,c(2,3))
+plotStats(out$stats,c(2,3))
 ```
 
 This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves.

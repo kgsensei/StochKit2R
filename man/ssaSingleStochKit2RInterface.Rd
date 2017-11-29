@@ -4,17 +4,17 @@
 \alias{ssaSingleStochKit2RInterface}
 \title{C++ Interface to Gillespie Stochastic Simulation Algorithm single trajectory}
 \usage{
-ssaSingleStochKit2RInterface(StochKit2Rmodel, outputFileNameString, startTime,
-  endTime, seed)
+ssaSingleStochKit2RInterface(StochKit2Rmodel, startTime, endTime,
+  outputFileNameString, seed)
 }
 \arguments{
 \item{StochKit2Rmodel}{R list (Rcpp List built from buildStochKit2Rmodel output)}
 
-\item{outputFileNameString}{Character string with path to output file.}
-
 \item{startTime}{Simulation start time}
 
 \item{endTime}{Simulation end time}
+
+\item{outputFileNameString}{Character string with path to output file.}
 
 \item{seed}{Seed for random number generator}
 }
