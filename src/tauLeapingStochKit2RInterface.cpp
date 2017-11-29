@@ -28,7 +28,6 @@ using namespace Rcpp;
 //'\code{ssa} Called by StochKit2R tauLeaping function, do not call this C++ interface directly
 //'
 //'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)
-//'@param outputDirNameString Character string with path to output directory. Should end in path separator.
 //'@param time Simulation time of each realization
 //'@param realizations Number of realizations
 //'@param intervals Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.
@@ -36,14 +35,15 @@ using namespace Rcpp;
 //'@param keepTrajectories Keep trajectory data
 //'@param keepHistograms Keep histogram data
 //'@param bins Number of histogram bins
+//'@param outputDirNameString Character string with path to output directory. Should end in path separator.
 //'@param seed Seed for random number generator
 //'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
 //'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 //'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-//'@return List containing means, variances, and trajectories
+//'@return List containing stats, trajectories and histograms
 //'@keywords internal
 // [[Rcpp::export]]
-RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p, double epsilon, int threshold) {
+RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, std::string outputDirNameString, unsigned int seed, int p, double epsilon, int threshold) {
   //assumes outputDirNameString is a valid path to the output directory name that does not end in path separator
 
   //create StochKit2R mass action model object
@@ -167,14 +167,17 @@ RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::s
   Rcpp::DataFrame means = R_NilValue;
   Rcpp::DataFrame vars = R_NilValue;
   Rcpp::List trajs = R_NilValue;
+  Rcpp::List hist = R_NilValue;
  
   if (keepStats) {
-    Rcpp::Rcout << "creating statistics output files...\n";
-    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
-    output[0].stats.writeMeansToFile(outputDirNameString+"/stats/means.txt",true,true);
-    STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/variances.txt",modelSpeciesList);
-    output[0].stats.writeVariancesToFile(outputDirNameString+"/stats/variances.txt",true,true);
-
+  //check if user wants output files 
+  if(outputDirNameString != ""){ 
+      Rcpp::Rcout << "creating statistics output files...\n";
+      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/means.txt",modelSpeciesList);
+      output[0].stats.writeMeansToFile(outputDirNameString+"/stats/means.txt",true,true);
+      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/stats/variances.txt",modelSpeciesList);
+      output[0].stats.writeVariancesToFile(outputDirNameString+"/stats/variances.txt",true,true);
+  }
     // return data
     // each 2D double array will get converted to a dataframe
     // retrieve stats in 2D arrays
@@ -222,17 +225,19 @@ RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::s
   }
 
   if (keepTrajectories) {
-    Rcpp::Rcout << "creating trajectories output files...\n";
-    std::size_t trajectoryNumber;
-    std::string trajectoryNumberString;
-    for (int i=0; i!=realizations; ++i) {
-      trajectoryNumber=i;
-      trajectoryNumberString=STOCHKIT::StandardDriverUtilities::size_t2string(trajectoryNumber);
+    //checks if user wants output files  
+    if(outputDirNameString != ""){  
+      Rcpp::Rcout << "creating trajectories output files...\n";
+      std::size_t trajectoryNumber;
+      std::string trajectoryNumberString;
+      for (int i=0; i!=realizations; ++i) {
+        trajectoryNumber=i;
+        trajectoryNumberString=STOCHKIT::StandardDriverUtilities::size_t2string(trajectoryNumber);
 
-      STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",modelSpeciesList);
-      output[0].trajectories.writeDataToFile(i,outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",true,true);
+        STOCHKIT::IntervalOutput<STOCHKIT::StandardDriverTypes::populationType>::writeLabelsToFile(outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",modelSpeciesList);
+        output[0].trajectories.writeDataToFile(i,outputDirNameString+"/trajectories/trajectory"+trajectoryNumberString+".txt",true,true);
+      }
     }
-
     // retrieve trajs in 3D array
     std::vector< std::vector< std::vector<double> > > trajBuffer;
 
@@ -265,13 +270,38 @@ RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::s
   }
 
   if (keepHistograms) {
-    Rcpp::Rcout << "creating histogram output files...\n";
-    output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
-    //std::vector< std::vector<double> > histBuffer;
+    //checks if user wants output files
+    if(outputDirNameString != ""){
+      Rcpp::Rcout << "creating histogram output files...\n";
+      output[0].histograms.writeHistogramsToFile(outputDirNameString+"/histograms/hist",".dat",modelSpeciesList);
+    }
+    // create hist return list
+    // hist has one element per species    
+    hist = Rcpp::List(output[0].histograms.numberOfSpecies());
+    // name elements species names
+    hist.attr("names")= modelSpeciesList;
+    
+    // iterate over the species
+    for (int species_index = 0; species_index<modelSpeciesList.size(); species_index++) {
+
+      std::vector<std::vector<std::string> > species_data;
+      //iterate over the output intervals
+      for (int output_index = 0; output_index<=intervals; output_index++) {
+        std::vector<std::string> this_interval = output[0].histograms(output_index,species_index).fileDataAsString(output[0].histograms.getOutputTimes(), modelSpeciesList[species_index]);
+        species_data.push_back(this_interval);
+      }
+      
+      hist[species_index] = Rcpp::wrap(species_data);
+    }
   }
 
+  //merge means and vars into "stats"
+  Rcpp::List stats = Rcpp::List::create(
+    Rcpp::Named("means") = means,
+    Rcpp::Named("vars") = vars);
+  
   Rcpp::Rcout << "done!\n";
-  return Rcpp::List::create(Rcpp::Named("means") = means,
-                            Rcpp::Named("vars") = vars,
-                            Rcpp::Named("trajs") = trajs);
+  return Rcpp::List::create(Rcpp::Named("stats") = stats,
+                            Rcpp::Named("trajs") = trajs,
+                            Rcpp::Named("hist") = hist);
 }

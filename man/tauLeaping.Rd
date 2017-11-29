@@ -4,15 +4,13 @@
 \alias{tauLeaping}
 \title{Explicit Adaptive Tau-leaping simulation}
 \usage{
-tauLeaping(modelFile, outputDir, time, realizations, intervals = 0,
-  noStats = FALSE, keepTrajectories = FALSE, keepHistograms = FALSE,
-  bins = 32, force = FALSE, seed = NULL, p = 0, epsilon = 0.03,
+tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
+  keepTrajectories = FALSE, keepHistograms = FALSE, bins = 32,
+  outputDir = NULL, force = FALSE, seed = NULL, p = 0, epsilon = 0.03,
   threshold = 10)
 }
 \arguments{
 \item{modelFile}{Character string with path to StochKit2 .xml model file}
-
-\item{outputDir}{Character string with path to output directory. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
 \item{time}{Simulation time of each realization}
 
@@ -27,6 +25,8 @@ tauLeaping(modelFile, outputDir, time, realizations, intervals = 0,
 \item{keepHistograms}{Keep histogram data. Creates histograms directory in output directory}
 
 \item{bins}{Number of histogram bins}
+
+\item{outputDir}{Character string with path to output directory. Default (=NULL) which writes no file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
 \item{force}{Force overwriting of existing data}
 
@@ -53,7 +53,6 @@ tauLeaping(model,"ex_out",10,100,20,force=TRUE)
 #more typical example where model file is stored elsewhere
 #(must be valid path to existing .xml StochKit2 model file)
 #store output in dimer_decay_output, overwrite existing data
-tauLeaping("Desktop/dimer_decay.xml",
-          "Desktop/dimer_decay_output",10,100,20,force=T)
+out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,outputDir="Desktop/dimer_decay_output",force=T)
 }
 }

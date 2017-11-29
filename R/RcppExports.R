@@ -45,7 +45,6 @@ ssaStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, interval
 #'\code{ssa} Called by StochKit2R tauLeaping function, do not call this C++ interface directly
 #'
 #'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)
-#'@param outputDirNameString Character string with path to output directory. Should end in path separator.
 #'@param time Simulation time of each realization
 #'@param realizations Number of realizations
 #'@param intervals Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.
@@ -53,13 +52,14 @@ ssaStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, interval
 #'@param keepTrajectories Keep trajectory data
 #'@param keepHistograms Keep histogram data
 #'@param bins Number of histogram bins
+#'@param outputDirNameString Character string with path to output directory. Should end in path separator.
 #'@param seed Seed for random number generator
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 #'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-#'@return List containing means, variances, and trajectories
+#'@return List containing stats, trajectories and histograms
 #'@keywords internal
-tauLeapingStochKit2RInterface <- function(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold) {
-    .Call('_StochKit2R_tauLeapingStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold)
+tauLeapingStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p, epsilon, threshold) {
+    .Call('_StochKit2R_tauLeapingStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p, epsilon, threshold)
 }
 

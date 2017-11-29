@@ -42,13 +42,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // tauLeapingStochKit2RInterface
-RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, std::string outputDirNameString, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, unsigned int seed, int p, double epsilon, int threshold);
-RcppExport SEXP _StochKit2R_tauLeapingStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP outputDirNameStringSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP seedSEXP, SEXP pSEXP, SEXP epsilonSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, std::string outputDirNameString, unsigned int seed, int p, double epsilon, int threshold);
+RcppExport SEXP _StochKit2R_tauLeapingStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP timeSEXP, SEXP realizationsSEXP, SEXP intervalsSEXP, SEXP keepStatsSEXP, SEXP keepTrajectoriesSEXP, SEXP keepHistogramsSEXP, SEXP binsSEXP, SEXP outputDirNameStringSEXP, SEXP seedSEXP, SEXP pSEXP, SEXP epsilonSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::List >::type StochKit2Rmodel(StochKit2RmodelSEXP);
-    Rcpp::traits::input_parameter< std::string >::type outputDirNameString(outputDirNameStringSEXP);
     Rcpp::traits::input_parameter< double >::type time(timeSEXP);
     Rcpp::traits::input_parameter< int >::type realizations(realizationsSEXP);
     Rcpp::traits::input_parameter< int >::type intervals(intervalsSEXP);
@@ -56,11 +55,12 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type keepTrajectories(keepTrajectoriesSEXP);
     Rcpp::traits::input_parameter< bool >::type keepHistograms(keepHistogramsSEXP);
     Rcpp::traits::input_parameter< int >::type bins(binsSEXP);
+    Rcpp::traits::input_parameter< std::string >::type outputDirNameString(outputDirNameStringSEXP);
     Rcpp::traits::input_parameter< unsigned int >::type seed(seedSEXP);
     Rcpp::traits::input_parameter< int >::type p(pSEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< int >::type threshold(thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(tauLeapingStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, seed, p, epsilon, threshold));
+    rcpp_result_gen = Rcpp::wrap(tauLeapingStochKit2RInterface(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p, epsilon, threshold));
     return rcpp_result_gen;
 END_RCPP
 }

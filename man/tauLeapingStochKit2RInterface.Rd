@@ -4,14 +4,12 @@
 \alias{tauLeapingStochKit2RInterface}
 \title{C++ Interface to Explicit Adaptive Tau-Leaping simulation}
 \usage{
-tauLeapingStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time,
-  realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins,
-  seed, p, epsilon, threshold)
+tauLeapingStochKit2RInterface(StochKit2Rmodel, time, realizations, intervals,
+  keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed,
+  p, epsilon, threshold)
 }
 \arguments{
 \item{StochKit2Rmodel}{R list (Rcpp List built from buildStochKit2Rmodel output)}
-
-\item{outputDirNameString}{Character string with path to output directory. Should end in path separator.}
 
 \item{time}{Simulation time of each realization}
 
@@ -27,6 +25,8 @@ tauLeapingStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time,
 
 \item{bins}{Number of histogram bins}
 
+\item{outputDirNameString}{Character string with path to output directory. Should end in path separator.}
+
 \item{seed}{Seed for random number generator}
 
 \item{p}{Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically}
@@ -36,7 +36,7 @@ tauLeapingStochKit2RInterface(StochKit2Rmodel, outputDirNameString, time,
 \item{threshold}{Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping}
 }
 \value{
-List containing means, variances, and trajectories
+List containing stats, trajectories and histograms
 }
 \description{
 \code{ssa} Called by StochKit2R tauLeaping function, do not call this C++ interface directly
