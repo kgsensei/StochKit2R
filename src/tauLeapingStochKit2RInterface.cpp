@@ -40,7 +40,7 @@ using namespace Rcpp;
 //'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
 //'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 //'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-//'@return List containing stats, trajectories and histograms
+//'@return List containing stats, trajectories and histogramsinst
 //'@keywords internal
 // [[Rcpp::export]]
 RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, int realizations, int intervals, bool keepStats, bool keepTrajectories, bool keepHistograms, int bins, std::string outputDirNameString, unsigned int seed, int p, double epsilon, int threshold) {

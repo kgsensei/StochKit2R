@@ -57,7 +57,7 @@ ssaStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, interval
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 #'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-#'@return List containing stats, trajectories and histograms
+#'@return List containing stats, trajectories and histogramsinst
 #'@keywords internal
 tauLeapingStochKit2RInterface <- function(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p, epsilon, threshold) {
     .Call('_StochKit2R_tauLeapingStochKit2RInterface', PACKAGE = 'StochKit2R', StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p, epsilon, threshold)

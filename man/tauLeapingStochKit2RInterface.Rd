@@ -36,7 +36,7 @@ tauLeapingStochKit2RInterface(StochKit2Rmodel, time, realizations, intervals,
 \item{threshold}{Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping}
 }
 \value{
-List containing stats, trajectories and histograms
+List containing stats, trajectories and histogramsinst
 }
 \description{
 \code{ssa} Called by StochKit2R tauLeaping function, do not call this C++ interface directly

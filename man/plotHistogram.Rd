@@ -22,7 +22,7 @@ The ggplot object
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-result = ssa(model,"ex_out",10,100,20,keepHistograms=TRUE,force=TRUE)
+out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #plot the histogram for species 2 ("S2") at time point 5 (t=2.0)
 #IMPORTANT: histogram file names have format:
 #hist_<species index>_<time point>.dat, where species index STARTS AT 0

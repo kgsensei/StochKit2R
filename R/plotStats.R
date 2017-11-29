@@ -11,12 +11,12 @@
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model,"ex_out",10,100,20,force=TRUE)
+#'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model)
-#'plotStats(out$stats,c(1,2,3))
+#'plotStats("ex_out/stats",c(1,2,3),TRUE)
 #'}
-plotStats <- function(statsDF,indices) {
-  
+plotStats <- function(statsData,indices,file=FALSE) {
+
   # Check to make sure that the indices are integers
   if (sum((round(indices)==indices)) != length(indices)) {
     stop('Indexes must be integers')
@@ -37,32 +37,55 @@ plotStats <- function(statsDF,indices) {
   indices = indices+1; # add 1 to account for the time column
   indices = sort(indices);
   len_indices =length(indices);
- 
-  # get file names
-  #fnameMean = paste(statsDirectory,'/means.txt',sep='');
-  #fnameVar =  paste(statsDirectory,'/variances.txt',sep='');
-  
-  #read the first line of the means file
-  #and check for headers (labels)
-  #line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
-  if (names(statsDF$means[1])=="time") {
+
+  if(file){
+    # get file names
+    fnameMean = paste(statsData,'/means.txt',sep='');
+    fnameVar =  paste(statsData,'/variances.txt',sep='');
+
+    #read the first line of the means file
+    #and check for headers (labels)
+    line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
+    if (line1[1]=="time") {
+      hasLabels=TRUE
+      } else {
+        hasLabels=FALSE
+      }
+
+    #get the means data
+    meansData <- read.table(fnameMean,header=hasLabels)[,c(1,indices)]
+    #give (slightly) more meaningful labels if none
+    if (!hasLabels) {
+      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
+    }
+    #get the variances data
+    variancesData <- read.table(fnameVar,header=hasLabels)[,c(1,indices)]
+    #give (slightly) more meaningful labels if none
+    if (!hasLabels) {
+      names(variancesData) <- names(meansData)
+    }
+}
+
+if(!file){
+  if (names(statsData$means[1])=="time") {
     hasLabels=TRUE
-  } else {
-    hasLabels=FALSE
-  }
-  
-  #get the means data
-  meansData <- statsDF$means
-  #give (slightly) more meaningful labels if none
-  if (!(names(statsDF$means[1])=="time")) {
-    names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
-  }
-  #get the variances data
-  variancesData <- statsDF$vars
-  #give (slightly) more meaningful labels if none
-  if (!(names(statsDF$vars[1])=="time")) {
-    names(variancesData) <- names(meansData)
-  }
+    } else {
+      hasLabels=FALSE
+    }
+    
+    #get the means data
+    meansData <- statsData$means
+    #give (slightly) more meaningful labels if none
+    if (!(names(statsData$means[1])=="time")) {
+      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
+    }
+    #get the variances data
+    variancesData <- statsData$vars
+    #give (slightly) more meaningful labels if none
+    if (!(names(statsData$vars[1])=="time")) {
+      names(variancesData) <- names(meansData)
+    }
+}
   
   #put data into plottable form
   value=NULL#only to appease R CMD CHECK for CRAN

@@ -12,13 +12,13 @@
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model,"ex_out",10,100,20,keepTrajectories=TRUE,force=TRUE)
+#'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #'#plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5
-#'plotTrajectories("ex_out/trajectories",2:3,1:3,file=T)
+#'plotTrajectories("ex_out/trajectories",2:3,1:3,TRUE)
 #'}
 plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
 
-  
+  #check to make sure indices are provided
   if (length(outputIndex)==0 | length(speciesIndex)==0) {
     stop('index vectors must not be empty')
   }
@@ -89,8 +89,6 @@ plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
      }  
 
   }
-
-
 
   if(file){
     #read the first line of the first file
