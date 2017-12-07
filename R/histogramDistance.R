@@ -22,7 +22,7 @@
 #'#IMPORTANT: histogram file names have format:
 #'#hist_<species index>_<time point>.dat, where species index STARTS AT 0
 #'histogramDistance("ex_out/histograms/hist_1_4.dat",
-#'                  "ex_out2/histograms/hist_1_4.dat",TRUE,TRUE)
+#'                  "ex_out2/histograms/hist_1_4.dat",file1=TRUE,file2=TRUE)
 #'}
 histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FALSE) {
   

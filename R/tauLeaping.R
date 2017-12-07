@@ -12,7 +12,7 @@
 #'@param keepHistograms Keep histogram data.
 #'@param bins Number of histogram bins
 #'@param outputDir Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
-#'@param force Force overwriting of existing data
+#'@param force Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{tauLeaping}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
@@ -27,7 +27,7 @@
 #'
 #'#more typical example where model file is stored elsewhere
 #'#(must be valid path to existing .xml StochKit2 model file)
-#'also, keep trajectory data
+#'#also, keep trajectory data
 #'out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 #'}
 tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,outputDir=NULL,force=FALSE,seed=NULL,p=0,epsilon=0.03,threshold=10) {

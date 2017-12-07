@@ -14,7 +14,7 @@
 #'#output written to ex_out directory (created in current working directory)
 #'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
-#'plotStats("ex_out/stats",c(1,2,3),TRUE)
+#'plotStats("ex_out/stats",c(1,2,3),file=TRUE)
 #'#same plot from returned output
 #'plotStats(out$stats,c(1,2,3))
 #'}

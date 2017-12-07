@@ -12,14 +12,13 @@
 #'@param keepHistograms Keep histogram data.
 #'@param bins Number of histogram bins
 #'@param outputDir Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
-#'@param force Force overwriting of existing output directory data. No effect when outputDir=NULL.
+#'@param force Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
-#'@return List of data frames with statistics, trajectory and histogram output data.
+#'@return List of statistics, trajectory and histogram output data.
 #'@examples
 #'\dontrun{
 #'#'#example using included dimer_decay.xml file
-#'#output written to directory ex_out (created in current working directory)
 #'#run 100 simulations for 10 time units, keeping output at 20 time intervals
 #'#store model file name in a variable first
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
