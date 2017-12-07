@@ -1,10 +1,11 @@
 #'@title Plot StochKit2R simulation statistics output data
 #'
 #'@description
-#'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices} in the StochKit2R stats output directory \code{statsDirectory}
+#'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices}
 #'
-#'@param statsDF stats dta frame of ssa output, list of means and vars sata frames
+#'@param statsData stats element from ssa (or tauLeaping) output (a list containing the means and vars (variances) data frames) or a character string to the path to the output stats directory.
 #'@param indices The species indices that will be plotted. The first species is index 1
+#'@param file set to TRUE if statsData is a path to the stats output directory (rather than returned output data)
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
@@ -14,7 +15,7 @@
 #'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
 #'plotStats("ex_out/stats",c(1,2,3),TRUE)
-#'#same plot from output
+#'#same plot from returned output
 #'plotStats(out$stats,c(1,2,3))
 #'}
 plotStats <- function(statsData,indices,file=FALSE) {

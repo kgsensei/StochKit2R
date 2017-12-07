@@ -4,7 +4,7 @@
 #'\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
 #'
 #'@param histogramData character vector from output object or string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param file indicates whether \code{histogramData} is data or file name
+#'@param file set to TRUE if histogramData is a path to the histogram output file (rather than returned output data)
 #'@return The ggplot object
 #'@examples
 #'\dontrun{

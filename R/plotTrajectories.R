@@ -1,11 +1,12 @@
 #'@title Plot StochKit2R simulation trajectory output data
 #'
 #'@description
-#'\code{plotTrajectories} Plots trajectories \code{outputIndex} of populations specified in \code{speciesIndex} in the StochKit2R trajectories in \code{trajectoriesData}
+#'\code{plotTrajectories} Plots trajectories \code{outputIndexes} of populations specified in \code{speciesIndex} in the StochKit2R trajectories in \code{trajectoriesData}
 #'
-#'@param trajectoriesData String containing file (must end in /trajectories) name or $trajs list of ssa output, depending on the value of the file parameter
-#'@param outputIndex Integer vector containing indexes for which trials will be plotted
-#'@param speciesIndex Integer Vector of the species indices that will be plotted. The first species is index 1
+#'@param trajectoriesData trajs list from ssa (or tauLeaping) returned output or character string containing the path to the trajectories output directory
+#'@param outputIndexes Integer vector containing indexes for which trials will be plotted
+#'@param speciesIndexes Integer vector of the species indices that will be plotted. The first species is index 1
+#'@param file set to TRUE if trajectoriesData is a path to the trajectories output directory (rather than returned output data)
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
@@ -18,7 +19,7 @@
 #'#same plot from output
 #'plotTrajectories(out$trajs,2:3,1:3)
 #'}
-plotTrajectories <- function(trajectoriesData,outputIndex,speciesIndex,file=F) {
+plotTrajectories <- function(trajectoriesData,outputIndexes,speciesIndexes,file=F) {
 
   #check to make sure indices are provided
   if (length(outputIndex)==0 | length(speciesIndex)==0) {

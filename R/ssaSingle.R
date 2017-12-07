@@ -12,7 +12,6 @@
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
-#'#output written to file single_output.txt (created in current working directory)
 #'out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),startTime=0,endTime=10)
 #'}
 ssaSingle <- function(modelFile,startTime,endTime,outputFile=NULL,seed=NULL) {

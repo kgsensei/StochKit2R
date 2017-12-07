@@ -1,12 +1,12 @@
 #'@title Plot two StochKit2R simulation histograms and display distance
 #'
 #'@description
-#'\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram output files \code{histogramFileName1} and \code{histogramFileName1} and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram returned output or output files and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
 #'
-#'@param histogramData1 character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param histogramData2 character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param file1 indicates whether \code{histogramData1} is data or file name
-#'@param file2 indicates whether \code{histogramData2} is data or file name
+#'@param histogramData1 histogram data from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'@param histogramData2 histogram data from output object or string with path to StochKit2 histogram output file 2. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'@param file1 set to TRUE if \code{histogramData1} is a path to the histogram output file (rather than returned output data)
+#'@param file2 set to TRUE if \code{histogramData2} is a path to the histogram output file (rather than returned output data)
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
