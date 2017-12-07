@@ -7,25 +7,27 @@
 plotStats(statsData, indices, file = FALSE)
 }
 \arguments{
+\item{statsData}{stats element from ssa (or tauLeaping) output (a list containing the means and vars (variances) data frames) or a character string to the path to the output stats directory.}
+
 \item{indices}{The species indices that will be plotted. The first species is index 1}
 
-\item{statsDF}{stats dta frame of ssa output, list of means and vars sata frames}
+\item{file}{set to TRUE if statsData is a path to the stats output directory (rather than returned output data)}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices} in the StochKit2R stats output directory \code{statsDirectory}
+\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices}
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
+out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=TRUE)
 #plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
-plotStats("ex_out/stats",c(1,2,3),TRUE)
-#same plot from output
+plotStats("ex_out/stats",c(1,2,3),file=TRUE)
+#same plot from returned output
 plotStats(out$stats,c(1,2,3))
 }
 }

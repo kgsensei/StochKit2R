@@ -8,19 +8,19 @@ histogramDistance(histogramData1, histogramData2, file1 = FALSE,
   file2 = FALSE)
 }
 \arguments{
-\item{histogramData1}{character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{histogramData1}{histogram data from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
 
-\item{histogramData2}{character vector from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{histogramData2}{histogram data from output object or string with path to StochKit2 histogram output file 2. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
 
-\item{file1}{indicates whether \code{histogramData1} is data or file name}
+\item{file1}{set to TRUE if \code{histogramData1} is a path to the histogram output file (rather than returned output data)}
 
-\item{file2}{indicates whether \code{histogramData2} is data or file name}
+\item{file2}{set to TRUE if \code{histogramData2} is a path to the histogram output file (rather than returned output data)}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram output files \code{histogramFileName1} and \code{histogramFileName1} and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram returned output or output files and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
 }
 \examples{
 \dontrun{
@@ -36,6 +36,6 @@ histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
 #IMPORTANT: histogram file names have format:
 #hist_<species index>_<time point>.dat, where species index STARTS AT 0
 histogramDistance("ex_out/histograms/hist_1_4.dat",
-                 "ex_out2/histograms/hist_1_4.dat",TRUE,TRUE)
+                 "ex_out2/histograms/hist_1_4.dat",file1=TRUE,file2=TRUE)
 }
 }

@@ -28,7 +28,7 @@ tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 
 \item{outputDir}{Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
-\item{force}{Force overwriting of existing data}
+\item{force}{Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.}
 
 \item{seed}{Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{tauLeaping}}
 
@@ -53,7 +53,7 @@ out <- tauLeaping(modelFile=model,time=10,realizations=100,intervals=20)
 
 #more typical example where model file is stored elsewhere
 #(must be valid path to existing .xml StochKit2 model file)
-also, keep trajectory data
+#also, keep trajectory data
 out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 }
 }

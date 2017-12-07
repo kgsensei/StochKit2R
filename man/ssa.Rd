@@ -27,14 +27,14 @@ ssa(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 
 \item{outputDir}{Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
-\item{force}{Force overwriting of existing output directory data. No effect when outputDir=NULL.}
+\item{force}{Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.}
 
 \item{seed}{Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}}
 
 \item{p}{Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.}
 }
 \value{
-List of data frames with statistics, trajectory and histogram output data.
+List of statistics, trajectory and histogram output data.
 }
 \description{
 \code{ssa} Runs an ensemble of SSA \code{realizations} (trajectories)
@@ -42,7 +42,6 @@ List of data frames with statistics, trajectory and histogram output data.
 \examples{
 \dontrun{
 #'#example using included dimer_decay.xml file
-#output written to directory ex_out (created in current working directory)
 #run 100 simulations for 10 time units, keeping output at 20 time intervals
 #store model file name in a variable first
 model <- system.file("dimer_decay.xml",package="StochKit2R")

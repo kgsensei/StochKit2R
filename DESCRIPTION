@@ -1,9 +1,12 @@
 Package: StochKit2R
 Type: Package
 Title: Efficient Discrete Stochastic Simulation
-Version: 0.5
-Date: 2015-02-26
-Author: Kevin R. Sanft
+Version: 0.6
+Date: 2017-12-07
+Author: Kevin R. Sanft [aut, cre, cph],
+  Harris Joseph [ctb],
+  John Ravi [ctb],
+  Linda R. Petzold [cph]
 Maintainer: Kevin R. Sanft <kevin@kevinsanft.com>
 Copyright: Kevin R. Sanft, Linda R. Petzold
 Description: Efficient discrete stochastic simulation using the Gillespie algorithm (aka the Stochastic Simulation Algorithm or SSA) and adaptive tau-leaping. It provides an R interface to simulation algorithms and it provides functions for visualizing (plotting) simulation output.

@@ -12,7 +12,7 @@
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
+#'out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=TRUE)
 #'#plot the data for species 1,2 and 3 (all of them in the dimer decay model) from file
 #'plotStats("ex_out/stats",c(1,2,3),file=TRUE)
 #'#same plot from returned output
