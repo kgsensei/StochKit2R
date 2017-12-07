@@ -28,9 +28,8 @@ The ggplot object
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
 result1 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
-
 #another ensemble with output written to ex_out2 directory
-result2 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
+result2 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out2",force=TRUE)
 #plot the histograms for species 2 ("S2") at time point 5 (t=2.0) for the two runs above
 histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
 #IMPORTANT: histogram file names have format:

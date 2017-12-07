@@ -39,7 +39,7 @@ tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 \item{threshold}{Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping}
 }
 \value{
-List of data frames with statistics, trajectory and histogram output data.
+List of statistics, trajectory and histogram output data.
 }
 \description{
 \code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} (trajectories). Will revert to SSA if Tau-leaping is not beneficial.

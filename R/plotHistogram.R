@@ -11,7 +11,8 @@
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model,time=10,realizations=100,intervals=20,keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
+#'out <- ssa(model,time=10,realizations=100,intervals=20,
+#'           keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
 #'#plot the histogram for species 2 ("S2") at time point 5 (t=2.0)
 #'#IMPORTANT: histogram file names have format:
 #'#hist_<species index>_<time point>.dat, where species index STARTS AT 0

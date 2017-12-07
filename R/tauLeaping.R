@@ -17,7 +17,7 @@
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 #'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-#'@return List of data frames with statistics, trajectory and histogram output data.
+#'@return List of statistics, trajectory and histogram output data.
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file

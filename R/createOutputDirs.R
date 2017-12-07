@@ -7,7 +7,7 @@
 #'@param noStats true if not keeping statistics data
 #'@param keepTrajectories true if keeping trajectory data
 #'@param keepHistograms true if keeping histogram data
-#'@param overwrite and delete existing output directories, if they exists
+#'@param force delete and overwrite existing output directories, if they exists
 createOutputDirs <- function(outputDir,noStats,keepTrajectories,keepHistograms,force) {
   if (file.exists(outputDir)) {
     if (!force) {

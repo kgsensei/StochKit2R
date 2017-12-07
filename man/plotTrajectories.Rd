@@ -26,10 +26,11 @@ The ggplot object
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-out <- ssa(model,time=10,realizations=100,intervals=20,keepTrajectories=TRUE,outputDir="ex_out",force=TRUE)
+out <- ssa(model,time=10,realizations=100,intervals=20,
+          keepTrajectories=TRUE,outputDir="ex_out",force=TRUE)
 #plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5 from file
-plotTrajectories("ex_out/trajectories",2:3,1:3,file=TRUE)
+plotTrajectories("ex_out/trajectories",outputIndexes=2:3,speciesIndexes=1:3,file=TRUE)
 #same plot from output
-plotTrajectories(out$trajs,2:3,1:3)
+plotTrajectories(out$trajs,outputIndexes=2:3,speciesIndexes=1:3)
 }
 }
