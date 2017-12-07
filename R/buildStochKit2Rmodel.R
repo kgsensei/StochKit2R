@@ -1,7 +1,5 @@
 buildStochKit2Rmodel <- function(modelFile) {
-#  doc <- xmlInternalTreeParse("/Users/kevinsanft/Desktop/StochKit2.0.10/models/examples/michaelis_menten_andreas_full.xml")
-#  doc <- xmlInternalTreeParse("/Users/kevinsanft/Desktop/testmodel.xml")
-  
+  # modelFile = "~/Desktop/schlogl.xml"  
   doc <- XML::xmlInternalTreeParse(modelFile)
   
   #how many children? #should be 1: model

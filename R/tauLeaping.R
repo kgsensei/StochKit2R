@@ -1,36 +1,34 @@
 #'@title Explicit Adaptive Tau-leaping simulation
 #'
 #'@description
-#'\code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} and writes output
-#'data to \code{outputDir}. Will revert to SSA if Tau-leaping is not beneficial.
+#'\code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} (trajectories). Will revert to SSA if Tau-leaping is not beneficial.
 #'
 #'@param modelFile Character string with path to StochKit2 .xml model file
 #'@param time Simulation time of each realization
 #'@param realizations Number of realizations
 #'@param intervals Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.
-#'@param noStats Do not keep means and variances data. Default \code{FALSE} creates stats directory in output directory
-#'@param keepTrajectories Keep trajectory data. Creates trajectories directory in output directory
-#'@param keepHistograms Keep histogram data. Creates histograms directory in output directory
+#'@param noStats Do not keep means and variances data. Default \code{FALSE} creates stats output.
+#'@param keepTrajectories Keep trajectory data.
+#'@param keepHistograms Keep histogram data.
 #'@param bins Number of histogram bins
-#'@param outputDir Character string with path to output directory. Default (=NULL) which writes no file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
+#'@param outputDir Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
 #'@param force Force overwriting of existing data
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{tauLeaping}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
 #'@param threshold Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping
-#'@return NULL
+#'@return List of data frames with statistics, trajectory and histogram output data.
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
-#'#output written to directory ex_out (created in current working directory)
 #'#store path to StochKit2R dimer_decay.xml file in a variable
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
-#'tauLeaping(model,"ex_out",10,100,20,force=TRUE)
+#'out <- tauLeaping(modelFile=model,time=10,realizations=100,intervals=20)
 #'
 #'#more typical example where model file is stored elsewhere
 #'#(must be valid path to existing .xml StochKit2 model file)
-#'#store output in dimer_decay_output, overwrite existing data
-#'out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,outputDir="Desktop/dimer_decay_output",force=T)
+#'also, keep trajectory data
+#'out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 #'}
 tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,outputDir=NULL,force=FALSE,seed=NULL,p=0,epsilon=0.03,threshold=10) {
   # can set seed in R with set.seed()

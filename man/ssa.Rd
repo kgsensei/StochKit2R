@@ -17,28 +17,27 @@ ssa(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 
 \item{intervals}{Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.}
 
-\item{noStats}{Do not keep means and variances data. Default \code{FALSE} creates stats directory in output directory}
+\item{noStats}{Do not keep means and variances data. Default \code{FALSE} creates stats output.}
 
-\item{keepTrajectories}{Keep trajectory data. Creates trajectories directory in output directory}
+\item{keepTrajectories}{Keep trajectory data.}
 
-\item{keepHistograms}{Keep histogram data. Creates histograms directory in output directory}
+\item{keepHistograms}{Keep histogram data.}
 
 \item{bins}{Number of histogram bins}
 
-\item{outputDir}{Character string with path to output directory. By default (=NULL) and will not write file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
+\item{outputDir}{Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
-\item{force}{Force overwriting of existing data}
+\item{force}{Force overwriting of existing output directory data. No effect when outputDir=NULL.}
 
 \item{seed}{Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}}
 
 \item{p}{Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.}
 }
 \value{
-List of data frames with means, variances, and a list of trajectory vectors
+List of data frames with statistics, trajectory and histogram output data.
 }
 \description{
-\code{ssa} Runs an ensemble of SSA \code{realizations} and writes output
-data to \code{outputDir}
+\code{ssa} Runs an ensemble of SSA \code{realizations} (trajectories)
 }
 \examples{
 \dontrun{
@@ -47,12 +46,10 @@ data to \code{outputDir}
 #run 100 simulations for 10 time units, keeping output at 20 time intervals
 #store model file name in a variable first
 model <- system.file("dimer_decay.xml",package="StochKit2R")
-out <- ssa(model,10,100,20,F,T,T,outputDir="ex_out",force=T)
+out <- ssa(modelFile=model,time=10,realizations=100,intervals=20)
 #more typical example where model file is stored elsewhere
 #(must be valid path to existing .xml StochKit2 model file)
-#store output in dimer_decay_output, overwrite existing data
-#and keep trajectory data.
-out <- ssa("Desktop/dimer_decay.xml",
-   "Desktop/dimer_decay_output",10,100,20,keepTrajectories=T,force=T)
+#also, keep trajectory data.
+out <- ssa("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 }
 }

@@ -18,15 +18,15 @@ tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 
 \item{intervals}{Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.}
 
-\item{noStats}{Do not keep means and variances data. Default \code{FALSE} creates stats directory in output directory}
+\item{noStats}{Do not keep means and variances data. Default \code{FALSE} creates stats output.}
 
-\item{keepTrajectories}{Keep trajectory data. Creates trajectories directory in output directory}
+\item{keepTrajectories}{Keep trajectory data.}
 
-\item{keepHistograms}{Keep histogram data. Creates histograms directory in output directory}
+\item{keepHistograms}{Keep histogram data.}
 
 \item{bins}{Number of histogram bins}
 
-\item{outputDir}{Character string with path to output directory. Default (=NULL) which writes no file. If output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
+\item{outputDir}{Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
 
 \item{force}{Force overwriting of existing data}
 
@@ -38,21 +38,22 @@ tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 
 \item{threshold}{Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping}
 }
+\value{
+List of data frames with statistics, trajectory and histogram output data.
+}
 \description{
-\code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} and writes output
-data to \code{outputDir}. Will revert to SSA if Tau-leaping is not beneficial.
+\code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} (trajectories). Will revert to SSA if Tau-leaping is not beneficial.
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
-#output written to directory ex_out (created in current working directory)
 #store path to StochKit2R dimer_decay.xml file in a variable
 model <- system.file("dimer_decay.xml",package="StochKit2R")
-tauLeaping(model,"ex_out",10,100,20,force=TRUE)
+out <- tauLeaping(modelFile=model,time=10,realizations=100,intervals=20)
 
 #more typical example where model file is stored elsewhere
 #(must be valid path to existing .xml StochKit2 model file)
-#store output in dimer_decay_output, overwrite existing data
-out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,outputDir="Desktop/dimer_decay_output",force=T)
+also, keep trajectory data
+out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 }
 }

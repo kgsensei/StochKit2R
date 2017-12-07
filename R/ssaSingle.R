@@ -1,21 +1,19 @@
 #'@title Gillespie Stochastic Simulation Algorithm single trajectory
 #'
 #'@description
-#'\code{ssaSingle} Run a single SSA trajectory and write output
-#'data to \code{outputFile}. Stores a row of data for every reaction event.
+#'\code{ssaSingle} Run a single SSA trajectory. Stores a row of data for every reaction event.
 #'
 #'@param modelFile Character string with path to StochKit2 .xml model file
 #'@param startTime Simulation start time
 #'@param endTime Simulation end time
-#'@param outputFile Character string with path to output file. By default (=NULL) and writes no out put file.
+#'@param outputFile Character string with path to output file. By default (=NULL) no data is written to file.
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssaSingle}
-#'@return Data frame containing: mean, variance for run and a vector of trajectories
+#'@return Data frame containing time and species population for every reaction event in the simulation.
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
 #'#output written to file single_output.txt (created in current working directory)
-#'out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,
-#'          "single_output.txt")
+#'out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),startTime=0,endTime=10)
 #'}
 ssaSingle <- function(modelFile,startTime,endTime,outputFile=NULL,seed=NULL) {
   # can set seed in R with set.seed()
