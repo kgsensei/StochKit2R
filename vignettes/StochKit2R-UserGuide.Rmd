@@ -46,11 +46,13 @@ install.packages("StochKit2R")
 -->
 StochKit2R is available on github. You should be able to install it from the R console using:
 ```{r, eval=FALSE}
-#install.packages("devtools") #run once on your system
+install.packages("devtools") #run once on your system
 devtools::install_github("kevinsanft/StochKit2R")
 ```
 
-Then load and attach the package with:
+(Note: on Windows, the above code will ask you to install additional tools. You must install the tools. You may need to rerun the call to devtools::install_github("kevinsanft/StochKit2R") after installing the tools.) 
+
+You may seem some compilation warning messages but no errors. After successful installation, load and attach the package with:
 ```{r, eval=FALSE}
 library(StochKit2R)
 ```
@@ -93,7 +95,7 @@ CXX=/usr/local/bin/g++
 You will need to install the devtools package first, if you haven’t already.
 -->
 1. Download the Mac clang binary with OpenMP support (as of this writing, the current file is http://r.research.att.com/libs/clang-4.0.0-darwin15.6-Release.tar.gz) from http://r.research.att.com/libs/.
-2. Unpack the .tar.gz file. Copy the clang4 directory to a permanent location (for example, in your /usr/local/ directory).
+2. Unpack the .tar.gz file. Copy the clang4 directory to your /usr/local/ directory.
 3. Create (or edit your existing) ~/.R/Makevars file to include the following lines:
 		CC=/usr/local/clang4/bin/clang
 		CXX=/usr/local/clang4/bin/clang++
@@ -103,6 +105,7 @@ You will need to install the devtools package first, if you haven’t already.
 
 If everything worked correctly, you may see some warning messages but you should see no errors. You should also be able to scroll up to view the compilation commands to confirm that the clang4 compiler and –fopenmp were used in the compile commands.
 
+<!--
 **Windows**
 
 Windows binary packages are available. On Windows, download StochKit2R_\<version\>.zip from http://www.kevinsanft.com/StochKit2R.
@@ -111,6 +114,7 @@ To install the package from .zip file:
 
 * In RStudio: under the Tools menu, choose "Package Archive File (.zip, .tar.gz)" from the "Install from:" dropdown menu. Then locate the .zip file, then click Install.
 * In Rgui: under the Packages menu, choose "Install package(s) from local zip files". Then locate the .zip file.
+-->
 
 ## Running a simulation
 
@@ -154,7 +158,7 @@ By default, the simulation will create an output directory named "stats" within 
 
 ssaSingle runs a single trajectory and outputs a row of data for every reaction event that occurs to a file. The function takes as arguments: a path to a StochKit2 .xml model, a path to an output file name, a start time (you will usually use 0 here), and an end time. Here is the example from the documentation, using the dimer_decay.xml model that is included with the StochKit2R package:
 ```{r, eval=FALSE}
-out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
+out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
 ```
 The above command will run one realization from t=0 to t=10 and write the output to single_output.txt. Note: the file will contain about 25,000 lines, one line for each reaction event (plus one line for the initial population and one line for the end time).
 
