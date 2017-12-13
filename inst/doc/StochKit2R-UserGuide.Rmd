@@ -11,7 +11,7 @@ vignette: >
 
 ### StochKit2R User Guide
 Kevin R. Sanft
-February 2015
+December 2017
 
 This document provides usage instructions for StochKit2R.
 
@@ -19,7 +19,7 @@ This document provides usage instructions for StochKit2R.
 
 StochKit2R is an R version of StochKit2.0, a software package for discrete stochastic simulation using Gillespie’s Stochastic Simulation Algorithm (SSA) and tau-leaping [1-3]. It is designed to support much of the functionality of StochKit2.0. One limitation of StochKit2R is that it does not accept input model files that contain non-mass-action (customized) propensity functions or events (this is due to the platform-specific compilation that is required; this functionality might be added to future versions of StochKit2R).
 
-StochKit2R was written by and is maintained by Kevin R. Sanft (kevin@kevinsanft.com). StochKit2.0 was written by Kevin R. Sanft, Sheng Wu, Min Roh, Jin Fu, Rone Kwei Lim, and others from Professor Linda Petzold's research group at UC Santa Barbara.
+StochKit2R was written by and is maintained by Kevin R. Sanft (kevin@kevinsanft.com), with contributions by Harris Joseph and John Ravi. StochKit2.0 was written by Kevin R. Sanft, Sheng Wu, Min Roh, Jin Fu, Rone Kwei Lim, and others from Professor Linda Petzold's research group at UC Santa Barbara.
 
 ## Citing StochKit2R
 
@@ -35,21 +35,50 @@ citation(package="StochKit2R")
 
 ## Acknowledgments
 
-This work was supported by NSF grant DMS-1045015 (through St. Olaf College’s Center for Interdisciplinary Research). I would like to thank Thomas Scott for his work on an early version of this package. I also thank Linda Petzold and her research group from the University of California, Santa Barbara.
+An early version of this work was partially supported by NSF grant DMS-1045015 (through St. Olaf College’s Center for Interdisciplinary Research). I also thank Linda Petzold and her research group from the University of California, Santa Barbara.
 
 ## Installation
-
+<!--
 As of this writing, StochKit2R is available on CRAN, the Comprehensive R Archive Network (http://cran.r-project.org/). Therefore, you should be able to install it from the R console:
 ```{r, eval=FALSE}
 install.packages("StochKit2R")
 ```
-Then load and attach the package with:
+-->
+StochKit2R is available on github. You may install from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary on Windows and Mac (see below).
+
+### Windows and Mac: binary installation
+
+Download the latest release from https://github.com/kevinsanft/StochKit2R/releases. On Windows, download the .zip file, on Mac download the .tgz file. (Note: you do not want to use the Source Code links.) Then execute the following code to install:
+
+```{r, eval=FALSE}
+install.packages(file.choose(),repos=NULL)
+```
+
+The above code will open a file browser window. Navigate to the downloaded file (typically this would be in your Downloads folder) and select it. After successful installation, load and attach the package with:
 ```{r, eval=FALSE}
 library(StochKit2R)
 ```
 
-Advanced Mac OS X users may want to view the additional instructions below on installation for high performance.
+If the installation fails, please install from source (see instructions below).
 
+### Any platform: install from Source
+
+You should be able to install it from the R console using:
+```{r, eval=FALSE}
+install.packages("devtools") #run once on your system
+devtools::install_github("kevinsanft/StochKit2R")
+```
+
+(Note: on Windows, the above code will ask you to install additional tools. You must install the tools. You may need to rerun the call to devtools::install_github("kevinsanft/StochKit2R") after installing the tools.) 
+
+You may see some compilation warning messages but there should be no errors. After successful installation, load and attach the package with:
+```{r, eval=FALSE}
+library(StochKit2R)
+```
+
+Advanced Mac OS X users may want to view the additional instructions below on installation from source for high performance.
+
+<!--
 ### Installing from source (Mac OS X, Linux/Unix) and Windows binaries
 
 Note: Installing from source will not install the dependencies. Therefore, you must install the "ggplot2", "reshape", "Rcpp", "BH", and "XML" packages (via install.packages) prior to installing StochKit2R.
@@ -66,12 +95,12 @@ Or, you can run the following command in the R console:
 install.packages("<path to>/StochKit2R_<version>.tar.gz",repos=NULL,type="source")
 ```
 Where you replace \<path to\> with the path to the .tar.gz file and \<version\> is the version number in the .tar.gz file name.
+-->
+**Advanced Mac OS X installation from source for high performance**
 
-**Advanced Mac OS X installation for high performance**
+As of this writing, the default compiler on recent versions of OS X does not support OpenMP. <!--(The gcc/g++ that comes with XCode's Command Line Tools is a wrapper for clang/clang++, not **GNU** GCC.)--> StochKit2R uses OpenMP to run simulations in parallel. Without OpenMP, StochKit2R uses only one processor. Advanced users can follow these instructions to install from source in a way that enables parallel ensemble simulations on Mac OS X. (The Mac binary installation described above will run in parallel, so these instructions are only for those who want to install from source or for whom the binary cannot be used.)
 
-As of this writing, the default compiler on recent versions of OS X does not support OpenMP. (The gcc/g++ that comes with XCode's Command Line Tools is a wrapper for clang/clang++, not **GNU** GCC.) StochKit2R uses OpenMP to run simulations in parallel. Without OpenMP, StochKit2R uses only one processor. Advanced users can follow these instructions to enable parallel ensemble simulations on Mac OS X.
-
-These instructions use **GNU** GCC. I tested it with GNU GCC 4.9. It may be possible to do this with the experimental version of Clang here: http://clang-omp.github.io/, but I have not tested it.
+<!--These instructions use **GNU** GCC. I tested it with GNU GCC 4.9. It may be possible to do this with the experimental version of Clang here: http://clang-omp.github.io/, but I have not tested it.
 
 1.  Install **GNU** GCC. (XCode's gcc and g++ are symbolic links to clang and clang++, respectively.) This can probably be done through homebrew, macports, or from source.
 2.	Download StochKit2R_\<version\>.tar.gz from http://www.kevinsanft.com/StochKit2R
@@ -83,17 +112,28 @@ CXX=/usr/local/bin/g++
 5.	In R, set the working directory to the unpacked StochKit2R directory with the setwd function.
 6.	In R, run devtools::load_all(recompile=T, export_all=F).
 You will need to install the devtools package first, if you haven’t already.
+-->
+1. Download the Mac clang binary with OpenMP support (as of this writing, the current file is http://r.research.att.com/libs/clang-4.0.0-darwin15.6-Release.tar.gz) from http://r.research.att.com/libs/.
+2. Unpack the .tar.gz file. Copy the clang4 directory to your /usr/local/ directory.
+3. Create (or edit your existing) ~/.R/Makevars file to include the following lines:
+		CC=/usr/local/clang4/bin/clang
+		CXX=/usr/local/clang4/bin/clang++
+		LDFLAGS=-L/usr/local/clang4/lib
+(Where /usr/local/ is replaced with your path to the clang4 directory, if different.)
+4. In R, run: devtools::install_github("kevinsanft/StochKit2R")
 
-If everything worked correctly, you may see some warning messages but you should see no errors. You should also be able to scroll up to view the compilation commands to confirm that g++ and –fopenmp were used in the compile commands.
+If everything worked correctly, you may see some warning messages but you should see no errors. You should also be able to scroll up to view the compilation commands to confirm that the clang4 compiler and –fopenmp were used in the compile commands.
 
+<!--
 **Windows**
 
 Windows binary packages are available. On Windows, download StochKit2R_\<version\>.zip from http://www.kevinsanft.com/StochKit2R.
 
 To install the package from .zip file:
 
-* In Rgui: under the Packages menu, choose "Install package(s) from local zip files". Then locate the .zip file.
 * In RStudio: under the Tools menu, choose "Package Archive File (.zip, .tar.gz)" from the "Install from:" dropdown menu. Then locate the .zip file, then click Install.
+* In Rgui: under the Packages menu, choose "Install package(s) from local zip files". Then locate the .zip file.
+-->
 
 ## Running a simulation
 
@@ -109,8 +149,8 @@ ssa and tauLeaping run ensembles (multiple simulation trajectories) and output d
 * keepTrajectories: when TRUE, trajectory data will be stored. Default is FALSE.
 * keepHistograms: when TRUE, historgram data will be stored. Default is FALSE.
 * bins: set the number of histogram bins. Default=32.
-* outputDir: the path to the output directory. By default (=NULL) which writes no file. If the directory does not exist, it will be created. If the directory already exists, an error will occur unless force=TRUE is specified (see below).
-* force: overwrite existing output. Default=FALSE.
+* outputDir: the path to the output directory. By default (=NULL) no output is written to file. If outputDir is set and the directory does not exist, it will be created. If the directory already exists, an error will occur unless force=TRUE is specified (see below).
+* force: overwrite existing output files. Default=FALSE.
 * p: number of processes (threads) to use. With default=0, the number of threads will be determined automatically (recommended). On some architectures, parallelism is not available by default (see section on "Advanced Mac OS X installation for high performance").
 * epsilon: (tauLeaping only) the error tolerance used for the step size selection procedure. Default=0.03.
 * threshold: (tauLeaping only) the minimum number of steps per leap before reverting to the SSA. By default, threshold=10, meaning tauLeaping will temporarily use the SSA direct method if a tau leap step fires fewer than 10 reactions
@@ -121,23 +161,23 @@ An example of running the ssa function:
 # to make things easier to read, store the path in a variable
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 # now, run a simulation:
-out <- ssa(model,"ex_out",10,100,20)
+out <- ssa(modelFile=model,time=10,realizations=100,intervals=20)
 ```
-The above function will run 100 simulations to time 10 using 20 output intervals. The returned list of data frames will be stored in the variable named out. Output may be stored in a new directory named ex_out which will be created in the current working directory. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
+The above function will run 100 simulations to time 10 using 20 output intervals. The returned list of data frames will be stored in the variable named out. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
 
 In the more typical case, the model file will be stored elsewhere in your file system. For example:
 ```{r, eval=FALSE}
-out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20)
+out <- ssa("~/Desktop/dimer_decay.xml",10,100,20)
 ```
-The file dimer_decay.xml must exist in the ~/Desktop directory. (This corresponds to a machine-specific full path such as "/Users/kevinsanft/Desktop/dimer_decay.xml", which might be required on some systems. On Windows, "~" usually corresponds to the user's Documents folder, so ~/Desktop would not be a valid path.) Output will be stored in a new directory named dimer_decay_output which will be created in the Desktop directory. If dimer_decay_output already exists, the ssa function will exit with an error saying that the directory already exists. To overwrite an existing directory, use force=TRUE:
+The file dimer_decay.xml must exist in the ~/Desktop directory. (This corresponds to a machine-specific full path such as "/Users/kevinsanft/Desktop/dimer_decay.xml", which might be required on some systems. On Windows, "~" usually corresponds to the user's Documents folder, so ~/Desktop would not be a valid path.) To write the output to a directory named dimer_decay_output (and overwrite the existing data, if it exists using force=TRUE):
 ```{r, eval=FALSE}
-out <- ssa("~/Desktop/dimer_decay.xml","~/Desktop/dimer_decay_output",10,100,20,force=T)
+out <- ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
 ```
 By default, the simulation will create an output directory named "stats" within the outputDir. The stats directory will contain two files: means.txt and variances.txt, containing the means and variances of the species at the output intervals. If keepTrajectories or keepHistograms is TRUE, a directory named trajectories or histograms, respectively, will be created within the output directory.
 
 ssaSingle runs a single trajectory and outputs a row of data for every reaction event that occurs to a file. The function takes as arguments: a path to a StochKit2 .xml model, a path to an output file name, a start time (you will usually use 0 here), and an end time. Here is the example from the documentation, using the dimer_decay.xml model that is included with the StochKit2R package:
 ```{r, eval=FALSE}
-out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),"single_output.txt",0,10)
+out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
 ```
 The above command will run one realization from t=0 to t=10 and write the output to single_output.txt. Note: the file will contain about 25,000 lines, one line for each reaction event (plus one line for the initial population and one line for the end time).
 
@@ -214,7 +254,7 @@ StochKit2R is released under the GPL-3 (GPLv3) open source license (http://www.g
 
 ## Copyright
 
-StochKit2R &copy; 2015, Kevin R. Sanft and Linda R. Petzold.
+StochKit2R &copy; 2015-2017, Kevin R. Sanft and Linda R. Petzold.
 
 ## Additional resources
 

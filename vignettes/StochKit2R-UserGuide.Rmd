@@ -63,7 +63,7 @@ If the installation fails, please install from source (see instructions below).
 
 ### Any platform: install from Source
 
-You should be able to install it from the R console using:
+You should be able to install the StochKit2R package from source using the R console commands:
 ```{r, eval=FALSE}
 install.packages("devtools") #run once on your system
 devtools::install_github("kevinsanft/StochKit2R")
