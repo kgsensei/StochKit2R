@@ -44,7 +44,26 @@ As of this writing, StochKit2R is available on CRAN, the Comprehensive R Archive
 install.packages("StochKit2R")
 ```
 -->
-StochKit2R is available on github. You should be able to install it from the R console using:
+StochKit2R is available on github. You may install from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary on Windows and Mac (see below).
+
+### Windows and Mac: binary installation
+
+Download the latest release from https://github.com/kevinsanft/StochKit2R/releases. On Windows, download the .zip file, on Mac download the .tgz file. (Note: you do not want to use the Source Code links.) Then execute the following code to install:
+
+```{r, eval=FALSE}
+install.packages(file.choose(),repos=NULL)
+```
+
+The above code will open a file browser window. Navigate to the downloaded file (typically this would be in your Downloads folder) and select it. After successful installation, load and attach the package with:
+```{r, eval=FALSE}
+library(StochKit2R)
+```
+
+If the installation fails, please install from source (see instructions below).
+
+### Any platform: install from Source
+
+You should be able to install it from the R console using:
 ```{r, eval=FALSE}
 install.packages("devtools") #run once on your system
 devtools::install_github("kevinsanft/StochKit2R")
@@ -52,12 +71,12 @@ devtools::install_github("kevinsanft/StochKit2R")
 
 (Note: on Windows, the above code will ask you to install additional tools. You must install the tools. You may need to rerun the call to devtools::install_github("kevinsanft/StochKit2R") after installing the tools.) 
 
-You may seem some compilation warning messages but no errors. After successful installation, load and attach the package with:
+You may see some compilation warning messages but there should be no errors. After successful installation, load and attach the package with:
 ```{r, eval=FALSE}
 library(StochKit2R)
 ```
 
-Advanced Mac OS X users may want to view the additional instructions below on installation for high performance.
+Advanced Mac OS X users may want to view the additional instructions below on installation from source for high performance.
 
 <!--
 ### Installing from source (Mac OS X, Linux/Unix) and Windows binaries
@@ -77,9 +96,9 @@ install.packages("<path to>/StochKit2R_<version>.tar.gz",repos=NULL,type="source
 ```
 Where you replace \<path to\> with the path to the .tar.gz file and \<version\> is the version number in the .tar.gz file name.
 -->
-**Advanced Mac OS X installation for high performance**
+**Advanced Mac OS X installation from source for high performance**
 
-As of this writing, the default compiler on recent versions of OS X does not support OpenMP. <!--(The gcc/g++ that comes with XCode's Command Line Tools is a wrapper for clang/clang++, not **GNU** GCC.)--> StochKit2R uses OpenMP to run simulations in parallel. Without OpenMP, StochKit2R uses only one processor. Advanced users can follow these instructions to enable parallel ensemble simulations on Mac OS X.
+As of this writing, the default compiler on recent versions of OS X does not support OpenMP. <!--(The gcc/g++ that comes with XCode's Command Line Tools is a wrapper for clang/clang++, not **GNU** GCC.)--> StochKit2R uses OpenMP to run simulations in parallel. Without OpenMP, StochKit2R uses only one processor. Advanced users can follow these instructions to install from source in a way that enables parallel ensemble simulations on Mac OS X. (The Mac binary installation described above will run in parallel, so these instructions are only for those who want to install from source or for whom the binary cannot be used.)
 
 <!--These instructions use **GNU** GCC. I tested it with GNU GCC 4.9. It may be possible to do this with the experimental version of Clang here: http://clang-omp.github.io/, but I have not tested it.
 

@@ -1,8 +1,8 @@
 Package: StochKit2R
 Type: Package
 Title: Efficient Discrete Stochastic Simulation
-Version: 0.6
-Date: 2017-12-07
+Version: 0.7
+Date: 2017-12-13
 Author: Kevin R. Sanft [aut, cre, cph],
   Harris Joseph [ctb],
   John Ravi [ctb],
