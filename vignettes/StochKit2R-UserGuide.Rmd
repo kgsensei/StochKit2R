@@ -242,11 +242,15 @@ The StochKit2 model definition supports (global) parameters as seen in the model
 
 NOTE: parameters cannot be functions of the species' populations.
 
-## Bugs
+## Bugs/FAQ
+
+StochKit2R currently does not support customized (non-mass-action) propensity functions or Events, so please do not report this as a bug.
+
+If you receive an error message reading "Error in fetch(key) : lazy-load database ... is corrupt", this is a known R bug (https://github.com/hadley/devtools/issues/419). If you restart R and reload StochKit2R, the messages should go away.
+
+### Reporting Bugs
 
 Please report bugs to kevin@kevinsanft.com. Please include a description of the error message, your R version, operating system, StochKit2R version, model file, and steps to recreate the error.
-
-Note: StochKit2R currently does not support customized (non-mass-action) propensity functions or Events, so please do not report this as a bug.
 
 ## License
 
