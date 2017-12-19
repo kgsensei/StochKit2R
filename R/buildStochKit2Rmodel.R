@@ -1,5 +1,5 @@
 buildStochKit2Rmodel <- function(modelFile) {
-  # modelFile = "~/Desktop/schlogl.xml"  
+  # modelFile = "~/Desktop/dimer_decay.xml"  
   doc <- XML::xmlInternalTreeParse(modelFile)
   
   #how many children? #should be 1: model
@@ -76,6 +76,28 @@ buildStochKit2Rmodel <- function(modelFile) {
   }
   
   StochKit2RReactionList <- lapply(StochKitReactions,getReactionInfo)
+  
+  # verify that species in ReactionList all appear in SpeciesList
+  # build vector of speciesIds
+  speciesIds = unlist(lapply(StochKit2RSpeciesList,function(x) return(x["Id"])))
+  # check that all reactants and products are in speciesIds
+  for (i in 1:length(StochKit2RReactionList)) {
+    thisrxn = StochKit2RReactionList[[i]]
+    # iterate over reactants
+    for (j in thisrxn$Reactants) {
+      #print(j$id)
+      if (! (j$id %in% speciesIds)) {
+        stop(paste("ERROR: species",j$id,"in reaction",thisrxn$Id,"is not in SpeciesList"))
+      }
+    }
+    #iterate over products
+    for (j in thisrxn$Products) {
+      #print(j$id)
+      if (! (j$id %in% speciesIds)) {
+        stop(paste("ERROR: species",j$id,"in reaction",thisrxn$Id,"is not in SpeciesList"))
+      }
+    }    
+  }
   
   return(list(StochKit2RParameterList,StochKit2RSpeciesList,StochKit2RReactionList))
 }

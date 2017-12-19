@@ -44,7 +44,7 @@ As of this writing, StochKit2R is available on CRAN, the Comprehensive R Archive
 install.packages("StochKit2R")
 ```
 -->
-StochKit2R is available on github. You may install from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary on Windows and Mac (see below).
+StochKit2R is available on github. You may install the latest version from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary release on Windows and Mac (see below).
 
 ### Windows and Mac: binary installation
 
