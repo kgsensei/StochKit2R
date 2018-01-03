@@ -26,12 +26,20 @@ getReactionInfo <- function(reactionXMLNode) {
   if (!any("Type"==XML::xmlSApply(reactionXMLNode, XML::xmlName))) {
     stop("ERROR: Reaction without Type tag")
   }
-  # StochKit2R does not allow Type=customized, therefore Rate is required
   if (XML::xmlValue(reactionXMLNode[["Type"]])!="mass-action") {
-    stop("ERROR: Reaction Type must equal 'mass-action'")
+    if (XML::xmlValue(reactionXMLNode[["Type"]])!="customized") {
+      stop("ERROR: Reaction Type must be 'mass-action' or 'customized'")
+    }
+    if (!any("PropensityFunction"==XML::xmlSApply(reactionXMLNode, XML::xmlName))) {
+      stop("ERROR: customized Reaction without PropensityFunction tag")
+    }
+    # propensity_string = XML::xmlValue(reactionXMLNode[["PropensityFunction"]])
+    # cat("propensity_string=",propensity_string,"\n")
+    #stop("Would process customized propensity here. Not implemented. Terminating")
+    # print("Would process customized propensity here... not implemented.")
   }
-  if (!any("Rate"==XML::xmlSApply(reactionXMLNode, XML::xmlName))) {
-    stop("ERROR: Reaction without Rate tag")
+  else if (!any("Rate"==XML::xmlSApply(reactionXMLNode, XML::xmlName))) {
+    stop("ERROR: Mass action reaction without Rate tag")
   }
   #must contain at least one of Reactants or Products (usually both)
   #note, this does not catch case where no SpeciesReference tags are present
@@ -69,7 +77,7 @@ getReactionInfo <- function(reactionXMLNode) {
     stop("Reactants and Products contain no SpeciesReference entries. At least one reactant or product must be specified")
   }
   
-  rxns <- list(Id=XML::xmlValue(reactionXMLNode[["Id"]]),Rate=XML::xmlValue(reactionXMLNode[["Rate"]]),Reactants=Reactants,Products=Products)
+  rxns <- list(Id=XML::xmlValue(reactionXMLNode[["Id"]]),Type=XML::xmlValue(reactionXMLNode[["Type"]]),Rate=XML::xmlValue(reactionXMLNode[["Rate"]]),PropensityFunction=XML::xmlValue(reactionXMLNode[["PropensityFunction"]]),Reactants=Reactants,Products=Products)
   if (sub("[[:space:]]+$", "", rxns["Id"])!=rxns["Id"]) {
     warning(paste("White space detected in Reaction Id ",rxns["Id"],", removing spaces"))
     rxns["Id"]=sub("[[:space:]]+$", "", rxns["Id"])

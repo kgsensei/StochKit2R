@@ -1,5 +1,38 @@
+createFunctionList <- function(expressionStrings) {
+  #take a list of C++ expressions, wrap in C++ functions, compile
+  # return a list of C++ functions (or function pointers?)
+  
+  if (!all(is.na(expressionStrings))) {
+    message("NOTE: compiling customized propensity functions, this may take a few moments.")
+  }
+  
+  output = list()
+  cppincludes = "#include <boost/numeric/ublas/vector.hpp>"
+  functionprefix = "double f"
+  functionargs = "(boost::numeric::ublas::vector<double>& x) {\n\treturn "
+  
+  functionsuffix = ";\n}"
+  for (i in 1:length(expressionStrings)) {
+    if (is.na(expressionStrings[i])) {
+      output[[i]]=NA
+    }
+    else {
+      cppfun <- paste(functionprefix,i,functionargs,expressionStrings[i],functionsuffix,sep="")#"double h1(boost::numeric::ublas::vector<double>& x1) {return x1(1)*x1(2);}"
+      #print(cppfun)
+      output[[i]] = cppXPtr(cppfun,depends="BH",includes = cppincludes)
+    }
+  }
+  
+  if (!all(is.na(expressionStrings))) {
+    message("NOTE: finished compiling customized propensity functions.")
+  }
+  
+  return(output)
+}
+
 buildStochKit2Rmodel <- function(modelFile) {
   # modelFile = "~/Desktop/dimer_decay.xml"  
+  # modelFile = "~/Desktop/schlogl.xml"
   doc <- XML::xmlInternalTreeParse(modelFile)
   
   #how many children? #should be 1: model
@@ -99,5 +132,13 @@ buildStochKit2Rmodel <- function(modelFile) {
     }    
   }
   
-  return(list(StochKit2RParameterList,StochKit2RSpeciesList,StochKit2RReactionList))
+  #get custom PropensityFunction strings
+  propFunctionStrings = unlist(lapply(StochKit2RReactionList,function(x) return(x["PropensityFunction"])))
+  #create C++ functions out of propensity function strings
+  #substitute parameter names for values and species names for 
+  expressionStrings = customPropensitySubstitution(propFunctionStrings,StochKit2RParameterList,StochKit2RSpeciesList)
+  #convert expressionStrings into list of functions or function pointers
+  StochKit2CustomPropensityFunctionList = createFunctionList(expressionStrings)
+  #return(list(StochKit2RParameterList,StochKit2RSpeciesList,StochKit2RReactionList))  
+  return(list(StochKit2RParameterList,StochKit2RSpeciesList,StochKit2RReactionList,StochKit2CustomPropensityFunctionList))
 }

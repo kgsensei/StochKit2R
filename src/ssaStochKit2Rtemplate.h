@@ -36,13 +36,13 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, double time, int r
   Rcpp::List rParameterList=StochKit2Rmodel[0];
   Rcpp::List rSpeciesList=StochKit2Rmodel[1];
   Rcpp::List rReactionList=StochKit2Rmodel[2];
-
+  Rcpp::List rCustomPropensityList=StochKit2Rmodel[3];
 //    int NumberOfSpecies=rSpeciesList.size();
 //    int NumberOfReactions=rReactionList.size();
     
   STOCHKIT::MassActionModel<STOCHKIT::StandardDriverTypes::populationType, _stoichiometryType,
     STOCHKIT::StandardDriverTypes::propensitiesType, 
-    STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,rReactionList,rSpeciesList);
+	STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,rReactionList,rSpeciesList,rCustomPropensityList);
     
   //create the main output object
   std::vector<STOCHKIT::StandardDriverTypes::outputType> output(1);

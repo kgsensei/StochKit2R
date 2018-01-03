@@ -71,7 +71,7 @@ RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, 
 #endif
     
     std::string method=chooseMethod(numberOfReactions, realizations, n);
-    
+	
     if (numberOfSpecies<denseStoichiometryCutoff) {
         if (method=="odm") {
             Rcout << "running odm dense...\n";

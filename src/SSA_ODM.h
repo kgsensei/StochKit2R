@@ -191,8 +191,8 @@ namespace STOCHKIT
         sort(FrequencyVector.begin(), FrequencyVector.end(), ValueGreater());
         Base::stoichiometry = ReorderVectors<_stoichiometryType>(Base::stoichiometry);
         typedef typename CustomPropensitySet<_populationVectorType>::tempType myType;
-//		Base::propensities.propensities = ReorderVectors<myType>(Base::propensities.propensities);
-		Base::propensities.simplePropensities = ReorderVectors<myType>(Base::propensities.simplePropensities);
+		Base::propensities.propensities = ReorderVectors<myType>(Base::propensities.propensities);
+//		Base::propensities.simplePropensities = ReorderVectors<myType>(Base::propensities.simplePropensities);
         Base::dependencyGraph = GenerateDG(Base::dependencyGraph);
     	
 	}
