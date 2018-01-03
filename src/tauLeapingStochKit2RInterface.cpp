@@ -51,11 +51,11 @@ RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, double
   Rcpp::List rParameterList=StochKit2Rmodel[0];
   Rcpp::List rSpeciesList=StochKit2Rmodel[1];
   Rcpp::List rReactionList=StochKit2Rmodel[2];
-    
+	Rcpp::List rCustomPropensityList=StochKit2Rmodel[3];
   STOCHKIT::MassActionModelMatrixStoichiometry<STOCHKIT::StandardDriverTypes::populationType,
     STOCHKIT::StandardDriverTypes::matrixStoichiometryType,
     STOCHKIT::StandardDriverTypes::propensitiesType,
-    STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,rReactionList,rSpeciesList);
+    STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,rReactionList,rSpeciesList,rCustomPropensityList);
     
   //create the main output object
   std::vector<STOCHKIT::StandardDriverTypes::outputType> output(1);

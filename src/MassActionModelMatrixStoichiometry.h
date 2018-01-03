@@ -2,6 +2,8 @@
 	\brief Text file input handler
 */
 
+//code duplication :( rather than specialization
+
 #ifndef STOCHKIT_MASS_ACTION_MODEL_H
 #define STOCHKIT_MASS_ACTION_MODEL_H
 
@@ -22,7 +24,7 @@
 #include "Parameter.h"
 #include "StringCalculator.h"
 //#include "VectorManipulation.h"
-//#include "CustomPropensity.h"
+#include "CustomPropensity.h"
 //#include "CustomSimplePropensity.h"
 //#include "CustomPropensitySet.h"
 #include <Rcpp.h>
@@ -69,8 +71,8 @@ namespace STOCHKIT
 			std::string Rate; // for mass-action
 			std::string Vmax;  // for michealis-menten
 			std::string Km;  // for michealis-menten
-			std::string Customized; // for customized propensity
-			std::vector<SpeciesReference> Reactants;  // reactant list
+		//std::string Customized; // for customized propensity
+		SEXP Customized;			std::vector<SpeciesReference> Reactants;  // reactant list
 			std::vector<SpeciesReference> Products;  // product list
 	};
 	std::vector<Reaction> ReactionsList;
@@ -80,7 +82,7 @@ namespace STOCHKIT
 
  public:
 
-     MassActionModelMatrixStoichiometry(Rcpp::List rParametersList, Rcpp::List rReactionList, Rcpp::List rSpeciesList) : simpleCalculator()
+     MassActionModelMatrixStoichiometry(Rcpp::List rParametersList, Rcpp::List rReactionList, Rcpp::List rSpeciesList, Rcpp::List rCustomPropensityList=NULL) : simpleCalculator()
 	{
 		NumberOfReactions = 0;
 		NumberOfSpecies = 0;
@@ -90,7 +92,7 @@ namespace STOCHKIT
         NumberOfSpecies=rSpeciesList.size();
         NumberOfReactions=rReactionList.size();
         recordParametersList(rParametersList);
-        recordReactionsList(rReactionList);
+        recordReactionsList(rReactionList,rCustomPropensityList);
         recordSpeciesList(rSpeciesList);
         
         if(!ParametersList.linkParameters()) {
@@ -113,7 +115,7 @@ namespace STOCHKIT
 
  protected:
      bool recordParametersList(Rcpp::List rParameterList);
-     bool recordReactionsList(Rcpp::List rReactionList);
+     bool recordReactionsList(Rcpp::List rReactionList, Rcpp::List rCustomPropensityList);
      bool recordSpeciesList(Rcpp::List rSpeciesList);
      bool linkSpeciesAndReactions();
 
@@ -169,26 +171,39 @@ MassActionModelMatrixStoichiometry<_populationVectorType,
 _stoichiometryType,
 _propensitiesFunctorType,
 _dependencyGraphType>::
-    recordReactionsList(Rcpp::List rReactionList)
+    recordReactionsList(Rcpp::List rReactionList, Rcpp::List rCustomPropensityList)
 {
 
     for (int i=0; i!=rReactionList.size(); ++i) {
         //contents: List of "reactions"
-        //each reaction is a list containing: Id, Rate, Reactants, Products
+		//each reaction contains Id, Type, Rate, PropensityFunction,Reactants, Products
         //where Reactants and Products are lists containing...
         Rcpp::List thisReaction = rReactionList[i];
         
-        std::string rId = Rcpp::as<std::string>(thisReaction[0]);
-        std::string rRate = Rcpp::as<std::string>(thisReaction[1]);
-        //Rcpp::Rcout << "reaction " << i << " has Id " << rId << ", Rate=" << rRate << "\n";
-        Rcpp::List reactants = thisReaction[2];
-        Rcpp::List products = thisReaction[3];
-        
+		std::string rId = Rcpp::as<std::string>(thisReaction[0]);
+		std::string rRate = Rcpp::as<std::string>(thisReaction[2]);
+		//Rcpp::Rcout << "reaction " << i << " has Id " << rId << ", Rate=" << rRate << std::endl;
+		//        Rcpp::List reactants = thisReaction[2];
+		//        Rcpp::List products = thisReaction[3];
+		Rcpp::List reactants = thisReaction[4];
+		Rcpp::List products = thisReaction[5];
+
         ReactionsList.push_back(Reaction());
         ReactionsList.back().Id=rId;
-        //all are mass action, Type=0
-        ReactionsList.back().Type=0;
-        ReactionsList.back().Rate=rRate;
+
+		std::string rxnTypeString = thisReaction[1];
+		if (rxnTypeString.compare("mass-action")==0) {
+			ReactionsList.back().Type=0;
+			ReactionsList.back().Rate=rRate;
+		}
+		else if (rxnTypeString.compare("customized")==0) {
+			ReactionsList.back().Type=2;
+			ReactionsList.back().Customized=(SEXP)rCustomPropensityList[i];
+		}
+		else {
+			Rcpp::stop("Detected invalid model reaction Type. Terminating.");
+		}
+
         //process Reactants
         int reactionOrder=0;//counter to check for >3rd order reaction
         for (int j=0; j!=reactants.size(); ++j) {
@@ -542,10 +557,14 @@ _dependencyGraphType>::writePropensities()
                     Rcpp::stop("Fatal error encountered, terminating StochKit2R");
             }
         }
-        else{
-            Rcpp::Rcout << "StochKit ERROR (Input_mass_action::writePropensities): reaction " << cur_reaction->Id << " is not a mass-action reaction\n";
-            Rcpp::stop("Fatal error encountered, terminating StochKit2R");
-        }
+		else if(cur_reaction->Type == 2){
+			//
+			propensitiesList.pushCustomPropensity(*Rcpp::XPtr<STOCHKIT::CustomPropensity<STOCHKIT::StandardDriverTypes::populationType>::customPropensityFunction>(cur_reaction->Customized));
+		}
+		else {
+			Rcpp::Rcout << "StochKit ERROR (Input_mass_action::writePropensities): reaction " << cur_reaction->Id << " has invalid Type.\n";
+			Rcpp::stop("Fatal error encountered, terminating StochKit2R");
+		}
     }
     
     return propensitiesList;

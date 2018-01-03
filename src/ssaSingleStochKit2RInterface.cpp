@@ -37,7 +37,8 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel,
   Rcpp::List rParameterList=StochKit2Rmodel[0];
   Rcpp::List rSpeciesList=StochKit2Rmodel[1];
   Rcpp::List rReactionList=StochKit2Rmodel[2];
-
+  Rcpp::List rCustomPropensityList=StochKit2Rmodel[3];
+	
   //get species labels...
   std::vector<std::string> modelSpeciesList = getSpeciesList(rSpeciesList);
 
@@ -46,7 +47,7 @@ RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel,
                             STOCHKIT::StandardDriverTypes::propensitiesType,
                             STOCHKIT::StandardDriverTypes::graphType> model(rParameterList,
                                                                             rReactionList,
-                                                                            rSpeciesList);
+                                                                            rSpeciesList,rCustomPropensityList);
 
   //create the output object
   std::vector< std::pair<double, STOCHKIT::StandardDriverTypes::populationType> > output;

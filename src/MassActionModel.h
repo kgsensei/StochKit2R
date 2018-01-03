@@ -197,7 +197,6 @@ _dependencyGraphType>::
 		
         ReactionsList.push_back(Reaction());
         ReactionsList.back().Id=rId;
-        //all are mass action, Type=0
 		
 		std::string rxnTypeString = thisReaction[1];
 		if (rxnTypeString.compare("mass-action")==0) {
@@ -205,7 +204,7 @@ _dependencyGraphType>::
 			ReactionsList.back().Rate=rRate;
 		}
 		else if (rxnTypeString.compare("customized")==0) {
-			ReactionsList.back().Type=1;
+			ReactionsList.back().Type=2;
 			ReactionsList.back().Customized=(SEXP)rCustomPropensityList[i];
 		}
 		else {
@@ -607,7 +606,7 @@ _dependencyGraphType>::writePropensities()
                     Rcpp::stop("Fatal error encountered, terminating StochKit2R");
             }
         }
-        else if(cur_reaction->Type == 1){
+        else if(cur_reaction->Type == 2){
 			//
 			propensitiesList.pushCustomPropensity(*Rcpp::XPtr<STOCHKIT::CustomPropensity<STOCHKIT::StandardDriverTypes::populationType>::customPropensityFunction>(cur_reaction->Customized));
 		}
