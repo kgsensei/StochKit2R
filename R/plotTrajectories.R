@@ -59,8 +59,7 @@ plotTrajectories <- function(trajectoriesData,outputIndexes,speciesIndexes,file=
     colLabels <- names(trajectoriesData[[1]])
     if (colLabels[1]=="time") {
       hasLabels=TRUE
-    }
-    else {
+    } else {
       hasLabels=FALSE
     }
 
@@ -76,10 +75,12 @@ plotTrajectories <- function(trajectoriesData,outputIndexes,speciesIndexes,file=
     value=NULL#only to appease R CMD CHECK for CRAN
     variable=NULL#only to appease R CMD CHECK for CRAN
     trajDataMelted <- melt(trajData,id="time")
+    
     p <- qplot(time,value,data=trajDataMelted,colour=variable,geom="line") + ylab("population") + ggtitle("trajectory plot")
     
     # plot the rest of the trajectories!
-    if (length(outputIndexes>1)) {
+    if (length(outputIndexes)>1) {
+      
       for (i in outputIndexes[2:length(outputIndexes)]) {
         trajData <- trajectoriesData[[i]][,c(1,speciesIndexes)]
         #give (slightly) more meaningful labels if none
@@ -92,17 +93,14 @@ plotTrajectories <- function(trajectoriesData,outputIndexes,speciesIndexes,file=
       }
      }  
 
-  }
-
-  else{
+  } else{
     #read the first line of the first file
     #and check for headers (labels)  
     fileName <- paste(trajectoriesData,"/trajectory",outputIndexes[1]-1,".txt",sep="")
     line1 <- strsplit(readLines(fileName,n=1),split="\t")[[1]]
     if (line1[1]=="time") {
       hasLabels=TRUE
-    }
-    else {
+    } else {
       hasLabels=FALSE
     }
 

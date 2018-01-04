@@ -11,19 +11,19 @@ vignette: >
 
 ### StochKit2R User Guide
 Kevin R. Sanft
-December 2017
+January 2018
 
 This document provides usage instructions for StochKit2R.
 
 ## Introduction
 
-StochKit2R is an R version of StochKit2.0, a software package for discrete stochastic simulation using Gillespie’s Stochastic Simulation Algorithm (SSA) and tau-leaping [1-3]. It is designed to support much of the functionality of StochKit2.0. One limitation of StochKit2R is that it does not accept input model files that contain non-mass-action (customized) propensity functions or events (this is due to the platform-specific compilation that is required; this functionality might be added to future versions of StochKit2R).
+StochKit2R is an R version of StochKit2.0, a software package for discrete stochastic simulation using Gillespie’s Stochastic Simulation Algorithm (SSA) and tau-leaping [1-3]. It is designed to support much of the functionality of StochKit2.0 (however, StochKit2R does not support non-reaction "events"--this functionality may be added to future versions of StochKit2R).
 
 StochKit2R was written by and is maintained by Kevin R. Sanft (kevin@kevinsanft.com), with contributions by Harris Joseph and John Ravi. StochKit2.0 was written by Kevin R. Sanft, Sheng Wu, Min Roh, Jin Fu, Rone Kwei Lim, and others from Professor Linda Petzold's research group at UC Santa Barbara.
 
 ## Citing StochKit2R
 
-If you use StochKit2R for simulations or analysis used in a publication or presentation, please cite the software. Until a StochKit2R paper is published, please cite the StochKit2 paper:
+If you use StochKit2R for simulations or analysis used in a publication or presentation, please cite the software. A StochKit2R paper is in progress, but until it is published, please cite the original StochKit2 paper:
 
 > Kevin R. Sanft, Sheng Wu, Min Roh, Jin Fu, Rone Kwei Lim, and Linda R. Petzold.  (2011). StochKit2: software for discrete stochastic simulation of biochemical systems with events. *Bioinformatics*. **27**(17), pp. 2457-2458.
 
@@ -44,7 +44,7 @@ As of this writing, StochKit2R is available on CRAN, the Comprehensive R Archive
 install.packages("StochKit2R")
 ```
 -->
-StochKit2R is available on github. You may install the latest version from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary release on Windows and Mac (see below).
+StochKit2R is available on github. (It it NOT available on CRAN.) You may install the latest version from source on all platforms using devtools::install_github (see below). Or, you may install a precompiled binary release on Windows and Mac (see below).
 
 ### Windows and Mac: binary installation
 
@@ -159,25 +159,25 @@ An example of running the ssa function:
 ```{r eval=FALSE}
 # use the dimer_decay.xml model that is included with StochKit2R
 # to make things easier to read, store the path in a variable
-model <- system.file("dimer_decay.xml",package="StochKit2R")
+model = system.file("dimer_decay.xml",package="StochKit2R")
 # now, run a simulation:
-out <- ssa(modelFile=model,time=10,realizations=100,intervals=20)
+out = ssa(modelFile=model,time=10,realizations=100,intervals=20)
 ```
-The above function will run 100 simulations to time 10 using 20 output intervals. The returned list of data frames will be stored in the variable named out. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
+The above function will run 100 simulations to time 10 using 20 output intervals (21 output times, including the initial t=0 population). The returned list of data frames will be stored in the variable named out. The above example uses the dimer_decay.xml file included with the StochKit2R distribution. This file is also available for download at http://www.kevinsanft.com/StochKit2R/dimer_decay.xml.
 
 In the more typical case, the model file will be stored elsewhere in your file system. For example:
 ```{r, eval=FALSE}
-out <- ssa("~/Desktop/dimer_decay.xml",10,100,20)
+out = ssa("~/Desktop/dimer_decay.xml",10,100,20)
 ```
 The file dimer_decay.xml must exist in the ~/Desktop directory. (This corresponds to a machine-specific full path such as "/Users/kevinsanft/Desktop/dimer_decay.xml", which might be required on some systems. On Windows, "~" usually corresponds to the user's Documents folder, so ~/Desktop would not be a valid path.) To write the output to a directory named dimer_decay_output (and overwrite the existing data, if it exists using force=TRUE):
 ```{r, eval=FALSE}
-out <- ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
+out = ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
 ```
 By default, the simulation will create an output directory named "stats" within the outputDir. The stats directory will contain two files: means.txt and variances.txt, containing the means and variances of the species at the output intervals. If keepTrajectories or keepHistograms is TRUE, a directory named trajectories or histograms, respectively, will be created within the output directory.
 
 ssaSingle runs a single trajectory and outputs a row of data for every reaction event that occurs to a file. The function takes as arguments: a path to a StochKit2 .xml model, a path to an output file name, a start time (you will usually use 0 here), and an end time. Here is the example from the documentation, using the dimer_decay.xml model that is included with the StochKit2R package:
 ```{r, eval=FALSE}
-out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
+out = ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
 ```
 The above command will run one realization from t=0 to t=10 and write the output to single_output.txt. Note: the file will contain about 25,000 lines, one line for each reaction event (plus one line for the initial population and one line for the end time).
 
@@ -191,36 +191,36 @@ StochKit2R includes four plotting functions for visualizing simulation output da
 * histogramDistance
 
 Consult the R function documentation (e.g. ?plotStats) for details. Here an example of the plotStats function, which plots the means and +/- one standard deviation curves.
-##
+
 ```{r, fig.width=6, fig.height=4, fig.align="center"}
 library(StochKit2R)
 #example using included dimer_decay.xml file
-model <- system.file("dimer_decay.xml",package="StochKit2R")
+model = system.file("dimer_decay.xml",package="StochKit2R")
 ##output value stored locally for use and written to ex_out file in working directory
-out <- ssa(modelFile=model,time=10,realizations=100,interval=20, outputDir="ex_out",force=TRUE)
+out = ssa(modelFile=model,time=10,realizations=100,interval=20, outputDir="ex_out",force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
 plotStats(out$stats,c(2,3))
 ```
 
-This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves.
+This example has relatively small variances, so the +/- standard deviation curves are very close to the mean curves. Examples for the other plot commands can be found on their help pages (for example, ?plotTrajectories).
 
 ## Model definition file format
 
 StochKit2R simulations use models in the StochKit2 xml model definition format. The StochKit2 model definition format uses tags to specify the description of a biochemical model in an xml format.
 
-One sample model file, dimer_decay.xml, is included with the StochKit2R package. You can access it with the R command: system.file("dimer_decay.xml",package="StochKit2R")
+A sample model file, dimer_decay.xml, is included with the StochKit2R package. You can access it with the R command: system.file("dimer_decay.xml",package="StochKit2R")
 
 To copy this file to a location of your choice, you can use R’s file.copy function. For simplicity, first copy the dimer_decay.xml path into a variable, then call file.copy:
 
 ``` {r, eval=FALSE}
-model <- system.file("dimer_decay.xml",package="StochKit2R")
+model = system.file("dimer_decay.xml",package="StochKit2R")
 file.copy(model,"~/Desktop/dimer_decay.xml")
 ```
 Again, "~/Desktop/dimer_decay.xml" must be a valid path; replace the destination with the appropriate path on your system. (On Windows, the dimer_decay.xml file may be difficult to read and edit due in some viewers and editors due to the way Windows handles newlines in text files.)
 
 You can view dimer_decay.xml in a text editor. Here, I will view it in R using the XML package:
 ``` {r, comment=""}
-model <- system.file("dimer_decay.xml",package="StochKit2R")
+model = system.file("dimer_decay.xml",package="StochKit2R")
 XML::xmlParse(model)
 ```
 
@@ -231,23 +231,55 @@ The first tag, "\<Model\>" indicates the beginning of the model definition. The 
 The above model definition file describes a model with 3 species and 4 reactions. Reaction R1 has one SpeciesReference tag within the Reactants and no Products. (Note the SpeciesReference does not use a closing tag, but instead ends the opening tag with "/\>") Since the stoichiometry of the Reactant is 1 and there are no products, Reaction R1 describes species S1 decaying into "nothing".
 
 NOTE: The rate constants in StochKit2 models are interpreted as stochastic rate
-constants (see Gillespie 1977). For enzymatic reactions where a species is both a
-reactant and a product, the species should appear in the Reactants and Products to
-ensure the mass‐action propensity is computed correctly.
+constants (see Gillespie 1977). For enzymatic reactions where a species is both a reactant and a product, the species should appear in the Reactants and Products to ensure the mass‐action propensity is computed correctly.
 
-The best way to create your own model is to copy and rename an existing model file,
-then open it in a text editor and modify it to suit your needs. Save it with a .xml extension.
+The best way to create your own model is to copy and rename an existing model file, then open it in a text editor and modify it to suit your needs. Save it with a .xml extension.
 
 The StochKit2 model definition supports (global) parameters as seen in the model above. Instead of putting a numeric value as the Rate, a parameter is used. Parameters are defined within the ParametersList tag.
 
 NOTE: parameters cannot be functions of the species' populations.
 
+### Customized propensity functions
+
+In the dimer_decay.xml example model, the Type tag within Reaction R1 had the value “mass‐action”. When Type is “mass‐action”, the propensity function is determined by the Rate and the population(s) of the reactant species [Gillespie 1977]. These “mass-action” reactions are limited to elementary reactions with 0, 1, or 2 Reactants (NOTE: 3rd order reactions are also accepted as valid mass‐action reactions but are discouraged since they require the simultaneous collision of 3 molecules.).
+
+StochKit2R allows for non‐elementary reactions by specifying a Reaction Type of
+“customized”. When the Reaction Type is “customized”, the <PropensityFunction> tag is required. The example below specifies that species “S1” and “S2” react with stochastic rate constant 2.0.
+```
+…
+<Type>customized</Type>
+<PropensityFunction>2.0*S1*S2</PropensityFunction>
+…
+```
+
+WARNING: the expression must be a valid __C++__ expression, not an R expression!
+
+NOTE: In order for the above PropensityFunction to be valid, species S1 and S2 must be defined and should be listed as Reactants in the Reaction. The expression in the PropensityFunction must be a valid expression composed of arithmetic operators (+,‐ ,*,/), species Id values, Parameters, and some C++ functions (e.g. pow, exp). Careless use of customized propensity functions can lead to errors and can cause StochKit2 to crash. “mass‐action” is the preferred Reaction Type.
+
+There is an example model file named schlogl.xml that includes both mass-action and customized propensity functions that you can access in the same way the dimer_decay.xml file was accessed above. But note that the customized propensity functions could evaluate to negative values (for example if S1=0)--this will cause unexpected behavior (and likely crash StochKit2R). It is possible to prevent negative values, see the FAQ section below. Again, “mass‐action” is the preferred Reaction Type--use customized propensities at your own risk.
+
 ## Bugs/FAQ
 
-StochKit2R currently does not support customized (non-mass-action) propensity functions or Events, so please do not report this as a bug.
+StochKit2R currently does not support Events, so please do not report this as a bug.
 
 If you receive an error message reading "Error in fetch(key) : lazy-load database ... is corrupt", this is a known R bug (https://github.com/hadley/devtools/issues/419). If you restart R and reload StochKit2R, the messages should go away.
 
+1. How do I prevent negative values in a customized propensity function?
+
+  + You can use the C++ max function to set the propensity to the larger of the propensity or 0. For example, to prevent reaction A2 from going negative in the schlogl.xml model, you could write:
+  ```
+  <PropensityFunction>std::max(R2/6.0*S1*(S1-1)*(S1-2),(double)0.0)</PropensityFunction>
+  ```
+  Note the function is "std::max" and that the value 0 is forced to be a double to ensure the compiler knows the types.
+  
+2. My simulation crashes without any helpful messages.
+
+  + StochKit2R might not "fail gracefully" if running in parallel. The most likely cause of a crash is a problem in a customized propensity function. For example, a function that can evaluate to a negative value or that can have a positive value when a Reactant is 0 (causing a negative population). Carefully check your custom propensities for these conditions.
+  
+  + You can also try restarting R and reloading StochKit2R.
+  
+  + If the bug persists please report it following the instructions below.
+  
 ### Reporting Bugs
 
 Please report bugs to kevin@kevinsanft.com. Please include a description of the error message, your R version, operating system, StochKit2R version, model file, and steps to recreate the error.
@@ -258,7 +290,7 @@ StochKit2R is released under the GPL-3 (GPLv3) open source license (http://www.g
 
 ## Copyright
 
-StochKit2R &copy; 2015-2017, Kevin R. Sanft and Linda R. Petzold.
+StochKit2R &copy; 2015-2018, Kevin R. Sanft and Linda R. Petzold.
 
 ## Additional resources
 

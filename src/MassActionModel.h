@@ -293,9 +293,9 @@ _dependencyGraphType>::linkSpeciesAndReactions()
                 while( (k<SpeciesList.size()) && (flag==0) ){
                     if(cur_reactant->Id.compare(SpeciesList[k].Id) == 0){
                         flag = 1;
-                        if(cur_reaction->Type == 0 || cur_reaction->Type == 1){
+                        //if(cur_reaction->Type == 0 || cur_reaction->Type == 1){
                             SpeciesList[k].AffectReactions.push_back(i);
-                        }
+                        //}
                         cur_reactant->Index = k;
                     }
                     ++k;
@@ -487,7 +487,15 @@ writeStoichiometry()
             nu[i][cur_species->Index] += cur_species->Stoichiometry;
         }
     }
-    
+	
+//	Rcpp::Rcout << "writeStoichiometry:"<<std::endl;
+//	for(unsigned int i=0; i<nu.size(); ++i) {
+//		for(unsigned int j=0; j<nu[i].size(); ++j) {
+//			Rcpp::Rcout << nu[i][j] <<"\t";
+//		}
+//		Rcpp::Rcout <<"\n";
+//	}
+
     return nu;
 }
 
@@ -687,7 +695,14 @@ writeDependencyGraph()
         }
         
     }
-    
+	
+//	Rcpp::Rcout << "writeDependencyGraph...\n";
+//	for (int i=0; i<dg.size(); i++) {
+//		for (int j=0; j<dg[i].size(); j++) {
+//			Rcpp::Rcout << dg[i][j] << "\t";
+//		}
+//		Rcpp::Rcout << "\n";
+//	}
     return dg;
 }
 
@@ -724,7 +739,9 @@ writeDependencyGraphMatrixStoichiometry()
         }
         
     }
-    
+	
+	
+	
     return dg;
 }
 

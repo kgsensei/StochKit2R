@@ -72,7 +72,8 @@ namespace STOCHKIT
 			std::string Vmax;  // for michealis-menten
 			std::string Km;  // for michealis-menten
 		//std::string Customized; // for customized propensity
-		SEXP Customized;			std::vector<SpeciesReference> Reactants;  // reactant list
+		SEXP Customized;
+			std::vector<SpeciesReference> Reactants;  // reactant list
 			std::vector<SpeciesReference> Products;  // product list
 	};
 	std::vector<Reaction> ReactionsList;
@@ -286,9 +287,9 @@ _dependencyGraphType>::linkSpeciesAndReactions()
                 while( (k<SpeciesList.size()) && (flag==0) ){
                     if(cur_reactant->Id.compare(SpeciesList[k].Id) == 0){
                         flag = 1;
-                        if(cur_reaction->Type == 0 || cur_reaction->Type == 1){
+                        //if(cur_reaction->Type == 0 || cur_reaction->Type == 1){
                             SpeciesList[k].AffectReactions.push_back(i);
-                        }
+                        //}
                         cur_reactant->Index = k;
                     }
                     ++k;

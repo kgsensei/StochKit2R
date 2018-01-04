@@ -380,6 +380,7 @@ namespace STOCHKIT
         propensitySum=0.0;
         for (std::size_t i=0; i!=NumberOfReactions; ++i) {
             currentPropensities[i]=propensities(i,currentPopulation);
+			//Rcpp::Rcout << "propensities["<<i<<"]="<<currentPropensities[i]<<std::endl;
 #ifdef DEBUG
             if (currentPropensities[i]!=currentPropensities[i]) {
                 Rcpp::Rcout << "StochKit DEBUG (SSA_Direct::calculateAllPropensities): detected 'NaN (not a number)' propensity for reaction index "<<i<<".\n";
@@ -414,6 +415,7 @@ namespace STOCHKIT
                 smallestNonzeroPropensity=currentPropensities[i];
             }
         }
+		
         stepsSinceCalculateAllPropensities=0;
         
         if (propensitySum>0.0 && smallestNonzeroPropensity/propensitySum<2E-10) { //per S.Mauch, M.Stalzer. (2009) "Efficient Formulations for Exact..."
@@ -469,7 +471,12 @@ namespace STOCHKIT
     _propensitiesFunctorType,
     _dependencyGraphType>::
     selectReaction() {
-        
+		
+//		Rcpp::Rcout << "selectReaction...\n";
+//		for (int i = 0; i<currentPropensities.size(); i++) {
+//			Rcpp::Rcout << "currentPropensities["<<i<<"]="<<currentPropensities[i]<<std::endl;
+//		}
+		
         previousReactionIndex=-1;
         if (stepsSinceCalculateAllPropensities>maxStepsCalculateAllPropensities) {
             calculateAllPropensities();
@@ -506,7 +513,8 @@ namespace STOCHKIT
                 jsum+=currentPropensities[previousReactionIndex];
             }
         }
-        
+		
+		//Rcpp::Rcout << "firing "<<previousReactionIndex<<std::endl;
         return previousReactionIndex;
     }
     
@@ -539,6 +547,9 @@ namespace STOCHKIT
 #else
             currentPopulation+=stoichiometry[reactionIndex];
 #endif
+			
+			//Rcpp::Rcout << "currentPopulation[0]="<<currentPopulation[0]<<std::endl;
+			
             int affectedReactionIndex;
             double oldPropensity;
             for (std::size_t i=0; i!=dependencyGraph[reactionIndex].size(); ++i) {

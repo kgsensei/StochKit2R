@@ -23,6 +23,7 @@ std::vector<std::string> getSpeciesList(Rcpp::List rSpeciesList) {
 }
 
 std::string chooseMethod(int numberOfReactions, int numberOfRealizations, int processes) {
+
     if (numberOfReactions>constantOverODMCutoff) {
         //large M, use constant-complexity method
         return "constant";
