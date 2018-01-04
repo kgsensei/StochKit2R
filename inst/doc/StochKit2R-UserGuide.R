@@ -23,33 +23,33 @@
 ## ----eval=FALSE----------------------------------------------------------
 #  # use the dimer_decay.xml model that is included with StochKit2R
 #  # to make things easier to read, store the path in a variable
-#  model <- system.file("dimer_decay.xml",package="StochKit2R")
+#  model = system.file("dimer_decay.xml",package="StochKit2R")
 #  # now, run a simulation:
-#  out <- ssa(modelFile=model,time=10,realizations=100,intervals=20)
+#  out = ssa(modelFile=model,time=10,realizations=100,intervals=20)
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  out <- ssa("~/Desktop/dimer_decay.xml",10,100,20)
+#  out = ssa("~/Desktop/dimer_decay.xml",10,100,20)
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  out <- ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
+#  out = ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
+#  out = ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),0,10,"single_output.txt")
 
 ## ---- fig.width=6, fig.height=4, fig.align="center"----------------------
 library(StochKit2R)
 #example using included dimer_decay.xml file
-model <- system.file("dimer_decay.xml",package="StochKit2R")
+model = system.file("dimer_decay.xml",package="StochKit2R")
 ##output value stored locally for use and written to ex_out file in working directory
-out <- ssa(modelFile=model,time=10,realizations=100,interval=20, outputDir="ex_out",force=TRUE)
+out = ssa(modelFile=model,time=10,realizations=100,interval=20, outputDir="ex_out",force=TRUE)
 #plot the data for species 2 and 3 (all of them in the dimer decay model)
 plotStats(out$stats,c(2,3))
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  model <- system.file("dimer_decay.xml",package="StochKit2R")
+#  model = system.file("dimer_decay.xml",package="StochKit2R")
 #  file.copy(model,"~/Desktop/dimer_decay.xml")
 
 ## ---- comment=""---------------------------------------------------------
-model <- system.file("dimer_decay.xml",package="StochKit2R")
-XML::xmlParse(model)
+model = system.file("dimer_decay.xml",package="StochKit2R")
+writeLines(readLines(model))
 

@@ -59,7 +59,7 @@ The above code will open a file browser window. Navigate to the downloaded file 
 library(StochKit2R)
 ```
 
-If the installation fails, please install from source (see instructions below).
+If the installation fails, you may need to update your R version. If installation still fails, please install from source (see instructions below).
 
 ### Any platform: install from Source
 
@@ -69,7 +69,7 @@ install.packages("devtools") #run once on your system
 devtools::install_github("kevinsanft/StochKit2R")
 ```
 
-(Note: on Windows, the above code will ask you to install additional tools. You must install the tools. You may need to rerun the call to devtools::install_github("kevinsanft/StochKit2R") after installing the tools.) 
+(Note: on Windows, the above code will ask you to install additional tools. You must install the tools. After installing the tools, you may need to rerun the call to devtools::install_github("kevinsanft/StochKit2R").) 
 
 You may see some compilation warning messages but there should be no errors. After successful installation, load and attach the package with:
 ```{r, eval=FALSE}
@@ -139,7 +139,7 @@ To install the package from .zip file:
 
 StochKit2R contains three primary simulation functions: ssa, ssaSingle, and tauLeaping.
 
-ssa and tauLeaping run ensembles (multiple simulation trajectories) and output data at regularly spaced intervals. They have nearly identical function calls. Consult the help pages for information. Here are the arguments:
+ssa and tauLeaping run ensembles (multiple simulation trajectories) and output data at regularly spaced intervals. They have nearly identical function calls. Consult the help pages for information. Here are the key arguments:
 
 * modelFile: the path to the StochKit2 xml model file.
 * time: the simulation time. Each simulation will run from 0 to time.
@@ -148,12 +148,8 @@ ssa and tauLeaping run ensembles (multiple simulation trajectories) and output d
 * noStats: when set to TRUE, statistics (means and variances) data will not be stored. Default is FALSE. If set to TRUE, keepTrajectories or keepHistograms must be set to TRUE.
 * keepTrajectories: when TRUE, trajectory data will be stored. Default is FALSE.
 * keepHistograms: when TRUE, historgram data will be stored. Default is FALSE.
-* bins: set the number of histogram bins. Default=32.
-* outputDir: the path to the output directory. By default (=NULL) no output is written to file. If outputDir is set and the directory does not exist, it will be created. If the directory already exists, an error will occur unless force=TRUE is specified (see below).
-* force: overwrite existing output files. Default=FALSE.
-* p: number of processes (threads) to use. With default=0, the number of threads will be determined automatically (recommended). On some architectures, parallelism is not available by default (see section on "Advanced Mac OS X installation for high performance").
-* epsilon: (tauLeaping only) the error tolerance used for the step size selection procedure. Default=0.03.
-* threshold: (tauLeaping only) the minimum number of steps per leap before reverting to the SSA. By default, threshold=10, meaning tauLeaping will temporarily use the SSA direct method if a tau leap step fires fewer than 10 reactions
+
+See the help pages (for example, ?ssa) for additional arguments and details.
 
 An example of running the ssa function:
 ```{r eval=FALSE}
@@ -173,7 +169,7 @@ The file dimer_decay.xml must exist in the ~/Desktop directory. (This correspond
 ```{r, eval=FALSE}
 out = ssa("~/Desktop/dimer_decay.xml",10,100,20,outputDir="~/Desktop/dimer_decay_output",force=TRUE)
 ```
-By default, the simulation will create an output directory named "stats" within the outputDir. The stats directory will contain two files: means.txt and variances.txt, containing the means and variances of the species at the output intervals. If keepTrajectories or keepHistograms is TRUE, a directory named trajectories or histograms, respectively, will be created within the output directory.
+When outputDir is given, then by default the simulation will create an output directory named "stats" within the outputDir. The stats directory will contain two files: means.txt and variances.txt, containing the means and variances of the species at the output intervals. If keepTrajectories or keepHistograms is TRUE, a directory named trajectories or histograms, respectively, will be created within the output directory.
 
 ssaSingle runs a single trajectory and outputs a row of data for every reaction event that occurs to a file. The function takes as arguments: a path to a StochKit2 .xml model, a path to an output file name, a start time (you will usually use 0 here), and an end time. Here is the example from the documentation, using the dimer_decay.xml model that is included with the StochKit2R package:
 ```{r, eval=FALSE}
@@ -218,13 +214,13 @@ file.copy(model,"~/Desktop/dimer_decay.xml")
 ```
 Again, "~/Desktop/dimer_decay.xml" must be a valid path; replace the destination with the appropriate path on your system. (On Windows, the dimer_decay.xml file may be difficult to read and edit due in some viewers and editors due to the way Windows handles newlines in text files.)
 
-You can view dimer_decay.xml in a text editor. Here, I will view it in R using the XML package:
+After you have copied dimer_decay.xml, you can view it in a text editor. Here, I will view it in R:
 ``` {r, comment=""}
 model = system.file("dimer_decay.xml",package="StochKit2R")
-XML::xmlParse(model)
+writeLines(readLines(model))
 ```
 
-The file might be intimidating at first, but it is quite simple!
+The file structure may look complicated at first glance, but is actually quite simple!
 
 The first tag, "\<Model\>" indicates the beginning of the model definition. The closing tag \</Model\> at the end indicates the end of the model definition. Most xml tags must be matched by a closing tag. The \<NumberOfReactions\> and \<NumberOfSpecies\> tags are required and specify the number of reactions and species, respectively, in the model. The "ReactionsList" tag encloses one or more (in this case only one) "\<Reaction\>" elements. A Reaction must contain an "\<Id\>" and a "\<Type\>". In most cases, a Reaction contains a "\<Reactants\>" tag and a "\<Products\>" tag to specify the reactant and product species, respectively. In StochKit2R, the Reaction Type must be "mass-action", and the "\<Rate\>" tag is required. The Rate is the stochastic reaction rate that is multiplied by the Reactants’ populations to calculate the propensity [1].
 
@@ -254,17 +250,28 @@ StochKit2R allows for non‐elementary reactions by specifying a Reaction Type o
 
 WARNING: the expression must be a valid __C++__ expression, not an R expression!
 
-NOTE: In order for the above PropensityFunction to be valid, species S1 and S2 must be defined and should be listed as Reactants in the Reaction. The expression in the PropensityFunction must be a valid expression composed of arithmetic operators (+,‐ ,*,/), species Id values, Parameters, and some C++ functions (e.g. pow, exp). Careless use of customized propensity functions can lead to errors and can cause StochKit2 to crash. “mass‐action” is the preferred Reaction Type.
+NOTE: In order for the above PropensityFunction to be valid, species S1 and S2 must be defined and *should* be listed as Reactants in the Reaction. The expression in the PropensityFunction must be a valid expression composed of arithmetic operators (+,‐ ,*,/), species Id values, Parameters, and some C++ functions (e.g. pow, exp). Careless use of customized propensity functions can lead to errors and can cause StochKit2 to crash. “mass‐action” is the preferred Reaction Type.
 
-There is an example model file named schlogl.xml that includes both mass-action and customized propensity functions that you can access in the same way the dimer_decay.xml file was accessed above. But note that the customized propensity functions could evaluate to negative values (for example if S1=0)--this will cause unexpected behavior (and likely crash StochKit2R). It is possible to prevent negative values, see the FAQ section below. Again, “mass‐action” is the preferred Reaction Type--use customized propensities at your own risk.
+There is an example model file named schlogl.xml that includes both mass-action and customized propensity functions that you can access in the same way the dimer_decay.xml file was accessed above. (The schlogl model is a toy model with one species that displays bimodality--try running an ensemble to time=10 and keep trajectories or histogram data.) Note that the customized propensity functions could evaluate to negative values (for example if S1=0)--this will cause unexpected behavior (and likely crash StochKit2R). Negative propensities are unlikely for the Schlogl model (because the population tends to stay large) but this issue can cause serious problems in other models. It is possible to prevent negative values, see the FAQ section below. Again, “mass‐action” is the preferred Reaction Type--use customized propensities at your own risk.
 
 ## Bugs/FAQ
 
-StochKit2R currently does not support Events, so please do not report this as a bug.
+1. How do I create a model file?
 
-If you receive an error message reading "Error in fetch(key) : lazy-load database ... is corrupt", this is a known R bug (https://github.com/hadley/devtools/issues/419). If you restart R and reload StochKit2R, the messages should go away.
+  + The best way is to start with an existing model file and modify it as necessary. You can create a copy of the dimer_decay.xml file using the following commands:
+  ```
+  model = system.file("dimer_decay.xml",package="StochKit2R")
+  file.copy(model, "~/some_file.xml")
+  ```
+  The above command will copy the file dimer_decay.xml with the name some_file.xml (choose a more meaningful name) into your home directory (on Mac or Linux) or your Documents folder (on Windows). You can then edit it using a text editor (for example, the RStudio editor).
+  
+2. I get an error message stating "Error in buildStochKit2Rmodel(modelFile) : Events not supported in StochKit2R".
 
-1. How do I prevent negative values in a customized propensity function?
+  + Sorry, StochKit2R currently does not support Events, so please do not report this as a bug.
+
+3. If you receive an error message reading "Error in fetch(key) : lazy-load database ... is corrupt", this is a known R bug (https://github.com/hadley/devtools/issues/419). If you restart R and reload StochKit2R, the messages should go away.
+
+4. How do I prevent negative values in a customized propensity function?
 
   + You can use the C++ max function to set the propensity to the larger of the propensity or 0. For example, to prevent reaction A2 from going negative in the schlogl.xml model, you could write:
   ```
@@ -272,9 +279,9 @@ If you receive an error message reading "Error in fetch(key) : lazy-load databas
   ```
   Note the function is "std::max" and that the value 0 is forced to be a double to ensure the compiler knows the types.
   
-2. My simulation crashes without any helpful messages.
+5. My simulation crashes without any helpful messages.
 
-  + StochKit2R might not "fail gracefully" if running in parallel. The most likely cause of a crash is a problem in a customized propensity function. For example, a function that can evaluate to a negative value or that can have a positive value when a Reactant is 0 (causing a negative population). Carefully check your custom propensities for these conditions.
+  + StochKit2R might not "fail gracefully" if an error occurs while running in parallel. The most likely cause of a crash is a problem in a customized propensity function; for example, a function that can evaluate to a negative value or that can have a positive value when a Reactant is 0 (causing a negative population). Carefully check your custom propensities for these conditions.
   
   + You can also try restarting R and reloading StochKit2R.
   
@@ -294,7 +301,7 @@ StochKit2R &copy; 2015-2018, Kevin R. Sanft and Linda R. Petzold.
 
 ## Additional resources
 
-You may also want to consult the StochKit2.0 (i.e. not StochKit2R) manual. StochKit2 can be downloaded from SourceForge.com. StochKit2.0 has some additional features, including being able to use non-mass-action propensity functions and plotting functions for Matlab.
+You may also want to consult the StochKit2.0 (i.e. not StochKit2R) manual. StochKit2 can be downloaded from SourceForge.com. StochKit2.0 has some additional features, including being able to use non-reaction Event actions and plotting functions for Matlab.
 
 ## References
 
