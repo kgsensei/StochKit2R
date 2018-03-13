@@ -9,7 +9,7 @@ createFunctionList <- function(expressionStrings) {
   output = list()
   cppincludes = "#include <boost/numeric/ublas/vector.hpp>"
   functionprefix = "double f"
-  functionargs = "(boost::numeric::ublas::vector<double>& x) {\n\treturn "
+  functionargs = "(const boost::numeric::ublas::vector<double>& x) {\n\treturn "
   
   functionsuffix = ";\n}"
   for (i in 1:length(expressionStrings)) {

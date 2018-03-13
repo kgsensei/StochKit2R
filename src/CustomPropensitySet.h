@@ -25,7 +25,7 @@ namespace STOCHKIT
 	{
 	}
 
-	double operator()(const int n, _populationVectorType& populations) {
+	double operator()(const int n, const _populationVectorType& populations) {
 	  return (*propensities[n])(populations);
 	}
 	
@@ -113,7 +113,7 @@ namespace STOCHKIT
 		return true;
 	}
 
-	bool pushCustomPropensity(double (*CustomPropensityFunc)(_populationVectorType&))
+	bool pushCustomPropensity(double (*CustomPropensityFunc)(const _populationVectorType&))
 	{
 		propensities_index.push_back(std::pair<unsigned int, unsigned int>(1,customPropensities.size()));
 		customPropensities.push_back(CustomPropensity<_populationVectorType>(CustomPropensityFunc));
@@ -122,6 +122,20 @@ namespace STOCHKIT
 		return true;
 	}
 
+ public:
+	 //convert stochastic propensities into ODE (reaction-rate equation) rates
+	 void convertToODE() {
+		 for (int i=0; i!=propensities_index.size(); i++) {
+			 //check if a mass action (not custom) propensity
+			 if (propensities_index[i].first==0) {
+				 int simple_index=propensities_index[i].second;
+				 simplePropensities[simple_index].convert_to_ode();
+				 propensities[i]=&(simplePropensities[simple_index]);
+				 //simplePropensities[i].convert_to_ode();
+			 }
+
+		 }
+	 }
  };
 }
 

@@ -6,6 +6,7 @@
 #include "boost/numeric/ublas/vector.hpp"
 
 #include "CustomPropensity.h"
+#include <Rcpp.h>
 
 namespace STOCHKIT
 {
@@ -24,7 +25,7 @@ private:
 	int doublereactantIndex;
 	int singlereactantIndex;
 
-	typedef double (CustomSimplePropensity::* PropensityFunction) (_populationVectorType&);
+	typedef double (CustomSimplePropensity::* PropensityFunction) (const _populationVectorType&);
 	PropensityFunction propensity;
 
  public:
@@ -62,7 +63,7 @@ private:
 		propensity=NULL;
 	}
 
-	virtual double operator()(_populationVectorType& x) {
+	virtual double operator()(const _populationVectorType& x) {
 		return (this->*propensity)(x);
 	}
 	
@@ -130,31 +131,54 @@ private:
 		}
 	}
 
-	double propensity0(_populationVectorType& x) {
+	double propensity0(const _populationVectorType& x) {
 		return rateConstant;
 	}
-	double propensity1(_populationVectorType& x) {
+	double propensity1(const _populationVectorType& x) {
 	  return rateConstant*x[reactantIndex1];
 	}
 	//bimolecular, same species
-	double propensity11(_populationVectorType& x) {
+	double propensity11(const _populationVectorType& x) {
 		return (rateConstant/2.0)*x[reactantIndex1]*(x[reactantIndex1]-1);
 	}
-	double propensity2(_populationVectorType& x) {
+	double propensity2(const _populationVectorType& x) {
 		return rateConstant*x[reactantIndex1]*x[reactantIndex2];
 	}
 	//trimolecular, same species
-	double propensity111(_populationVectorType& x) {
+	double propensity111(const _populationVectorType& x) {
 		return (rateConstant/6.0)*x[reactantIndex1]*(x[reactantIndex1]-1)*(x[reactantIndex1]-2);
 	}
 	//trimolecular, two of the same species, the other not
-	double propensity21(_populationVectorType& x) {
+	double propensity21(const _populationVectorType& x) {
 		return (rateConstant/2.0)*x[doublereactantIndex]*(x[doublereactantIndex]-1)*x[singlereactantIndex];
 	}
-	double propensity3(_populationVectorType& x) {
+	double propensity3(const _populationVectorType& x) {
 		return rateConstant*x[reactantIndex1]*x[reactantIndex2]*x[reactantIndex3];
 	}
 
+	 //for ODE (reaction-rate equations)
+	 double ode11(const _populationVectorType& x) {
+		 return (rateConstant*x[reactantIndex1]*x[reactantIndex1]);
+	 }
+	 double ode111(const _populationVectorType& x) {
+		 return (rateConstant*x[reactantIndex1]*x[reactantIndex1]*x[reactantIndex1]);
+	 }
+	 double ode21(const _populationVectorType& x) {
+		 return (rateConstant*x[reactantIndex1]*x[reactantIndex1]*x[reactantIndex2]);
+	 }
+ public:
+	 // we need to convert A+A type propensity to A^2 form
+	 void convert_to_ode() {
+		 if (propensity==&CustomSimplePropensity::propensity11) {
+			 propensity=&CustomSimplePropensity::ode11;
+		 }
+		 if (propensity==&CustomSimplePropensity::propensity111) {
+			 propensity=&CustomSimplePropensity::ode111;
+		 }
+		 if (propensity==&CustomSimplePropensity::propensity21) {
+			 propensity=&CustomSimplePropensity::ode21;
+		 }
+	 }
  };
 }
 

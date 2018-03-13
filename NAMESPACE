@@ -1,5 +1,5 @@
 useDynLib(StochKit2R)
-export(ssa,ssaSingle,tauLeaping,plotStats,plotTrajectories,plotHistogram,histogramDistance)
+export(ssa,ssaSingle,tauLeaping,plotStats,plotTrajectories,plotHistogram,histogramDistance,ode)
 importFrom(Rcpp, evalCpp)
 importFrom(RcppXPtrUtils, cppXPtr)
 importFrom(R.utils, mkdirs)

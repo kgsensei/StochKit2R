@@ -18,6 +18,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// odecpp
+RcppExport SEXP odecpp(Rcpp::List StochKit2Rmodel, double endTime, int intervals);
+RcppExport SEXP _StochKit2R_odecpp(SEXP StochKit2RmodelSEXP, SEXP endTimeSEXP, SEXP intervalsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type StochKit2Rmodel(StochKit2RmodelSEXP);
+    Rcpp::traits::input_parameter< double >::type endTime(endTimeSEXP);
+    Rcpp::traits::input_parameter< int >::type intervals(intervalsSEXP);
+    rcpp_result_gen = Rcpp::wrap(odecpp(StochKit2Rmodel, endTime, intervals));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ssaSingleStochKit2RInterface
 RcppExport SEXP ssaSingleStochKit2RInterface(Rcpp::List StochKit2Rmodel, double startTime, double endTime, std::string outputFileNameString, unsigned int seed);
 RcppExport SEXP _StochKit2R_ssaSingleStochKit2RInterface(SEXP StochKit2RmodelSEXP, SEXP startTimeSEXP, SEXP endTimeSEXP, SEXP outputFileNameStringSEXP, SEXP seedSEXP) {
@@ -80,6 +93,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_StochKit2R_customPropensitySubstitution", (DL_FUNC) &_StochKit2R_customPropensitySubstitution, 3},
+    {"_StochKit2R_odecpp", (DL_FUNC) &_StochKit2R_odecpp, 3},
     {"_StochKit2R_ssaSingleStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaSingleStochKit2RInterface, 5},
     {"_StochKit2R_ssaStochKit2RInterface", (DL_FUNC) &_StochKit2R_ssaStochKit2RInterface, 11},
     {"_StochKit2R_tauLeapingStochKit2RInterface", (DL_FUNC) &_StochKit2R_tauLeapingStochKit2RInterface, 13},

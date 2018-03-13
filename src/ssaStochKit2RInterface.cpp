@@ -100,9 +100,9 @@ RcppExport SEXP ssaStochKit2RInterface(Rcpp::List StochKit2Rmodel, double time, 
             Rcout << "running odm sparse...\n";
             out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
             STOCHKIT::SSA_ODM<STOCHKIT::StandardDriverTypes::populationType,
-            STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
-            STOCHKIT::StandardDriverTypes::propensitiesType,
-            STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p);
+				STOCHKIT::StandardDriverTypes::sparseStoichiometryType,
+				STOCHKIT::StandardDriverTypes::propensitiesType,
+				STOCHKIT::StandardDriverTypes::graphType> >(StochKit2Rmodel, time, realizations, intervals, keepStats, keepTrajectories, keepHistograms, bins, outputDirNameString, seed, p);
         } else if (method=="direct"){
             Rcout << "running direct sparse...\n";
             out=ssaStochKit2Rtemplate<STOCHKIT::StandardDriverTypes::sparseStoichiometryType,

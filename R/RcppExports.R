@@ -8,6 +8,19 @@ customPropensitySubstitution <- function(originalString, originalParametersList,
 #'@title C++ Interface to Gillespie Stochastic Simulation Algorithm single trajectory
 #'
 #'@description
+#'\code{ode} Called by StochKit2R ode function, do not call this C++ interface directly
+#'
+#'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)
+#'@param endTime Simulation end time
+#'@return Dataframe containing the time and population sizes
+#'@keywords internal
+odecpp <- function(StochKit2Rmodel, endTime, intervals) {
+    .Call('_StochKit2R_odecpp', PACKAGE = 'StochKit2R', StochKit2Rmodel, endTime, intervals)
+}
+
+#'@title C++ Interface to Gillespie Stochastic Simulation Algorithm single trajectory
+#'
+#'@description
 #'\code{ssa} Called by StochKit2R ssaSingle function, do not call this C++ interface directly
 #'
 #'@param StochKit2Rmodel R list (Rcpp List built from buildStochKit2Rmodel output)

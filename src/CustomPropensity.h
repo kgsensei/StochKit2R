@@ -12,7 +12,7 @@ namespace STOCHKIT
  {	
  public:
   
-  typedef double (*customPropensityFunction)(_populationVectorType&);
+  typedef double (*customPropensityFunction)(const _populationVectorType&);
   customPropensityFunction propensityFunction;
 
   CustomPropensity(){};
@@ -21,7 +21,7 @@ namespace STOCHKIT
     propensityFunction(func)
     {}
 
-  virtual double operator()(_populationVectorType& x) {
+  virtual double operator()(const _populationVectorType& x) {
     return (*propensityFunction)(x);
   }
 

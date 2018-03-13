@@ -101,7 +101,7 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, double time, int r
       output[ID].setKeepHistograms(keepHistograms);
       output[ID].setHistogramBins(bins);
     }
-        
+	  
     _solverType ssa(model.writeInitialPopulation(),model.writeStoichiometry(),model.writePropensities(),model.writeDependencyGraph(),seeds[ID]);
     ssa.template simulate<STOCHKIT::StandardDriverTypes::outputType>(localRealizations, 0.0, time, output[ID]);
         

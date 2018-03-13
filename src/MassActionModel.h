@@ -1,5 +1,5 @@
 /*!
-	\brief Text file input handler
+ \brief MassActionModel model class (Note: no longer restricted to mass-action!)
 */
 
 #ifndef STOCHKIT_MASS_ACTION_MODEL_H
@@ -19,12 +19,13 @@
 //#include "boost/shared_ptr.hpp"
 //#include <vector>
 //#include <limits>
+#include "StandardDriverTypes.h"
 #include "Parameter.h"
 #include "StringCalculator.h"
 //#include "VectorManipulation.h"
 #include "CustomPropensity.h"
 //#include "CustomSimplePropensity.h"
-//#include "CustomPropensitySet.h"
+#include "CustomPropensitySet.h"
 #include <Rcpp.h>
 
 namespace STOCHKIT
@@ -132,7 +133,7 @@ public:
      _propensitiesFunctorType writePropensities();
      _dependencyGraphType writeDependencyGraph();
      _dependencyGraphType writeDependencyGraphMatrixStoichiometry();
-
+	 
  }; // end of MassActionModel class definition
 
 //include function definitions
@@ -744,7 +745,6 @@ writeDependencyGraphMatrixStoichiometry()
 	
     return dg;
 }
-
 
 }// end namespace STOCHKIT
 #endif
