@@ -4,7 +4,7 @@
 #'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices}
 #'
 #'@param statsData stats element from ssa (or tauLeaping) output (a list containing the means and vars (variances) data frames) or a character string to the path to the output stats directory.
-#'@param indices The species indices that will be plotted. The first species is index 1
+#'@param species A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.
 #'@param file set to TRUE if statsData is a path to the stats output directory (rather than returned output data)
 #'@return The ggplot object
 #'@examples
@@ -13,49 +13,91 @@
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
 #'out <- ssa(model,time=10,realizations=100,intervals=20,outputDir="ex_out",force=TRUE)
-#'#plot the data for species 1, 2 and 3 (all species in the dimer decay model) from file
+#'#plot the data for all species
+#'plotStats(out$stats)
+#'#plot species "S1" and "S3" using data from file
 #'plotStats("ex_out/stats",c(1,2,3),file=TRUE)
 #'#same plot from returned output
-#'plotStats(out$stats,c(1,2,3))
 #'}
-plotStats <- function(statsData,indices,file=FALSE) {
+plotStats <- function(statsData,species=NULL,file=FALSE) {
 
-  # Check to make sure that the indices are integers
-  if (sum((round(indices)==indices)) != length(indices)) {
-    stop('Indexes must be integers')
+  # if user provided the entire output object, help them
+  # check if it is data vs file name
+  if (class(statsData)=="list") { 
+    if (is.null(statsData$means)) {
+      if (is.null(statsData$stats$means)) {
+        stop("ERROR: invalid statsData")
+      } else {
+        statsData = statsData$stats
+        message("Using statsData$stats")
+      }
+    }
   }
   
-  # Check to make sure that the indices are greater than 0
-  if (min(indices)<=0) {
-    stop('Indexes must be positive integers')
+  if (!is.null(species)) {
+    if (! (class(species)=="character" || class(species)=="numeric" || class(species)=="integer")) {
+      stop("Species must be a character vector of species names or a numeric vector")
+    }
+    
+    if (class(species)=="numeric" || class(species)=="integer") {
+      # Check to make sure that the indices are integers
+      if (sum((round(species)==species)) != length(species)) {
+        stop('Species indexes must be integers')
+      }
+      
+      # Check to make sure that the indices are greater than 0
+      if (min(indices)<=0) {
+        stop('Species indexes must be positive integers')
+      }
+    }
+    
+    # Check to eliminate duplicate species
+    species2 = unique(species);
+    if (length(species2)!=length(species)) {
+      warning(paste("removing ",length(species) - length(species2), " duplicate species."))
+      species=species2;
+    }
+    
+    #if numeric, add 1 (if character, handle it later)
+    if (class(species)=="numeric" || class(species)=="integer") {
+      indices = species+1; # add 1 to account for the time column
+      indices = sort(indices);
+      len_indices =length(indices);
+    }
   }
   
-  # Check to eliminate duplicate indices
-  indices2 = unique(indices);
-  if (length(indices2)!=length(indices)) {
-    warning(paste("removing ",length(indices) - length(indices2), " duplicate indexes."))
-    indices=indices2;
-  }
-  
-  indices = indices+1; # add 1 to account for the time column
-  indices = sort(indices);
-  len_indices =length(indices);
-
+  # by here, species might be NULL
 if(!file){
   if (names(statsData$means[1])=="time") {
     hasLabels=TRUE
-    } else {
-      hasLabels=FALSE
-    }
+  } else {
+    hasLabels=FALSE
+  }
     
+    if (class(species)=="character" && !hasLabels) {
+      stop("ERROR: data does not have labels, so species names cannot be used. Use species indexes instead.")
+    }
+    #convert species names to indices
+    if (class(species)=="character") {
+      indices = sapply(species,function(s) which(s==names(statsData$means)))
+      # if one or more names is not found
+      if (class(indices)=="list") {
+        bad_names = paste(species[sapply(indices,function(i) length(i)==0)],collapse=",")
+        stop(paste("ERROR: invalid species name(s) (",bad_names,") entered.",sep=""))
+      }
+    }
+  
+  if (is.null(species)) {
+    indices=1:(ncol(statsData$means)-1)+1
+  }
     #get the means data
-    meansData <- statsData$means
+    meansData <- statsData$means[,c(1,indices)]
     #give (slightly) more meaningful labels if none
     if (!(names(statsData$means[1])=="time")) {
       names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
     }
     #get the variances data
-    variancesData <- statsData$vars
+    variancesData <- statsData$vars[,c(1,indices)]
     #give (slightly) more meaningful labels if none
     if (!(names(statsData$vars[1])=="time")) {
       names(variancesData) <- names(meansData)
@@ -64,9 +106,20 @@ if(!file){
 
 else{
     # get file names
-    fnameMean = paste(statsData,'/means.txt',sep='');
-    fnameVar =  paste(statsData,'/variances.txt',sep='');
+    fnameMean = paste(statsData,'/means.txt',sep='')
+    fnameVar =  paste(statsData,'/variances.txt',sep='')
 
+    if (!(file.exists(fnameMean) && file.exists(fnameVar))) {
+      # means and variances files do not exist
+      # see if the user passed the outer directory name
+      fnameMean = paste(statsData,'/stats/means.txt',sep='')
+      fnameVar =  paste(statsData,'/stats/variances.txt',sep='')
+      if (!(file.exists(fnameMean) && file.exists(fnameVar))) {
+        stop(paste("ERROR: means and/or variances file not found in directory",statsData))
+      } else {
+        message("Using statsData/stats")
+      }
+    }
     #read the first line of the means file
     #and check for headers (labels)
     line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
@@ -76,6 +129,23 @@ else{
         hasLabels=FALSE
       }
 
+    if (class(species)=="character" && !hasLabels) {
+      stop("ERROR: data does not have labels, so species names cannot be used. Use species indexes instead.")
+    }
+    #convert species names to indices
+    if (class(species)=="character") {
+      indices = sapply(species,function(s) which(s==line1))
+      # if one or more names is not found
+      if (class(indices)=="list") {
+        bad_names = paste(species[sapply(indices,function(i) length(i)==0)],collapse=",")
+        stop(paste("ERROR: invalid species name(s) (",bad_names,") entered.",sep=""))
+      }
+    }
+    
+    if (is.null(species)) {
+      indices=1:(length(line1)-1)+1
+    }
+    
     #get the means data
     meansData <- read.table(fnameMean,header=hasLabels)[,c(1,indices)]
     #give (slightly) more meaningful labels if none
