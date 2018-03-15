@@ -273,12 +273,12 @@ Rcpp::List ssaStochKit2Rtemplate(Rcpp::List& StochKit2Rmodel, double time, int r
   //merge means and vars into "stats"
   Rcpp::List stats = Rcpp::List::create(
     Rcpp::Named("means") = means,
-    Rcpp::Named("vars") = vars);
+    Rcpp::Named("variances") = vars);
 
 
   return Rcpp::List::create(
               Rcpp::Named("stats") = stats,
-              Rcpp::Named("trajs") = trajs,
-							Rcpp::Named("hist") = hist);
+              Rcpp::Named("trajectories") = trajs,
+							Rcpp::Named("histograms") = hist);
 }
 #endif

@@ -1,37 +1,26 @@
 #'@title Plot StochKit2R simulation statistics output data
 #'
 #'@description
-#'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices}
+#'\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{species}
 #'
-#'@param statsData stats element from ssa (or tauLeaping) output (a list containing the means and vars (variances) data frames) or a character string to the path to the output stats directory.
+#'@param data ensemble output from ssa or tauLeaping (stats object must exist, i.e. ensemble must NOT have been run with noStats=TRUE).
 #'@param species A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.
-#'@param file set to TRUE if statsData is a path to the stats output directory (rather than returned output data)
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model,time=10,realizations=100,intervals=20,outputDir="ex_out",force=TRUE)
+#'out <- ssa(model,time=10,realizations=100,intervals=20)
 #'#plot the data for all species
-#'plotStats(out$stats)
-#'#plot species "S1" and "S3" using data from file
-#'plotStats("ex_out/stats",c(1,2,3),file=TRUE)
-#'#same plot from returned output
+#'plotStats(out)
+#'#plot the data for species S2 and S3
+#'plotStats(stats,species=c("S2","S3"))
 #'}
-plotStats <- function(statsData,species=NULL,file=FALSE) {
+plotStats <- function(data,species=NULL) {
 
-  # if user provided the entire output object, help them
-  # check if it is data vs file name
-  if (class(statsData)=="list") { 
-    if (is.null(statsData$means)) {
-      if (is.null(statsData$stats$means)) {
-        stop("ERROR: invalid statsData")
-      } else {
-        statsData = statsData$stats
-        message("Using statsData$stats")
-      }
-    }
+  if (is.null(data$stats)) {
+    stop("data does not contain stats element.")
   }
   
   if (!is.null(species)) {
@@ -46,7 +35,7 @@ plotStats <- function(statsData,species=NULL,file=FALSE) {
       }
       
       # Check to make sure that the indices are greater than 0
-      if (min(indices)<=0) {
+      if (min(species)<=0) {
         stop('Species indexes must be positive integers')
       }
     }
@@ -66,99 +55,31 @@ plotStats <- function(statsData,species=NULL,file=FALSE) {
     }
   }
   
-  # by here, species might be NULL
-if(!file){
-  if (names(statsData$means[1])=="time") {
-    hasLabels=TRUE
-  } else {
-    hasLabels=FALSE
+  #convert species names to indices
+  if (class(species)=="character") {
+    indices = sapply(species,function(s) which(s==names(data$stats$means)))
+    # if one or more names is not found
+    if (class(indices)=="list") {
+      bad_names = paste(species[sapply(indices,function(i) length(i)==0)],collapse=",")
+      stop(paste("ERROR: invalid species name(s) (",bad_names,") entered.",sep=""))
+    }
   }
-    
-    if (class(species)=="character" && !hasLabels) {
-      stop("ERROR: data does not have labels, so species names cannot be used. Use species indexes instead.")
-    }
-    #convert species names to indices
-    if (class(species)=="character") {
-      indices = sapply(species,function(s) which(s==names(statsData$means)))
-      # if one or more names is not found
-      if (class(indices)=="list") {
-        bad_names = paste(species[sapply(indices,function(i) length(i)==0)],collapse=",")
-        stop(paste("ERROR: invalid species name(s) (",bad_names,") entered.",sep=""))
-      }
-    }
   
   if (is.null(species)) {
-    indices=1:(ncol(statsData$means)-1)+1
+    indices=1:(ncol(data$stats$means)-1)+1
   }
-    #get the means data
-    meansData <- statsData$means[,c(1,indices)]
-    #give (slightly) more meaningful labels if none
-    if (!(names(statsData$means[1])=="time")) {
-      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
-    }
-    #get the variances data
-    variancesData <- statsData$vars[,c(1,indices)]
-    #give (slightly) more meaningful labels if none
-    if (!(names(statsData$vars[1])=="time")) {
-      names(variancesData) <- names(meansData)
-    }
-}
-
-else{
-    # get file names
-    fnameMean = paste(statsData,'/means.txt',sep='')
-    fnameVar =  paste(statsData,'/variances.txt',sep='')
-
-    if (!(file.exists(fnameMean) && file.exists(fnameVar))) {
-      # means and variances files do not exist
-      # see if the user passed the outer directory name
-      fnameMean = paste(statsData,'/stats/means.txt',sep='')
-      fnameVar =  paste(statsData,'/stats/variances.txt',sep='')
-      if (!(file.exists(fnameMean) && file.exists(fnameVar))) {
-        stop(paste("ERROR: means and/or variances file not found in directory",statsData))
-      } else {
-        message("Using statsData/stats")
-      }
-    }
-    #read the first line of the means file
-    #and check for headers (labels)
-    line1 <- strsplit(readLines(fnameMean,n=1),split="\t")[[1]]
-    if (line1[1]=="time") {
-      hasLabels=TRUE
-      } else {
-        hasLabels=FALSE
-      }
-
-    if (class(species)=="character" && !hasLabels) {
-      stop("ERROR: data does not have labels, so species names cannot be used. Use species indexes instead.")
-    }
-    #convert species names to indices
-    if (class(species)=="character") {
-      indices = sapply(species,function(s) which(s==line1))
-      # if one or more names is not found
-      if (class(indices)=="list") {
-        bad_names = paste(species[sapply(indices,function(i) length(i)==0)],collapse=",")
-        stop(paste("ERROR: invalid species name(s) (",bad_names,") entered.",sep=""))
-      }
-    }
-    
-    if (is.null(species)) {
-      indices=1:(length(line1)-1)+1
-    }
-    
-    #get the means data
-    meansData <- read.table(fnameMean,header=hasLabels)[,c(1,indices)]
-    #give (slightly) more meaningful labels if none
-    if (!hasLabels) {
-      names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
-    }
-    #get the variances data
-    variancesData <- read.table(fnameVar,header=hasLabels)[,c(1,indices)]
-    #give (slightly) more meaningful labels if none
-    if (!hasLabels) {
-      names(variancesData) <- names(meansData)
-    }
-}
+  #get the means data
+  meansData <- data$stats$means[,c(1,indices)]
+  #give (slightly) more meaningful labels if none
+  if (!(names(data$stats$means[1])=="time")) {
+    names(meansData) <- c("time",names(meansData)[1:(length(meansData)-1)])
+  }
+  #get the variances data
+  variancesData <- data$stats$variances[,c(1,indices)]
+  #give (slightly) more meaningful labels if none
+  if (!(names(data$stats$variances[1])=="time")) {
+    names(variancesData) <- names(meansData)
+  }
   
   #put data into plottable form
   value=NULL#only to appease R CMD CHECK for CRAN

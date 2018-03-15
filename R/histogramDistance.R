@@ -1,53 +1,78 @@
 #'@title Plot two StochKit2R simulation histograms and display distance
 #'
 #'@description
-#'\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram returned output or output files and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'\code{histogramDistance} Plots histograms of data stored in StochKit2R ensemble (ssa or tauLeaping) output and calculates histogram distance.
 #'
-#'@param histogramData1 histogram data from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param histogramData2 histogram data from output object or string with path to StochKit2 histogram output file 2. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
-#'@param file1 set to TRUE if \code{histogramData1} is a path to the histogram output file (rather than returned output data)
-#'@param file2 set to TRUE if \code{histogramData2} is a path to the histogram output file (rather than returned output data)
+#'@param data1 ensemble output from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).
+#'@param species1 The species name or index in data1 to use for the first histogram. For numeric indexes, the first species is index 1.
+#'@param timeIndex1 The time index in data1 to use for the second histogram (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.
+#'@param data2 ensemble output (could be the same as data1) from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).
+#'@param species2 The species name or index in data2 to use for the second histogram. For numeric indexes, the first species is index 1.
+#'@param timeIndex2 The time index in data2 to use for the second histogram (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.
 #'@return The ggplot object
 #'@examples
 #'\dontrun{
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml",package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'result1 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
-#'#another ensemble with output written to ex_out2 directory
-#'result2 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out2",force=TRUE)
+#'result1 = ssa(model,10,100,20,keepHistograms=TRUE)
+#'#another ensemble
+#'result2 = ssa(model,10,100,20,keepHistograms=TRUE)
 #'#plot the histograms for species 2 ("S2") at time point 5 (t=2.0) for the two runs above
-#'histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
-#'#IMPORTANT: histogram file names have format:
-#'#hist_<species index>_<time point>.dat, where species index STARTS AT 0
-#'histogramDistance("ex_out/histograms/hist_1_4.dat",
-#'                  "ex_out2/histograms/hist_1_4.dat",file1=TRUE,file2=TRUE)
+#'histogramDistance(result1,"S2",5,result2,"S2",5)
+#'#compare species from the same ensemble at different time points
+#'histogramDistance(result1,"S2",5,result1,"S2",6) #warning about time mismatch
 #'}
-histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FALSE) {
+histogramDistance <- function(data1,species1,timeIndex1=NULL,data2,species2,timeIndex2=NULL) {
   
-  # read in the lines for the first data 
-  if (!file1) {
-    # data is coming from character vector from output object, not file
-    if (length(histogramData1)!=3) {
-      if (length(histogramData1==1)) {
-        stop('Invalid histogramData1 (did you intend to set file1=TRUE?)')
-      }
-      else {
-        stop('Invalid histogramData1')        
-      }
-    }
-    
-    lines1 <- strsplit(histogramData1,split="\t")
+  if (is.null(data1$histograms)) {
+    stop("data1 does not contain histograms element. Run ensemble with keepHistograms=TRUE.")
   }
-  else {
-    #histogramData is a histogram output file name
-    if (length(histogramData1)!=1) {
-      stop('Invalid histogramData1 argument with file1=TRUE')
+  
+  if (!(class(species1)=="integer" || class(species1)=="numeric" || class(species1)=="character")) {
+    stop("species1 must be a species name or index")
+  }
+  if (length(species1)!=1) {
+    stop("species1 must be a single name or index.")
+  }
+  
+  if (class(species1)=="integer" || class(species1)=="numeric") {
+    # convert to species name
+    if (!round(species1)==species1) {
+      stop('species1 index must be an integer')
     }
-    
-    # read in the lines 
-    lines1 <- strsplit(readLines(histogramData1),split="\t")
-  }  
+    if (species1<1 || species1>length(names(data1$histograms))) {
+      stop('Invalid species1 index.')
+    }
+    species1 = names(data1$histograms)[species1]
+  } else {
+    # verify species name
+    if (!any(species1==names(data1$histograms))) {
+      stop("Invalid species1 name.")
+    }
+  }
+  species1Index = which(names(data1$histograms)==species1)
+  speciesHistogramData1 = data1$histograms[[species1Index]]
+  
+  # verify timeIndex
+  if (is.null(timeIndex1)) {
+    timeIndex1=length(speciesHistogramData1)
+  } else {
+    if (class(timeIndex1)!="integer" && class(timeIndex1)!="numeric") {
+      stop("timeIndex1 must be an integer.")
+    }
+    if (!round(timeIndex1)==timeIndex1) {
+      stop('timeIndex1 must be an integer')
+    }
+    if (timeIndex1<1 || timeIndex1>length(speciesHistogramData1)) {
+      stop("Invalid timeIndex1")
+    }
+  }
+  
+  histogramData1 = speciesHistogramData1[[timeIndex1]]
+  
+  lines1 <- strsplit(histogramData1,split="\t")
+
   sID1 <- lines1[[1]][1] # species ID
   time1 = as.numeric(lines1[[1]][2]) # time
   sInd1 = as.numeric(lines1[[1]][2]) # species index
@@ -69,31 +94,55 @@ histogramDistance <- function(histogramData1,histogramData2,file1=FALSE,file2=FA
   bincenters1 <- (dataRange1[-1] + dataRange1[-length(dataRange1)])/2
   df1 <- data.frame(centers=bincenters1,counts=data1)
 
-  #read in second file
-  # read in the lines for the first data 
-  if (!file2) {
-    # data is coming from character vector from output object, not file
-    if (length(histogramData2)!=3) {
-      if (length(histogramData2==1)) {
-        stop('Invalid histogramData2 (did you intend to set file2=TRUE?)')
-      }
-      else {
-        stop('Invalid histogramData2')        
-      }
-    }
-    
-    lines2 <- strsplit(histogramData2,split="\t")
+  # second histogram
+  if (is.null(data2$histograms)) {
+    stop("data2 does not contain histograms element. Run ensemble with keepHistograms=TRUE.")
   }
-  else {
-    #histogramData is a histogram output file name
-    if (length(histogramData2)!=1) {
-      stop('Invalid histogramData2 argument with file2=TRUE')
-    }
-    
-    # read in the lines 
-    lines2 <- strsplit(readLines(histogramData2),split="\t")
-  }  
   
+  if (!(class(species2)=="integer" || class(species2)=="numeric" || class(species2)=="character")) {
+    stop("species2 must be a species name or index")
+  }
+  if (length(species2)!=1) {
+    stop("species2 must be a single name or index.")
+  }
+  
+  if (class(species2)=="integer" || class(species2)=="numeric") {
+    # convert to species name
+    if (!round(species2)==species2) {
+      stop('species2 index must be an integer')
+    }
+    if (species2<1 || species2>length(names(data2$histograms))) {
+      stop('Invalid species2 index.')
+    }
+    species2 = names(data2$histograms)[species2]
+  } else {
+    # verify species name
+    if (!any(species2==names(data2$histograms))) {
+      stop("Invalid species2 name.")
+    }
+  }
+  species2Index = which(names(data2$histograms)==species2)
+  speciesHistogramData2 = data2$histograms[[species2Index]]
+  
+  # verify timeIndex
+  if (is.null(timeIndex2)) {
+    timeIndex2=length(speciesHistogramData2)
+  } else {
+    if (class(timeIndex2)!="integer" && class(timeIndex2)!="numeric") {
+      stop("timeIndex2 must be an integer.")
+    }
+    if (!round(timeIndex2)==timeIndex2) {
+      stop('timeIndex2 must be an integer')
+    }
+    if (timeIndex2<1 || timeIndex2>length(speciesHistogramData2)) {
+      stop("Invalid timeIndex2")
+    }
+  }
+  
+  histogramData2 = speciesHistogramData2[[timeIndex2]]
+  
+  lines2 <- strsplit(histogramData2,split="\t")
+
   sID2 <- lines2[[1]][1] # species ID
   time2 = as.numeric(lines2[[1]][2]) # time
   sInd2 = as.numeric(lines2[[1]][2]) # species index

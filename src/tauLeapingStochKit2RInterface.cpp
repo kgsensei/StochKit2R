@@ -298,10 +298,10 @@ RcppExport SEXP tauLeapingStochKit2RInterface(Rcpp::List StochKit2Rmodel, double
   //merge means and vars into "stats"
   Rcpp::List stats = Rcpp::List::create(
     Rcpp::Named("means") = means,
-    Rcpp::Named("vars") = vars);
+    Rcpp::Named("variances") = vars);
   
   Rcpp::Rcout << "done!\n";
   return Rcpp::List::create(Rcpp::Named("stats") = stats,
-                            Rcpp::Named("trajs") = trajs,
-                            Rcpp::Named("hist") = hist);
+                            Rcpp::Named("trajectories") = trajs,
+                            Rcpp::Named("histograms") = hist);
 }
