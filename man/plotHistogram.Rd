@@ -4,32 +4,28 @@
 \alias{plotHistogram}
 \title{Plot StochKit2R simulation histogram output data}
 \usage{
-plotHistogram(histogramData, file = FALSE)
+plotHistogram(data, species, timeIndex = NULL)
 }
 \arguments{
-\item{histogramData}{histogram data from output object or string with path to StochKit2 histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{data}{ensemble output from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).}
 
-\item{file}{set to TRUE if histogramData is a path to the histogram output file (rather than returned output data)}
+\item{species}{The species name or index. For numeric indexes, the first species is index 1.}
+
+\item{timeIndex}{The time index (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file.
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-out <- ssa(model,time=10,realizations=100,intervals=20,
-          keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
-#plot the histogram for species 2 ("S2") at time point 5 (t=2.0)
-#IMPORTANT: histogram file names have format:
-#hist_<species index>_<time point>.dat, where species index STARTS AT 0
-#  and time point index starts at 0
-plotHistogram(out$hist$S2[[5]])
-#equivalent, data from file
-plotHistogram("ex_out/histograms/hist_1_4.dat",file=TRUE) # from file
+out <- ssa(model,time=10,realizations=100,intervals=20,keepHistograms=TRUE)
+#plot the histogram for species "S2" at time point 5 (t=2.0)
+plotHistogram(out,species="S2",timeIndex=5)
 }
 }

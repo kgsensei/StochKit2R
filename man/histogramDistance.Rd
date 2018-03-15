@@ -4,37 +4,39 @@
 \alias{histogramDistance}
 \title{Plot two StochKit2R simulation histograms and display distance}
 \usage{
-histogramDistance(histogramData1, histogramData2, file1 = FALSE,
-  file2 = FALSE)
+histogramDistance(data1, species1, timeIndex1 = NULL, data2, species2,
+  timeIndex2 = NULL)
 }
 \arguments{
-\item{histogramData1}{histogram data from output object or string with path to StochKit2 histogram output file 1. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{data1}{ensemble output from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).}
 
-\item{histogramData2}{histogram data from output object or string with path to StochKit2 histogram output file 2. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)}
+\item{species1}{The species name or index in data1 to use for the first histogram. For numeric indexes, the first species is index 1.}
 
-\item{file1}{set to TRUE if \code{histogramData1} is a path to the histogram output file (rather than returned output data)}
+\item{timeIndex1}{The time index in data1 to use for the second histogram (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.}
 
-\item{file2}{set to TRUE if \code{histogramData2} is a path to the histogram output file (rather than returned output data)}
+\item{data2}{ensemble output (could be the same as data1) from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).}
+
+\item{species2}{The species name or index in data2 to use for the second histogram. For numeric indexes, the first species is index 1.}
+
+\item{timeIndex2}{The time index in data2 to use for the second histogram (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{histogramDistance} Plots histograms of data stored in StochKit2R histogram returned output or output files and calculates histogram distance. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+\code{histogramDistance} Plots histograms of data stored in two StochKit2R ensemble (ssa or tauLeaping) output objects and calculates histogram distance.
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-result1 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out",force=TRUE)
-#another ensemble with output written to ex_out2 directory
-result2 = ssa(model,10,100,20,keepHistograms=TRUE,outputDir="ex_out2",force=TRUE)
+result1 = ssa(model,10,100,20,keepHistograms=TRUE)
+#another ensemble
+result2 = ssa(model,10,100,20,keepHistograms=TRUE)
 #plot the histograms for species 2 ("S2") at time point 5 (t=2.0) for the two runs above
-histogramDistance(result1$hist$S2[[5]],result2$hist$S2[[5]])
-#IMPORTANT: histogram file names have format:
-#hist_<species index>_<time point>.dat, where species index STARTS AT 0
-histogramDistance("ex_out/histograms/hist_1_4.dat",
-                 "ex_out2/histograms/hist_1_4.dat",file1=TRUE,file2=TRUE)
+histogramDistance(result1,"S2",5,result2,"S2",5)
+#compare species from the same ensemble at different time points
+histogramDistance(result1,"S2",5,result1,"S2",6) #warning about time mismatch
 }
 }

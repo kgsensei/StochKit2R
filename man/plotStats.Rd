@@ -4,30 +4,28 @@
 \alias{plotStats}
 \title{Plot StochKit2R simulation statistics output data}
 \usage{
-plotStats(statsData, indices, file = FALSE)
+plotStats(data, species = NULL)
 }
 \arguments{
-\item{statsData}{stats element from ssa (or tauLeaping) output (a list containing the means and vars (variances) data frames) or a character string to the path to the output stats directory.}
+\item{data}{ensemble output from ssa or tauLeaping (stats object must exist, i.e. ensemble must NOT have been run with noStats=TRUE).}
 
-\item{indices}{The species indices that will be plotted. The first species is index 1}
-
-\item{file}{set to TRUE if statsData is a path to the stats output directory (rather than returned output data)}
+\item{species}{A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{indices}
+\code{plotStats} Plots means and mean +/- one standard deviation of populations specified in \code{species}
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-out <- ssa(model,time=10,realizations=100,intervals=20,outputDir="ex_out",force=TRUE)
-#plot the data for species 1, 2 and 3 (all species in the dimer decay model) from file
-plotStats("ex_out/stats",c(1,2,3),file=TRUE)
-#same plot from returned output
-plotStats(out$stats,c(1,2,3))
+out <- ssa(model,time=10,realizations=100,intervals=20)
+#plot the data for all species
+plotStats(out)
+#plot the data for species S2 and S3
+plotStats(out,species=c("S2","S3"))
 }
 }

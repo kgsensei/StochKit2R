@@ -11,8 +11,6 @@
 #'@param keepTrajectories Keep trajectory data.
 #'@param keepHistograms Keep histogram data.
 #'@param bins Number of histogram bins
-#'@param outputDir Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
-#'@param force Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{tauLeaping}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
 #'@param epsilon Set the tolerance (applicable to tauLeaping only), default is 0.03. Valid values: must be greater than 0.0 and less than 1.0
@@ -30,7 +28,7 @@
 #'#also, keep trajectory data
 #'out <- tauLeaping("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 #'}
-tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,outputDir=NULL,force=FALSE,seed=NULL,p=0,epsilon=0.03,threshold=10) {
+tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,seed=NULL,p=0,epsilon=0.03,threshold=10) {
   # can set seed in R with set.seed()
   
   #checks on modelFile  
@@ -54,27 +52,27 @@ tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,kee
     stop("ERROR: number of processes must not be negative (when p=0, processes will be determined automatically)")
   }
   
-  if(!is.null(outputDir)){
-    #expand path
-    outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
-    #remove tailing slashes or backslashes
-    #because file.exists returns false if directory ends in slash or backslash
-    outputDir <- gsub("//*$","",outputDir)
-    outputDir <- gsub("\\\\*$","",outputDir)
-    if (file.exists(outputDir)) {
-      if (!force) {
-        stop("ERROR: Output directory already exists. Delete existing directory, specify a unique directory name, or run with force=TRUE to overwrite")
-      }
-      else {
-        #delete stats, trajectories, histograms directories, if they exist
-        unlink(file.path(outputDir,"stats"),recursive=TRUE)
-        unlink(file.path(outputDir,"trajectories"),recursive=TRUE)
-        unlink(file.path(outputDir,"histograms"),recursive=TRUE)
-      }
-    }
-    else {
-      dir.create(outputDir,recursive=TRUE)
-    }
+  # if(!is.null(outputDir)){
+  #   #expand path
+  #   outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
+  #   #remove tailing slashes or backslashes
+  #   #because file.exists returns false if directory ends in slash or backslash
+  #   outputDir <- gsub("//*$","",outputDir)
+  #   outputDir <- gsub("\\\\*$","",outputDir)
+  #   if (file.exists(outputDir)) {
+  #     if (!force) {
+  #       stop("ERROR: Output directory already exists. Delete existing directory, specify a unique directory name, or run with force=TRUE to overwrite")
+  #     }
+  #     else {
+  #       #delete stats, trajectories, histograms directories, if they exist
+  #       unlink(file.path(outputDir,"stats"),recursive=TRUE)
+  #       unlink(file.path(outputDir,"trajectories"),recursive=TRUE)
+  #       unlink(file.path(outputDir,"histograms"),recursive=TRUE)
+  #     }
+  #   }
+  #   else {
+  #     dir.create(outputDir,recursive=TRUE)
+  #   }
     
     #must keep some output
     if (noStats & !keepTrajectories & !keepHistograms) {
@@ -82,24 +80,24 @@ tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,kee
     }
     
     #create stats, trajectories, histograms output directories, if needed
-    if (!noStats) {
-      dir.create(file.path(outputDir,"stats"))
-    }
-    if (keepTrajectories) {
-      dir.create(file.path(outputDir,"trajectories"))
-    }
-    if (keepHistograms) {
-      dir.create(file.path(outputDir,"histograms"))
-    }
-  }
+  #   if (!noStats) {
+  #     dir.create(file.path(outputDir,"stats"))
+  #   }
+  #   if (keepTrajectories) {
+  #     dir.create(file.path(outputDir,"trajectories"))
+  #   }
+  #   if (keepHistograms) {
+  #     dir.create(file.path(outputDir,"histograms"))
+  #   }
+  # }
   
   if (is.null(seed)) {
       seed=floor(runif(1,-.Machine$integer.max,.Machine$integer.max))
     }
 
-  if(is.null(outputDir)){
-    outputDir=""
-  }
+  # if(is.null(outputDir)){
+  #   outputDir=""
+  # }
 
   # process the xml model file, put in R Lists
   StochKit2Rmodel <- buildStochKit2Rmodel(modelFile)
@@ -118,5 +116,5 @@ tauLeaping <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,kee
     threshold=as.integer(threshold)
   }
   # everything is set up, ready to run the simulation
-  tauLeapingStochKit2RInterface(StochKit2Rmodel,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,outputDir,seed,p,epsilon,threshold)
+  tauLeapingStochKit2RInterface(StochKit2Rmodel,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,"",seed,p,epsilon,threshold)
 }

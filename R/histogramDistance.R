@@ -1,7 +1,7 @@
 #'@title Plot two StochKit2R simulation histograms and display distance
 #'
 #'@description
-#'\code{histogramDistance} Plots histograms of data stored in StochKit2R ensemble (ssa or tauLeaping) output and calculates histogram distance.
+#'\code{histogramDistance} Plots histograms of data stored in two StochKit2R ensemble (ssa or tauLeaping) output objects and calculates histogram distance.
 #'
 #'@param data1 ensemble output from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).
 #'@param species1 The species name or index in data1 to use for the first histogram. For numeric indexes, the first species is index 1.

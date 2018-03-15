@@ -15,7 +15,7 @@
 #'#plot the data for all species
 #'plotStats(out)
 #'#plot the data for species S2 and S3
-#'plotStats(stats,species=c("S2","S3"))
+#'plotStats(out,species=c("S2","S3"))
 #'}
 plotStats <- function(data,species=NULL) {
 
@@ -67,6 +67,10 @@ plotStats <- function(data,species=NULL) {
   
   if (is.null(species)) {
     indices=1:(ncol(data$stats$means)-1)+1
+  }
+  
+  if (max(indices)>ncol(data$stats$means)) {
+    stop("ERROR: invalid species index")
   }
   #get the means data
   meansData <- data$stats$means[,c(1,indices)]

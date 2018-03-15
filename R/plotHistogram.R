@@ -1,7 +1,7 @@
 #'@title Plot StochKit2R simulation histogram output data
 #'
 #'@description
-#'\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file. IMPORTANT: histogram file names have format hist_<species index>_<time point>.dat, where species index STARTS AT 0 (not 1!)
+#'\code{plotHistogram} Plots histogram of data stored in StochKit2R output object or histogram output file.
 #'
 #'@param data ensemble output from ssa or tauLeaping (histograms object must exist, i.e. ensemble must have been run with keepHistograms=TRUE).
 #'@param species The species name or index. For numeric indexes, the first species is index 1.

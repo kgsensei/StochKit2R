@@ -11,8 +11,6 @@
 #'@param keepTrajectories Keep trajectory data.
 #'@param keepHistograms Keep histogram data.
 #'@param bins Number of histogram bins
-#'@param outputDir Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite
-#'@param force Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssa}
 #'@param p Override default and specify the number of processes (threads) to use. By default (=0), the number of processes will be determined automatically (recommended). Ignored on systems without OpenMP support.
 #'@return List of statistics, trajectory and histogram output data.
@@ -28,7 +26,7 @@
 #'#also, keep trajectory data.
 #'out <- ssa("Desktop/dimer_decay.xml",10,100,20,keepTrajectories=TRUE)
 #'}
-ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,outputDir=NULL,force=FALSE,seed=NULL,p=0) {
+ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajectories=FALSE,keepHistograms=FALSE,bins=32,seed=NULL,p=0) {
   # can set seed in R with set.seed()
   
   #checks on modelFile  
@@ -59,19 +57,19 @@ ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajec
   }
   
   
-  if(!is.null(outputDir)){
-    #expand path
-    outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
-    #remove tailing slashes or backslashes
-    #because file.exists returns false if directory ends in slash or backslash
-    outputDir <- gsub("//*$","",outputDir)
-    outputDir <- gsub("\\\\*$","",outputDir)
-
-    createOutputDirs(outputDir,noStats,keepTrajectories,keepHistograms,force)
-  }
-  if(is.null(outputDir)){
-    outputDir=""
-  }
+  # if(!is.null(outputDir)){
+  #   #expand path
+  #   outputDir <- tryCatch(suppressWarnings(normalizePath(outputDir)), error = function(e) {stop("Invalid or missing outputDir output directory path, terminating StochKit2R")}, finally = NULL)
+  #   #remove tailing slashes or backslashes
+  #   #because file.exists returns false if directory ends in slash or backslash
+  #   outputDir <- gsub("//*$","",outputDir)
+  #   outputDir <- gsub("\\\\*$","",outputDir)
+  # 
+  #   createOutputDirs(outputDir,noStats,keepTrajectories,keepHistograms,force)
+  # }
+  # if(is.null(outputDir)){
+  #   outputDir=""
+  # }
   
   if (is.null(seed)) {
     seed=floor(runif(1,-.Machine$integer.max,.Machine$integer.max))
@@ -81,5 +79,5 @@ ssa <- function(modelFile,time,realizations,intervals=0,noStats=FALSE,keepTrajec
   StochKit2Rmodel <- buildStochKit2Rmodel(modelFile)
   
   # everything is set up, ready to run the simulation
-  ssaStochKit2RInterface(StochKit2Rmodel,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,outputDir,seed,p)
+  ssaStochKit2RInterface(StochKit2Rmodel,time,realizations,intervals,!noStats,keepTrajectories,keepHistograms,bins,"",seed,p)
 }

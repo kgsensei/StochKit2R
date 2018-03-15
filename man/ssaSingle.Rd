@@ -4,16 +4,12 @@
 \alias{ssaSingle}
 \title{Gillespie Stochastic Simulation Algorithm single trajectory}
 \usage{
-ssaSingle(modelFile, startTime, endTime, outputFile = NULL, seed = NULL)
+ssaSingle(modelFile, time, seed = NULL)
 }
 \arguments{
 \item{modelFile}{Character string with path to StochKit2 .xml model file}
 
-\item{startTime}{Simulation start time}
-
-\item{endTime}{Simulation end time}
-
-\item{outputFile}{Character string with path to output file. By default (=NULL) no data is written to file.}
+\item{time}{Simulation end time}
 
 \item{seed}{Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssaSingle}}
 }
@@ -26,6 +22,6 @@ Data frame containing time and species population for every reaction event in th
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
-out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),startTime=0,endTime=10)
+out <- ssaSingle(system.file("dimer_decay.xml",package="StochKit2R"),time=10)
 }
 }

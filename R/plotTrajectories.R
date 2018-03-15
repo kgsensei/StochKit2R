@@ -112,11 +112,7 @@ plotTrajectories <- function(data,trajectoryIndexes=NULL,species=NULL) {
     
     for (i in trajectoryIndexes[2:length(trajectoryIndexes)]) {
       trajData <- trajectoriesData[[i]][,c(1,indices)]
-      #give (slightly) more meaningful labels if none
-      if (!hasLabels) {
-        names(trajData) <- c("time",names(trajData)[1:(length(trajData)-1)])
-      }
-      
+
       trajDataMelted2 <- melt(trajData,id="time")
       p <- p + geom_line(data=trajDataMelted2)
     }

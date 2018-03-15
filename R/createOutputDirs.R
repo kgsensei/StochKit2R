@@ -4,7 +4,7 @@
 #'\code{createOutputDirs} Called by writeOutput create output directory
 #'
 #'@param outputDir Character string with path to output directory.
-#'@param subDirs Character vector
+#'@param subdirs Character vector containing names of subdirectories to create under outputDir
 #'@param force delete and overwrite existing output directories, if they exists
 createOutputDirs <- function(outputDir,subdirs,force=FALSE) {
   if (file.exists(outputDir)) {

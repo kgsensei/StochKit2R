@@ -4,33 +4,28 @@
 \alias{plotTrajectories}
 \title{Plot StochKit2R simulation trajectory output data}
 \usage{
-plotTrajectories(trajectoriesData, outputIndexes, speciesIndexes, file = F)
+plotTrajectories(data, trajectoryIndexes = NULL, species = NULL)
 }
 \arguments{
-\item{trajectoriesData}{trajs list from ssa (or tauLeaping) returned output or character string containing the path to the trajectories output directory}
+\item{data}{ensemble output from ssa or tauLeaping (trajectories object must exist, i.e. ensemble must have been run with keepTrajectories=TRUE).}
 
-\item{outputIndexes}{Integer vector containing indexes for which trials will be plotted}
+\item{trajectoryIndexes}{Integer vector containing indexes for which simulations will be plotted. By default (=NULL) all trajectories are plotted.}
 
-\item{speciesIndexes}{Integer vector of the species indices that will be plotted. The first species is index 1}
-
-\item{file}{set to TRUE if trajectoriesData is a path to the trajectories output directory (rather than returned output data)}
+\item{species}{A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.}
 }
 \value{
 The ggplot object
 }
 \description{
-\code{plotTrajectories} Plots trajectories \code{outputIndexes} of populations specified in \code{speciesIndexes} in the StochKit2R trajectories in \code{trajectoriesData}
+\code{plotTrajectories} Plots trajectories \code{trajectoryIndexes} of populations specified in \code{species} in the StochKit2R trajectories element of \code{data}
 }
 \examples{
 \dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml",package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
-out <- ssa(model,time=10,realizations=100,intervals=20,
-          keepTrajectories=TRUE,outputDir="ex_out",force=TRUE)
-#plot the data for species 1,2 and 3 for trajectories 2,3,4 and 5 from file
-plotTrajectories("ex_out/trajectories",outputIndexes=2:3,speciesIndexes=1:3,file=TRUE)
-#same plot from output
-plotTrajectories(out$trajs,outputIndexes=2:3,speciesIndexes=1:3)
+out <- ssa(model,time=10,realizations=100,intervals=20,keepTrajectories=TRUE)
+#plot the data for species S2 and S3 for trajectories 2,3,4 and 5
+plotTrajectories(out,trajectoryIndexes=2:5,species=c("S2","S3"))
 }
 }

@@ -6,8 +6,7 @@
 \usage{
 tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
   keepTrajectories = FALSE, keepHistograms = FALSE, bins = 32,
-  outputDir = NULL, force = FALSE, seed = NULL, p = 0, epsilon = 0.03,
-  threshold = 10)
+  seed = NULL, p = 0, epsilon = 0.03, threshold = 10)
 }
 \arguments{
 \item{modelFile}{Character string with path to StochKit2 .xml model file}
@@ -25,10 +24,6 @@ tauLeaping(modelFile, time, realizations, intervals = 0, noStats = FALSE,
 \item{keepHistograms}{Keep histogram data.}
 
 \item{bins}{Number of histogram bins}
-
-\item{outputDir}{Character string with path to output directory. By default (=NULL) no data is written to file. If specified output directory does not exist, it will be created. If output directory already exists, use \code{force=TRUE} to overwrite}
-
-\item{force}{Force overwriting of existing output directory data. No effect when \code{outputDir=NULL}.}
 
 \item{seed}{Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{tauLeaping}}
 
