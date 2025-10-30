@@ -8,16 +8,28 @@
 
 ## Development
 
-Rebuild c++ exported functions for Rcpp:
+Rebuild c++ Exported Functions for Rcpp:
 
 ```r
 Rcpp::compileAttributes()
 ```
 
-Rebuild vignettes:
+Rebuild Documentation & Exported Functions:
+
+```r
+devtools::document()
+```
+
+Rebuild Bignettes:
 
 ```r
 devtools::build_vignettes()
 # or to see all of stdout/stderr
 devtools::build_vignettes(quiet = FALSE)
+```
+
+Install Package from Local Directory:
+
+```r
+install.packages("/path/", repos = NULL, type = "source")
 ```

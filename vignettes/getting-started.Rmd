@@ -221,9 +221,10 @@ StochKit2R_\<version\>.zip from http://www.kevinsanft.com/StochKit2R.
 To install the package from .zip file:
 
 * In RStudio: under the Tools menu, choose "Package Archive File (.zip, .tar.gz)"
-from the "Install from:" dropdown menu. Then locate the .zip file, then click Install.
-* In Rgui: under the Packages menu, choose "Install package(s) from local zip files".
-Then locate the .zip file.
+  from the "Install from:" dropdown menu. Then locate the .zip file, then click
+  Install.
+* In Rgui: under the Packages menu, choose "Install package(s) from local zip
+  files". Then locate the .zip file.
 -->
 
 ## Running a simulation
