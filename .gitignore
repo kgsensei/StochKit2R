@@ -1,3 +1,4 @@
 #ignore workspace image
 .Rhistory
 *.o
+*.dll
