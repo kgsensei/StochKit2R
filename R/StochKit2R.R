@@ -8,6 +8,8 @@
 #' provides an R interface to stochastic simulation functions and
 #' provides functions for generating plots of the simulation data.
 #'
+#' @useDynLib StochKit2R, .registration=TRUE
+#'
 #' @import reshape
 #' @import ggplot2
 #' @import XML

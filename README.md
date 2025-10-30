@@ -39,8 +39,6 @@ install.packages("/path/", repos = NULL, type = "source")
 - Move `inst/dimer_decay.xml` and `inst/schlogl.xml` into a `data/` directory
   and update documentation and `DESCRIPTION` accordingly. This seems to be a
   modern standard for packages that come with datasets.
-- Remove `vignettes/*` in favor of Roxygen only. It looks like there were maybe
-  two documentation builders, more research necessary.
 - Maybe add some unit tests or something similar to verify package continues to
   work correctly.
 - Clean up more of the warnings and notes when installing. For some reason they
@@ -48,3 +46,6 @@ install.packages("/path/", repos = NULL, type = "source")
   installing from Github via `devtools::install_github`.
 - Verify current solution works on Linux (who cares about Mac anyway) and other
   potentially different environments.
+- Attempting to browse vignettes right now displays douplicate vignettes for
+  StochKit2R, I'll have to look into this later and see if it's a me-only
+  problem.
