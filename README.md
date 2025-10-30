@@ -20,7 +20,7 @@ Rebuild Documentation & Exported Functions:
 devtools::document()
 ```
 
-Rebuild Bignettes:
+Rebuild Vignettes:
 
 ```r
 devtools::build_vignettes()
