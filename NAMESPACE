@@ -1,5 +1,6 @@
-useDynLib(StochKit2R)
-export(ssa,ssaSingle,tauLeaping,plotStats,plotTrajectories,plotHistogram,histogramDistance,ode,writeEnsembleData,readEnsembleData)
+# .registration adheres to CRAN's modern protocols
+useDynLib(StochKit2R, .registration=TRUE)
+export(ssa, ssaSingle, tauLeaping, plotStats, plotTrajectories, plotHistogram, histogramDistance, ode, writeEnsembleData, readEnsembleData)
 importFrom(Rcpp, evalCpp)
 importFrom(RcppXPtrUtils, cppXPtr)
 importFrom(R.utils, mkdirs)
