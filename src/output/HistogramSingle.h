@@ -23,7 +23,7 @@
     ((std::ostringstream() << std::dec << x).str())
 
 // old macro:
-// #define to_string_macro( x ) static_cast< std::ostringstream & >( \
+// #define to_string_macro( x ) static_cast< std::ostringstream & >(
 // 	( std::ostringstream() << std::dec << x ) ).str()
 
 //export LD_LIBRARY_PATH=libs/boost_1_41_0/stage/lib/

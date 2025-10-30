@@ -39,7 +39,8 @@ public:
 	//propensities/rate vector same type as population
 	void operator() (const state_type &x, state_type &dxdt, const double t) {
 		std::fill(dxdt.begin(), dxdt.end(), 0.0);
-		for (int i = 0; i != props.size(); i++) {
+		// `std::size_t` replaces `int` here to make the compiler happy
+		for (std::size_t i = 0; i != props.size(); i++) {
 			dxdt += props(i, x) * nu[i];
 		}
 	}
