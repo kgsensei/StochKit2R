@@ -17,7 +17,7 @@
 #'#plot the data for species S2 and S3
 #'plotStats(out, species=c("S2", "S3"))
 #'}
-plotStats <- function(data,species=NULL) {
+plotStats <- function(data, species=NULL) {
 
   # if (is.null(data$stats)) {
   #   stop("data does not contain stats element.")
@@ -92,7 +92,18 @@ plotStats <- function(data,species=NULL) {
   value=NULL#only to appease R CMD CHECK for CRAN
   variable=NULL#only to appease R CMD CHECK for CRAN
   meansDataMelted <- melt(meansData,id="time")
-  p <- qplot(time,value,data=meansDataMelted,colour=variable) + geom_line() + ylab("population") + ggtitle("stats plot")
+
+  # `qplot()` has been deprecated so we switch to `ggplot()`,
+  # it still works virtually the same with no changes.
+  p <- ggplot(
+    data=meansDataMelted,
+	aes(
+      x=time,
+	  y=value,
+	  colour=variable
+	)
+  ) + geom_line() + ylab("population") + ggtitle("stats plot")
+
   # create mean+stdev data
   plusStdevData <- meansData
   plusStdevData[,2:ncol(plusStdevData)] <- plusStdevData[,2:ncol(plusStdevData)] + sqrt(variancesData[,2:ncol(variancesData)])

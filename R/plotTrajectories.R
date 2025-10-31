@@ -16,7 +16,7 @@
 #'#plot the data for species S2 and S3 for trajectories 2,3,4 and 5
 #'plotTrajectories(out, trajectoryIndexes=2:5, species=c("S2", "S3"))
 #'}
-plotTrajectories <- function(data,trajectoryIndexes=NULL,species=NULL) {
+plotTrajectories <- function(data, trajectoryIndexes=NULL, species=NULL) {
   
   # if (is.null(data$trajectories)) {
   #   stop("data does not contain trajectories element. Run ensemble with keepTrajectories=TRUE.")
@@ -108,9 +108,18 @@ plotTrajectories <- function(data,trajectoryIndexes=NULL,species=NULL) {
   value=NULL#only to appease R CMD CHECK for CRAN
   variable=NULL#only to appease R CMD CHECK for CRAN
   trajDataMelted <- melt(trajData,id="time")
-  
-  p <- qplot(time,value,data=trajDataMelted,colour=variable,geom="line") + ylab("population") + ggtitle("trajectory plot")
-  
+
+  # `qplot()` has been deprecated so we switch to `ggplot()`,
+  # it still works virtually the same with no changes.
+  p <- ggplot(
+	data=trajDataMelted,
+	aes(
+	  x=time,
+	  y=value,
+	  colour=variable
+	)
+  ) + geom_line() + ylab("population") + ggtitle("trajectory plot")
+
   # plot the rest of the trajectories!
   if (length(trajectoryIndexes)>1) {
     
