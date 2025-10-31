@@ -44,3 +44,17 @@ install.packages("/path/", repos = NULL, type = "source")
 - Attempting to browse vignettes currently displays douplicate vignettes for
   StochKit2R, I'll have to look into this later and see if it's a me-only
   problem.
+
+## Found Bugs
+
+Both of the following errors caused when using
+`out <- ode(model, _, _)` and then calling
+`plotStats(out)` and/or `writeEnsembleData(out, "./")`
+respectively.
+
+- `R/plotStats.R` at `25:7`  
+  Error at: `nrow(data$stats$means)`  
+  Error message: `$ operator is invalid for atomic vectors`
+- `R/writeEnsembleData.R` at `24:7`  
+  Error at: `nrow(data$stats$means)`  
+  Error message: `$ operator is invalid for atomic vectors`
