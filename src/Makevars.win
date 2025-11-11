@@ -1,8 +1,8 @@
-# `-w` suppresses warnings and notes from the compiler, disable this if
-# debugging. Mostly to make the package install appear less intimidating.
+# `-w` suppresses warnings and notes from the compiler,
+# this should not have to be used in "production"
 
 # `-O2` is an optimization flag
 
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -O2 -w -DBOOST_UBLAS_NDEBUG -DNDEBUG
+PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) -O2 -DBOOST_UBLAS_NDEBUG -DNDEBUG
 PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS)
 CXX_STD = CXX17

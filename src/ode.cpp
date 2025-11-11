@@ -148,14 +148,14 @@ RcppExport SEXP odecpp(Rcpp::List StochKit2Rmodel, double endTime, int intervals
 		// only output end time
 		integrate_times(boost::numeric::odeint::make_controlled(1E-8, 1E-7, stepper_type()), rhs, x, times.begin(), times.end(), initialDeltaT, recorder);
 		df(0, 0) = recorder.times[recorder.times.size() - 1];
-		for (int i = 0; i < modelSpeciesList.size(); i++) {
+		for (long long unsigned int i = 0; i < modelSpeciesList.size(); i++) {
 			df(0, i + 1) = recorder.state[recorder.state.size() - 1](i);
 		}
 	} else {
 		integrate_times(boost::numeric::odeint::make_controlled(1E-8, 1E-7, stepper_type()), rhs, x, times.begin(), times.end(), initialDeltaT, recorder);
-		for (int i = 0; i < recorder.times.size(); i++) {
+		for (long long unsigned int i = 0; i < recorder.times.size(); i++) {
 			df(i, 0) = recorder.times[i];
-			for (int j = 0; j < modelSpeciesList.size(); j++) {
+			for (long long unsigned int j = 0; j < modelSpeciesList.size(); j++) {
 				df(i, j + 1) = recorder.state[i](j);
 			}
 		}
@@ -166,8 +166,9 @@ RcppExport SEXP odecpp(Rcpp::List StochKit2Rmodel, double endTime, int intervals
 	Rcpp::CharacterVector col_names;
 	col_names.push_back("time");
 
-	for (int i = 0; i < modelSpeciesList.size(); i++)
+	for (long long unsigned int i = 0; i < modelSpeciesList.size(); i++)
 		col_names.push_back(modelSpeciesList[i]);
+
 	Rcpp::colnames(df) = col_names;
 	return df;
 }

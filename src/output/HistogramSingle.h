@@ -15,16 +15,10 @@
 #include "boost/tokenizer.hpp"
 #include <limits>
 
-// original macro was trying to use a temporary value and it was causing
-// the compiler to freak out, so here's the new one. still needs testing
-
-// new macro:
+// original macro was trying to cast a temporary value and it
+// was causing the compiler to freak out, replacement below
 #define to_string_macro(x) \
     ((std::ostringstream() << std::dec << x).str())
-
-// old macro:
-// #define to_string_macro( x ) static_cast< std::ostringstream & >(
-// 	( std::ostringstream() << std::dec << x ) ).str()
 
 //export LD_LIBRARY_PATH=libs/boost_1_41_0/stage/lib/
 
