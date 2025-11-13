@@ -66,8 +66,8 @@ plotStats <- function(data, species=NULL) {
 	if (is.character(species)) {
 		indices = sapply(species, function(s) which(s == names(data$stats$means)))
 		# if one or more names is not found
-		if (class(indices) == "list") {
-		# if (is.list())
+		# if (class(indices) == "list") {
+		if (is.list(indices)) {
 			bad_names = paste(species[sapply(indices, function(i) length(i) == 0)], collapse=",")
 			stop(paste("ERROR: invalid species name(s) (", bad_names, ") entered.", sep=""))
 		}
