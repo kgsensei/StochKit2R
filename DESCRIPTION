@@ -5,6 +5,7 @@ Authors@R: c(
 		person("Kevin R.", "Sanft", email = "kevin@kevinsanft.com", role = c("aut", "cre", "cph")),
 		person("Harris", "Joseph", role = "ctb"),
 		person("John", "Ravi", role = "ctb"),
+		person("J.", "Kellem", role = "ctb"),
 		person("Linda R.", "Petzold", role = "cph")
 	)
 Description: Efficient discrete stochastic simulation using the Gillespie algorithm (aka the Stochastic Simulation Algorithm or SSA) and adaptive tau-leaping. It provides an R interface to simulation algorithms and it provides functions for visualizing (plotting) simulation output.
