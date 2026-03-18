@@ -7,17 +7,16 @@
 #'@param outputDir Character string with path to output directory. If specified output directory does not exist, it will be created. If output directory or file already exists, use \code{force=TRUE} to overwrite.
 #'@param force Force overwriting of existing data. Warning: force=TRUE will delete all existing content in the output directory.
 #'@param indexStart Starting index. Default =1 for R data. Set to 0 for compatibility with StochKit2 C++ version.
+#'@return \value{None}
 #'@examples
-#'\dontrun{
 #'#'#example using included dimer_decay.xml file
 #'#run 100 simulations for 10 time units, keeping output at 20 time intervals
 #'#store model file name in a variable first
-#'model <- system.file("dimer_decay.xml", package="StochKit2R")
-#'out <- ssa(modelFile=model, time=10, realizations=100, intervals=20)
+#'model <- system.file("dimer_decay.xml", package = "StochKit2R")
+#'out <- ssa(modelFile = model, time = 10, realizations = 100, intervals = 20)
 #'#creates ex_out directory and writes output
-#'writeEnsembleData(data=out, outputDir="ex_out")
-#'}
-writeEnsembleData <- function(data,outputDir,force=FALSE,indexStart=1) {
+#'writeEnsembleData(data = out, outputDir = "ex_out")
+writeEnsembleData <- function(data, outputDir, force=FALSE, indexStart=1) {
   if (!(indexStart==1 || indexStart==0)) {
     warning("indexStart is not 0 or 1")
   }

@@ -20,8 +20,6 @@ Data frame containing time and species population for every reaction event in th
 \code{ssaSingle} Run a single SSA trajectory. Stores a row of data for every reaction event.
 }
 \examples{
-\dontrun{
 #example using included dimer_decay.xml file
-out <- ssaSingle(system.file("dimer_decay.xml", package="StochKit2R"), time=10)
-}
+out <- ssaSingle(system.file("dimer_decay.xml", package = "StochKit2R"), time = 10)
 }

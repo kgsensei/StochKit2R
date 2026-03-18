@@ -31,7 +31,7 @@ namespace STOCHKIT
       using Base::outputTimes;
       using Base::writeLabelsToFile;
 
-      /* to understand this class in terms of the notation from http://www.johndcook.com/standard_deviation.html:
+      /* to understand this class in terms of the notation from https://www.johndcook.com/standard_deviation.html:
       data[0] is m_oldM
       data[1] is m_newM
       data[2] is m_oldS

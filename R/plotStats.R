@@ -7,16 +7,14 @@
 #'@param species A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.
 #'@return The ggplot object
 #'@examples
-#'\dontrun{
 #'#example using included dimer_decay.xml file
-#'model <- system.file("dimer_decay.xml", package="StochKit2R")
+#'model <- system.file("dimer_decay.xml", package = "StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model, time=10, realizations=100, intervals=20)
+#'out <- ssa(model, time = 10, realizations = 100, intervals = 20)
 #'#plot the data for all species
 #'plotStats(out)
 #'#plot the data for species S2 and S3
-#'plotStats(out, species=c("S2", "S3"))
-#'}
+#'plotStats(out, species = c("S2", "S3"))
 plotStats <- function(data, species=NULL) {
 	# if (is.null(data$stats)) {
 	#   stop("data does not contain stats element.")

@@ -8,11 +8,9 @@
 #'@param seed Seed the random number generator. By default the seed is determined by the R random number generator, so the seed can also be set by calling \code{set.seed} in R immediately before calling \code{ssaSingle}
 #'@return Data frame containing time and species population for every reaction event in the simulation.
 #'@examples
-#'\dontrun{
 #'#example using included dimer_decay.xml file
-#'out <- ssaSingle(system.file("dimer_decay.xml", package="StochKit2R"), time=10)
-#'}
-ssaSingle <- function(modelFile,time,seed=NULL) {
+#'out <- ssaSingle(system.file("dimer_decay.xml", package = "StochKit2R"), time = 10)
+ssaSingle <- function(modelFile, time, seed=NULL) {
   # can set seed in R with set.seed()
   
   #checks on modelFile  

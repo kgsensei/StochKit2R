@@ -20,8 +20,6 @@ Data frame containing time and species population
 \code{ode} Run an ODE simulation (population version of the reaction rate equations). Homodimerization (e.g. A+A type) propensities are converted to Reaction Rate Equation rates (c*A*A instead of c*A*(A-1)/2) for mass action reactions. Propensities of customized propensities are not converted. Uses the 5th order Dormand-Prince Runge-Kutta method.
 }
 \examples{
-\dontrun{
 #example using included dimer_decay.xml file
-out <- ode(system.file("dimer_decay.xml", package="StochKit2R"), time=10, intervals=20)
-}
+out <- ode(system.file("dimer_decay.xml", package = "StochKit2R"), time = 10, intervals = 20)
 }

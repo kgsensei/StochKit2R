@@ -8,10 +8,8 @@
 #'@param intervals Number of output intervals. Default 0 outputs at end time only. 1=keep data at start and end time, 2=keep data at start, middle, and end times, etc. Note data is stored at (intervals+1) equally spaced time points.
 #'@return Data frame containing time and species population
 #'@examples
-#'\dontrun{
 #'#example using included dimer_decay.xml file
-#'out <- ode(system.file("dimer_decay.xml", package="StochKit2R"), time=10, intervals=20)
-#'}
+#'out <- ode(system.file("dimer_decay.xml", package = "StochKit2R"), time = 10, intervals = 20)
 ode <- function(modelFile,time,intervals) {
 
   #checks on modelFile  

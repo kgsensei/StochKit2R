@@ -55,7 +55,7 @@ Santa Barbara.
 
 <!--
 As of this writing, StochKit2R is available on CRAN, the Comprehensive R Archive
-Network (http://cran.r-project.org/). Therefore, you should be able to install
+Network (https://cran.r-project.org/). Therefore, you should be able to install
 it from the R console:
 
 ```r
@@ -146,7 +146,7 @@ Tools before proceeding. Advanced Mac OS X users may want to view the additional
 instructions below on installation for high performance.
 
 You can install from the source file StochKit2R\_\<version\>.tar.gz, available
-at http://www.kevinsanft.com/StochKit2R, on Linux and Mac OS X by running the
+at https://www.kevinsanft.com/StochKit2R, on Linux and Mac OS X by running the
 following at a terminal (not the R console) from within the directory of the
 .tar.gz file: R CMD INSTALL StochKit2R_\<version\>.tar.gz
 
@@ -171,12 +171,12 @@ used.)
 <!--
 These instructions use **GNU** GCC. I tested it with GNU GCC 4.9. It may be
 possible to do this with the experimental version of Clang here:
-http://clang-omp.github.io/, but I have not tested it.
+https://clang-omp.github.io/, but I have not tested it.
 
 1.  Install **GNU** GCC. (XCode's gcc and g++ are symbolic links to clang and
 clang++, respectively.) This can probably be done through homebrew, macports,
 or from source.
-2.	Download StochKit2R_\<version\>.tar.gz from http://www.kevinsanft.com/StochKit2R
+2.	Download StochKit2R_\<version\>.tar.gz from https://www.kevinsanft.com/StochKit2R
 3.	Unpack the StochKit2R .tar.gz file. In the file StochKit2R/src/Makevars,
 replace the string "$(SHLIB_OPENMP_CXXFLAGS)" with "–fopenmp" (two occurrences).
 4.	Create or edit your ~/.R/Makevars file to contain the line:  
@@ -194,8 +194,8 @@ You will need to install the devtools package first, if you haven’t already.
 
 1. Download the Mac clang binary with OpenMP support (as of this writing, the
    current file is
-   http://r.research.att.com/libs/clang-4.0.0-darwin15.6-Release.tar.gz)
-   from http://r.research.att.com/libs/.
+   https://r.research.att.com/libs/clang-4.0.0-darwin15.6-Release.tar.gz)
+   from https://r.research.att.com/libs/.
 2. Unpack the .tar.gz file. Copy the clang4 directory to your /usr/local/
    directory.
 3. Create (or edit your existing) ~/.R/Makevars file to include the following
@@ -216,7 +216,7 @@ in the compile commands.
 **Windows**
 
 Windows binary packages are available. On Windows, download
-StochKit2R_\<version\>.zip from http://www.kevinsanft.com/StochKit2R.
+StochKit2R_\<version\>.zip from https://www.kevinsanft.com/StochKit2R.
 
 To install the package from .zip file:
 
@@ -524,7 +524,7 @@ system, StochKit2R version, model file, and steps to recreate the error.
 ## License
 
 StochKit2R is released under the GPL-3 (GPLv3) open source license
-(http://www.gnu.org/licenses/gpl-3.0.html).
+(https://www.gnu.org/licenses/gpl-3.0.html).
 
 ## Copyright
 

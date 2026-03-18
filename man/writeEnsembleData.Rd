@@ -15,17 +15,18 @@ writeEnsembleData(data, outputDir, force = FALSE, indexStart = 1)
 
 \item{indexStart}{Starting index. Default =1 for R data. Set to 0 for compatibility with StochKit2 C++ version.}
 }
+\value{
+\value{None}
+}
 \description{
 \code{writeEnsembleData} Writes StochKit2R ensemble output data to files.
 }
 \examples{
-\dontrun{
 #'#example using included dimer_decay.xml file
 #run 100 simulations for 10 time units, keeping output at 20 time intervals
 #store model file name in a variable first
-model <- system.file("dimer_decay.xml", package="StochKit2R")
-out <- ssa(modelFile=model, time=10, realizations=100, intervals=20)
+model <- system.file("dimer_decay.xml", package = "StochKit2R")
+out <- ssa(modelFile = model, time = 10, realizations = 100, intervals = 20)
 #creates ex_out directory and writes output
-writeEnsembleData(data=out, outputDir="ex_out")
-}
+writeEnsembleData(data = out, outputDir = "ex_out")
 }

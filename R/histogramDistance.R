@@ -11,7 +11,6 @@
 #'@param timeIndex2 The time index in data2 to use for the second histogram (the initial condition is index 1, the index of the end time is equal to the number of output intervals+1). By default =NULL the last index is used.
 #'@return The ggplot object
 #'@examples
-#'\dontrun{
 #'#example using included dimer_decay.xml file
 #'model <- system.file("dimer_decay.xml", package="StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
@@ -22,7 +21,6 @@
 #'histogramDistance(result1, "S2", 5, result2, "S2", 5)
 #'#compare species from the same ensemble at different time points
 #'histogramDistance(result1, "S2", 5, result1, "S2", 6) #warning about time mismatch
-#'}
 histogramDistance <- function(data1, species1, timeIndex1=NULL, data2, species2, timeIndex2=NULL) {
 	# if (is.null(data1$histograms)) {
 	#   stop("data1 does not contain histograms element. Run ensemble with keepHistograms=TRUE.")

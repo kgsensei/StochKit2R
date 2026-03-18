@@ -8,14 +8,12 @@
 #'@param species A character vector of species names or a numeric vector of species indexes of the species that will be plotted. For numeric indexes, the first species is index 1. By default =NULL, all species are plotted.
 #'@return The ggplot object
 #'@examples
-#'\dontrun{
 #'#example using included dimer_decay.xml file
-#'model <- system.file("dimer_decay.xml", package="StochKit2R")
+#'model <- system.file("dimer_decay.xml", package = "StochKit2R")
 #'#output written to ex_out directory (created in current working directory)
-#'out <- ssa(model, time=10, realizations=100, intervals=20, keepTrajectories=TRUE)
+#'out <- ssa(model, time = 10, realizations = 100, intervals = 20, keepTrajectories = TRUE)
 #'#plot the data for species S2 and S3 for trajectories 2,3,4 and 5
-#'plotTrajectories(out, trajectoryIndexes=2:5, species=c("S2", "S3"))
-#'}
+#'plotTrajectories(out, trajectoryIndexes = 2:5, species = c("S2", "S3"))
 plotTrajectories <- function(data, trajectoryIndexes=NULL, species=NULL) {
 	# if (is.null(data$trajectories)) {
 	#   stop("data does not contain trajectories element. Run ensemble with keepTrajectories=TRUE.")

@@ -45,21 +45,19 @@ tauLeaping(
 \item{threshold}{Set the threshold (minimum number of reactions per leap before switching to ssa) for tauLeaping}
 }
 \value{
-List of statistics, trajectory and histogram output data.
+List of statistics, trajectory, and histogram output data.
 }
 \description{
 \code{tauLeaping} Runs an ensemble of Tau-leaping \code{realizations} (trajectories). Will revert to SSA if Tau-leaping is not beneficial.
 }
 \examples{
-\dontrun{
 #example using included dimer_decay.xml file
 #store path to StochKit2R dimer_decay.xml file in a variable
-model <- system.file("dimer_decay.xml", package="StochKit2R")
-out <- tauLeaping(modelFile=model, time=10, realizations=100, intervals=20)
+model <- system.file("dimer_decay.xml", package = "StochKit2R")
+out <- tauLeaping(modelFile = model, time = 10, realizations = 100, intervals = 20)
 
 #more typical example where model file is stored elsewhere
 #(must be valid path to existing .xml StochKit2 model file)
 #also, keep trajectory data
-out <- tauLeaping("Desktop/dimer_decay.xml", 10, 100, 20, keepTrajectories=TRUE)
-}
+out <- tauLeaping("~/Desktop/dimer_decay.xml", 10, 100, 20, keepTrajectories = TRUE)
 }

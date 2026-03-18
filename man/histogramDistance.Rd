@@ -33,7 +33,6 @@ The ggplot object
 \code{histogramDistance} Plots histograms of data stored in two StochKit2R ensemble (ssa or tauLeaping) output objects and calculates histogram distance.
 }
 \examples{
-\dontrun{
 #example using included dimer_decay.xml file
 model <- system.file("dimer_decay.xml", package="StochKit2R")
 #output written to ex_out directory (created in current working directory)
@@ -44,5 +43,4 @@ result2 = ssa(model, 10, 100, 20, keepHistograms=TRUE)
 histogramDistance(result1, "S2", 5, result2, "S2", 5)
 #compare species from the same ensemble at different time points
 histogramDistance(result1, "S2", 5, result1, "S2", 6) #warning about time mismatch
-}
 }
