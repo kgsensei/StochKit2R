@@ -1,6 +1,6 @@
 Package: StochKit2R
 Title: Efficient Discrete Stochastic Simulation
-Version: 1.1
+Version: 1.1.1
 Authors@R: c(
 		person("Kevin R.", "Sanft", email = "kevin@kevinsanft.com", role = c("aut", "cre", "cph")),
 		person("Harris", "Joseph", role = "ctb"),
