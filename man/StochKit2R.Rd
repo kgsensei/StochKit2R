@@ -15,7 +15,7 @@ provides functions for generating plots of the simulation data.
 Useful links:
 \itemize{
   \item \url{https://github.com/kevinsanft/StochKit2R}
-  \item \url{https://www.kevinsanft.com/StochKit2R}
+  \item \url{https://www.kevinsanft.com/StochKit2R/}
   \item Report bugs at \url{https://github.com/kevinsanft/StochKit2R/issues}
 }
 

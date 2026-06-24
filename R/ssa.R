@@ -24,7 +24,7 @@
 #'#more typical example where model file is stored elsewhere
 #'#(must be valid path to existing .xml StochKit2 model file)
 #'#also, keep trajectory data.
-#'out <- ssa("~/Desktop/dimer_decay.xml", 10, 100, 20, keepTrajectories = TRUE)
+#'#out <- ssa("~/Desktop/dimer_decay.xml", 10, 100, 20, keepTrajectories = TRUE)
 ssa <- function(modelFile, time, realizations, intervals=0, noStats=FALSE, keepTrajectories=FALSE, keepHistograms=FALSE, bins=32, seed=NULL, p=0) {
   # can set seed in R with set.seed()
   
