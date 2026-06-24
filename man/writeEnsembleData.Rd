@@ -16,7 +16,7 @@ writeEnsembleData(data, outputDir, force = FALSE, indexStart = 1)
 \item{indexStart}{Starting index. Default =1 for R data. Set to 0 for compatibility with StochKit2 C++ version.}
 }
 \value{
-\value{None}
+None
 }
 \description{
 \code{writeEnsembleData} Writes StochKit2R ensemble output data to files.
