@@ -194,8 +194,8 @@ You will need to install the devtools package first, if you haven’t already.
 
 1. Download the Mac clang binary with OpenMP support (as of this writing, the
    current file is
-   https://r.research.att.com/libs/clang-4.0.0-darwin15.6-Release.tar.gz)
-   from https://r.research.att.com/libs/.
+   https://mac.R-project.org/libs/clang-4.0.0-darwin15.6-Release.tar.gz)
+   from https://mac.R-project.org/libs/.
 2. Unpack the .tar.gz file. Copy the clang4 directory to your /usr/local/
    directory.
 3. Create (or edit your existing) ~/.R/Makevars file to include the following
