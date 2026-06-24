@@ -14,8 +14,8 @@
 #'#store model file name in a variable first
 #'model <- system.file("dimer_decay.xml", package = "StochKit2R")
 #'out <- ssa(modelFile = model, time = 10, realizations = 100, intervals = 20)
-#'#creates ex_out directory and writes output
-#'writeEnsembleData(data = out, outputDir = "ex_out")
+#'#creates ex_out directory and writes output, it's generally recommended to not use the force flag
+#'writeEnsembleData(data = out, outputDir = "ex_out", force = TRUE)
 writeEnsembleData <- function(data, outputDir, force=FALSE, indexStart=1) {
   if (!(indexStart==1 || indexStart==0)) {
     warning("indexStart is not 0 or 1")

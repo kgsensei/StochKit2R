@@ -27,6 +27,6 @@ None
 #store model file name in a variable first
 model <- system.file("dimer_decay.xml", package = "StochKit2R")
 out <- ssa(modelFile = model, time = 10, realizations = 100, intervals = 20)
-#creates ex_out directory and writes output
+#creates ex_out directory and writes output, it's generally recommended to not use the force flag
 writeEnsembleData(data = out, outputDir = "ex_out")
 }
