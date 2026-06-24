@@ -69,7 +69,7 @@ See installation instructions below.
 ## Windows and Mac: Binary Installation (recommended)
 
 Download the latest release from
-https://github.com/StochKit2R/StochKit2R/releases. On Windows, download the .zip
+https://github.com/kevinsanft/StochKit2R/releases. On Windows, download the .zip
 file, on Mac download the .tgz file. (Note: you do not want to use the Source
 Code links.) Then execute the following code to install:
 
@@ -95,13 +95,13 @@ console commands:
 
 ```r
 install.packages("devtools") # Run once on your system
-devtools::install_github("StochKit2R/StochKit2R")
+devtools::install_github("kevinsanft/StochKit2R")
 ```
 
 (Note: on Windows, the above code will ask you to install additional tools. You
 must install the tools. You will get a message saying installation failed
 because it could not find the build tools. After installing the tools, rerun the
-call to `devtools::install_github("StochKit2R/StochKit2R")` to install
+call to `devtools::install_github("kevinsanft/StochKit2R")` to install
 StochKit2R.) 
 
 You may see some compilation warning messages but there should be no errors.
@@ -126,7 +126,7 @@ install a serial version of StochKit2R.
 
 ```r
 install.packages("devtools") #run once on your system
-devtools::install_github("StochKit2R/StochKit2R", ref="serial")
+devtools::install_github("kevinsanft/StochKit2R", ref="serial")
 ```
 
 Advanced Mac OS X users may want to view the additional instructions below on
@@ -205,7 +205,7 @@ You will need to install the devtools package first, if you haven’t already.
    `LDFLAGS=-L/usr/local/clang4/lib`  
    (Where /usr/local/ is replaced with your path to the clang4 directory, if
    different.)
-4. In R, run: `devtools::install_github("StochKit2R/StochKit2R")`
+4. In R, run: `devtools::install_github("kevinsanft/StochKit2R")`
 
 If everything worked correctly, you may see some compilation warning messages
 but you should see no errors. You should also be able to scroll up to view the
@@ -216,7 +216,7 @@ in the compile commands.
 **Windows**
 
 Windows binary packages are available. On Windows, download
-StochKit2R_\<version\>.zip from https://www.kevinsanft.com/StochKit2R.
+StochKit2R_\<version\>.zip from https://www.kevinsanft.com/StochKit2R/.
 
 To install the package from .zip file:
 
